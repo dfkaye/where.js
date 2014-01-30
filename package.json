@@ -1,0 +1,35 @@
+{
+  "name": "where.js",
+  "version": "0.0.0",
+  "description": "data-driven test method for mocha, jasmine, qunit and tape",
+  "homepage" : "https://github.com/dfkaye/where.js",
+  "author": {
+    "name": "david kaye (@dfkaye)",
+    "email" : "dfkaye@yahoo.com"
+  },
+  "devDependencies": {
+    "jasmine-node": "1.x.x"
+  },
+  "license": "MIT",
+  "main": "./vm-shim.js",
+  "peerDependencies": {
+    "chai": ">= 1.x",
+    "expect.js": ">= 0.2",
+    "mocha": ">= 1.7",
+    "qunitjs": ">= 1.13",
+    "qunit-tap": ">= 1.4",
+    "should": ">= 3.0.1",
+    "tape": ">= 2.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dfkaye/where.js.git"
+  },
+  "scripts": {
+    "test": "jasmine-node --verbose ./test/jasmine.spec.js",
+    "jasmine": "jasmine-node --verbose ./test/jasmine.spec.js",
+    "mocha": "node ./test/mocha-suite.js",
+    "qunit": "node ./test/qunit-suite.js",
+    "tape": "node ./test/tape-suite.js"
+  }
+}
