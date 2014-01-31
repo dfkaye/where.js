@@ -3,7 +3,10 @@
 
 // mocha-suite
 
-require('../where.js');
+if (typeof require == 'function') {
+  // enable to re-use in a browser without require.js
+  require('../../where.js');
+}
 
 // should be function
 // should pass tape context        
@@ -16,13 +19,22 @@ require('../where.js');
 // should not throw when intercept specified
 
 describe('where(fn, context)', function(done) {
-      
+  
+  // ASSERT
+  
   describe('with assert', function () {
-
-    it('should throw when function has only one row in data-table', function () {
+  
+    var assert;
     
-      var assert = require('assert');
-      
+    if (typeof require == 'function') {
+      // enable to re-use in a browser without require.js
+      assert = require('assert');
+    } else {
+      assert = window.assert; //(github.com/Jxck/assert)
+    }
+    
+    it('should throw when function has only one row in data-table', function () {
+          
       var pass = false;
       
       try {
@@ -39,9 +51,7 @@ describe('where(fn, context)', function(done) {
     });
     
     it('should pass', function() {
-    
-      var assert = require('assert');
-      
+          
       var results = where(function(){/***
         | a | b | c |
         | 1 | 2 | 2 |
@@ -58,20 +68,23 @@ describe('where(fn, context)', function(done) {
     
     
     it('should throw unintercepted errors', function() {
-      var assert = require('assert');
-      var results = where(function(){/***
-        | a | b | c |
-        | 1 | 2 | 3 |
-        ***/
-        assert.equal(Math.max(a, b), c);
-      }, { assert: assert});
+    
+      assert.throws(function(){
+      
+        where(function(){/***
+          | a | b | c |
+          | 1 | 2 | 3 |
+          ***/
+          assert.equal(Math.max(a, b), c);
+          
+        }, { assert: assert});
+        
+      });
+        
     });
     
-    
     it('should log table', function() {
-    
-      var assert = require('assert');
-      
+          
       var results = where(function(){/***
       
         | a | b | c |
@@ -89,8 +102,6 @@ describe('where(fn, context)', function(done) {
     
     it('should intercept failing results', function() {
     
-      var assert = require('assert');
-      
       var results = where(function(){/***
       
         | a | b | c |
@@ -108,9 +119,7 @@ describe('where(fn, context)', function(done) {
     });
     
     it('should log and intercept', function() {
-    
-      var assert = require('assert');
-      
+         
       var results = where(function(){/***
         | a | b | c |
         | 1 | 2 | 2 |
@@ -126,12 +135,21 @@ describe('where(fn, context)', function(done) {
     });
   });
   
+  // EXPECT
+
   describe('with expect.js', function() {
+  
+    var expect;
     
+    if (typeof require == 'function') {
+      // enable to re-use in a browser without require.js
+      expect = require('expect.js');
+    } else {
+      expect = window.expect;
+    }
+
     it('should pass', function() {
-    
-      var expect = require('expect.js');
-      
+          
       var results = where(function(){/***
         | a | b | c |
         | 1 | 2 | 2 |
@@ -146,22 +164,25 @@ describe('where(fn, context)', function(done) {
       expect(results.values.length).to.be(3);
     });
     
-    
+
     it('should throw unintercepted errors', function() {
-      var expect = require('expect.js');
-      var results = where(function(){/***
-        | a | b | c |
-        | 1 | 2 | 3 |
-        ***/
-        expect(Math.max(a, b)).to.be(c);
-      }, { expect: expect});
+    
+      expect(function() {
+        where(function(){/***
+          | a | b | c |
+          | 1 | 2 | 3 |
+          ***/
+          expect(Math.max(a, b)).to.be(c);
+          
+        }, { expect: expect});
+        
+      }).to.throwError(); // synonym of throwException
+
     });
     
     
     it('should log data', function() {
-    
-      var expect = require('expect.js');
-      
+          
       var results = where(function(){/***
         | a | b | c |
         | 1 | 2 | 2 |
@@ -176,9 +197,7 @@ describe('where(fn, context)', function(done) {
     });
     
     it('should intercept failures', function() {
-    
-      var expect = require('expect.js');
-      
+          
       var results = where(function(){/***
       
         | a | b | c |
@@ -196,9 +215,7 @@ describe('where(fn, context)', function(done) {
     });
     
     it('should log and intercept', function() {
-    
-      var expect = require('expect.js');
-      
+          
       var results = where(function(){/***
       
         | a | b | c |
@@ -216,11 +233,17 @@ describe('where(fn, context)', function(done) {
     });
   });
   
+  // SHOULD
+  
   describe('with should.js', function() {
   
-    require('should');
+    if (typeof require == 'function') {
+      // enable to re-use in a browser without require.js
+      require('should');
+    }
     
-    //~ should is added to Object.prototype
+    // should is added to Object.prototype
+    
     it('should pass without a context', function() {
     
       var results = where(function(){/***
@@ -239,12 +262,17 @@ describe('where(fn, context)', function(done) {
     
     
     it('should throw unintercepted errors', function() {
-      var results = where(function(){/***
-        | a | b | c |
-        | 1 | 2 | 3 |
-        ***/
-        Math.max(a, b).should.equal(c);
-      }, { intercept: 0 });
+
+      (function(){
+      
+        where(function(){/***
+          | a | b | c |
+          | 1 | 2 | 3 |
+          ***/
+          Math.max(a, b).should.equal(c);
+        });
+        
+      }).should.throw();
     });
     
     it('should log data', function() {
@@ -301,10 +329,18 @@ describe('where(fn, context)', function(done) {
     
   });
   
+  // CHAI
   
   describe('with chai', function () {
   
-    var chai = require('chai');
+    var chai;
+    
+    if (typeof require == 'function') {
+      // enable to re-use in a browser without require.js
+      chai = require('chai');
+    } else {
+      chai = window.chai;
+    }    
     
     describe('with chai.assert', function () {
       
@@ -348,12 +384,14 @@ describe('where(fn, context)', function(done) {
       
       it('should throw unintercepted errors', function() {
         var assert = chai.assert;
-        var results = where(function(){/***
-          | a | b | c |
-          | 1 | 2 | 3 |
-          ***/
-          assert.equal(Math.max(a, b), c);
-        }, { assert: assert});
+        assert.throws(function() {
+          where(function(){/***
+            | a | b | c |
+            | 1 | 2 | 3 |
+            ***/
+            assert.equal(Math.max(a, b), c);
+          }, { assert: assert});
+        });
       });
       
       
@@ -439,12 +477,16 @@ describe('where(fn, context)', function(done) {
       
       it('should throw unintercepted errors', function() {
         var expect = chai.expect;
-        var results = where(function(){/***
-          | a | b | c |
-          | 1 | 2 | 3 |
-          ***/
-          expect(Math.max(a, b)).to.equal(c);
-        }, { expect: expect});
+        expect(function() {
+        
+          where(function(){/***
+            | a | b | c |
+            | 1 | 2 | 3 |
+            ***/
+            expect(Math.max(a, b)).to.equal(c);
+          }, { expect: expect});
+          
+        }).to.throw();
       });
       
       
@@ -506,7 +548,8 @@ describe('where(fn, context)', function(done) {
       });
       
     });
-     
+
+    
     describe('with chai.should', function() {
 
       // decontaminate should.js first...
@@ -534,12 +577,17 @@ describe('where(fn, context)', function(done) {
       
       
       it('should throw unintercepted errors', function() {
-        var results = where(function(){/***
-          | a | b | c |
-          | 1 | 2 | 3 |
-          ***/
-          Math.max(a, b).should.equal(c);
-        });
+        (function(){
+        
+          where(function(){/***
+            | a | b | c |
+            | 1 | 2 | 3 |
+            ***/
+            Math.max(a, b).should.equal(c);
+          });
+          
+         }).should.throw();
+         
       });
       
       

@@ -1,6 +1,9 @@
 
 // node test/tape-suite
-require('../where.js');
+if (typeof require == 'function') {
+  // enable to re-use in a browser without require.js
+  require('../../where.js');
+}
 
 var tape = require('tape');
 
@@ -39,18 +42,18 @@ tape('should pass tape context', function(test) {
 
 tape('should throw when data-table is malformed', function (test) {
 
-    test.throws(
-      function() {
-        where(function(){/*** 
-        | a | b | c |
-        | 1 | 2 | 3 
-        | 2 | 4 | 6 |
-        ***/
-        });
-      },
-      'should throw'
-    );
-    test.end();
+  test.throws(
+    function() {
+      where(function(){/*** 
+      | a | b | c |
+      | 1 | 2 | 3 
+      | 2 | 4 | 6 |
+      ***/
+      });
+    },
+    'should throw'
+  );
+  test.end();
 });
 
 tape('should return results', function(test) {

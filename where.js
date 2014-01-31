@@ -1,10 +1,41 @@
+/**
+ * @name where.js
+ * @author david kaye (@dfkaye)
+ * @date 31 JAN 2014
+ *
+ * where.js enables data-driven testing with JavaScript test runners such as 
+ * Mocha, Jasmine, QUnit and Tape in node.js and browser environments.
+ *
+ * WARNING: where() is a global function so as not to attach itself to any 
+ * specific framework.
+ *
+ * Simple example:
+ *
+ *  var results = where(function() {
+ *      /***
+ *      a | b | c
+ *      1 | 2 | 3
+ *      ***\/
+ *
+ *    expect(Math.max(a,b)).to.be(c);
+ *    
+ *  }, { expect: expect, jasmine: jasmine, intercept: 1, log: 1 });
+ *
+ *  expect(results.passing.length).toBe(1);
+ *  expect(results.values.length).toBe(2);
+ *
+ * Documentation and source at 
+ * + github.com/dfkaye/where.js
+ * + npmjs.org/dfkaye/where.js
+ *
+ * License: MIT
+ *
+ */
+;(function whereSandox(/* named IFFE for testing purposes - not exported */){
 
-
-// where.js
-
-
-;(function whereSandox() {
-
+  // This makes where() a global function so as not to attach itself to any 
+  // specific framework.
+  
   if (typeof global != "undefined") {
     !global.where && (global.where = where);
   }
@@ -20,43 +51,30 @@
   var PASSED = 'Passed';
   var FAILED = 'Failed';
   
-  // TODO - jasmine 2.x.x. tests
-  // documentation -
-  //  context.expect | assert | tape
-  //  context.jasmine | tape | QUnit 
-  //  context.log | intercept
-
-  /*
-    where(function() {
-  //    /***
-        a | b | c
-        1 | 2 | 3
-  //    ***\/
-      assert|expect(Math.max(a,b)).to.be(c);
-      
-    }, { assert|expect: assert|expect , tape|QUnit|jasmine: test|QUnit|jasmine, intercept: 1, log: 1 });
-  
-  */
-  
   /**
-   * This function processes a function with a commented data-table and any expectations
-   *  into a data array, passing each array row into a new Function() that contains the 
-   *  original function body's expectation statements.
+   * This function processes a function with a commented data-table and any 
+   * expectations into a data array, passing each array row into a new 
+   * Function() that contains the original function body's expectation 
+   * statements.
    *
    * @method where
-   * @param fn - function containing data table and expectations 
-   * @param context - configuration object for injecting local arguments to the new test 
-   *  test function, mainly for placing non-global assert|expect methods into the test, 
-   *  and for passing output flags. 
+   * @param function containing data table and expectations 
+   * @param object - context object for injecting local arguments to the new 
+   *  test function, mainly for placing non-global assert|expect methods into 
+   *  the test, and for specifying output flags (intercept, log). 
    *
    * context output flags - log, intercept 
-   *  + if {log: 1} is specified, the row data under test is logged to the console.
-   *  + if {intercept: 1} is NOT specified, expectation failures are immediately thrown as 
-   *      errors.
+   *  + if {log: 1} is specified, the row data under test is always logged to 
+   *    the console; otherwise only failing rows are logged.
+   *  + if {intercept: 1} is specified, where attempts to suppress errors from 
+   *    appearing in the testrunner's reports as failed; otherwise, if it is NOT 
+   *    specified, an error containing all failures as a single message is 
+   *    thrown after all rows have been tested.
    *
-   * @returns an object containing arrays for failing, passing, and values for further use 
-   *  in other expectations.
-  */
+   * @returns object for further use in other expectations, containing arrays 
+   *  for failing and passing tests, and a values array representing the parsed 
+   *  data for each row, including labels.
+   */
   function where(fn, context) {
 
     if (typeof fn != 'function') {
@@ -64,60 +82,68 @@
     }
     
     context = context || {};
+
+    // long stretch of procedural code here
     
     var fs = fn.toString();
+    
     var fnBody = fs.replace(/\s*function[^\(]*[\(][^\)]*[\)][^\{]*{/,'')
                             .replace(/[\}]$/, '');
-
     var fnVars = '\n;';
+    
     for (var key in context) {
       if (context.hasOwnProperty(key)) {
         fnVars = fnVars + 'var ' + key + ' = context[\'' + key + '\'];\n';
       }
     }
+    
     fnBody = fnVars + fnBody;
 
-    /*
-     * {labels} array is toString'd so values become param symbols in new Function.
-     * {fnBody} is what's left of the original function, mainly the expectation, plus any 
-     *  context attributes.
-     */
-    var values = parseDataTable(fnBody);
-   
+    var values = parseDataTable(fnBody);   
     var labels = values[0];
     var traceLabels = '\n [' + labels.join(PAD) + '] : ';
     
+    /*
+     * labels array is toString'd so values become param symbols in new Function.
+     * fnBody is what's left of the original function, mainly the expectation, 
+     * plus any context attributes.
+     */
     var fnTest = new Function('context,' + labels.toString(), fnBody);
     
     var failing = [];
     var passing = [];
     var results = { failing: failing, passing: passing, values: values };
     
+    /*
+     * Search the strategy cache for the corresponding method to apply to each
+     * test row.  The default strategy is "mocha" which uses a try+catch 
+     * approach.  If a strategy method is not found, an error is thrown.  If a 
+     * strategy method is returned, it is immediately invoked with the context 
+     * object and returns the "seeded" method for the given strategy.
+     */
     var strategy = where.strategy(context.strategy || 
                                   (context.jasmine && 'jasmine') || 
                                   (context.QUnit && 'QUnit') || 
                                   (context.tape && 'tape') || 
-                                  (context.mocha || 'mocha')); // default mocha
-    var applyStrategy = strategy(context);
+                                  (context.mocha || 'mocha'))(context);
     
-    var item, message, test, i;   
+    var test, i;   
 
     // i is 1 to start with first data row (row 0 is the labels row)
     for (i = 1; i < values.length; i += 1) {
     
       test = { result: PASSED };
+      strategy(fnTest, test, values[i]);
       
-      applyStrategy(fnTest, test, values[i]);
-      
+      // each strategy modifies test.result if the test fails.
       test.message = traceLabels + '\n [' + values[i].join(PAD) + '] (' + 
                      test.result + ')\n';
-      
+
       if (test.result != PASSED) {
       
-        failing.push(test);
-        
         // always log failures
         console.log(test.message);
+        failing.push(test);
         
       } else {
       
@@ -133,15 +159,16 @@
       throwFailingResults(failing);
     }
     
-    // for use in further assertions
     return results;
   }
   
   
   /**
+   * Iterates over array of failing items, concatenates their messages, and 
+   * throws an error with the merged messages.
+   *
    * @private 
-   * @method throwFailingResults() iterates over array of failing items, concatenates 
-   *  their messages, and throws an error with the merged messages.
+   * @method throwFailingResults() 
    * @param row array of failing items.
    */
   function throwFailingResults(failing) {
@@ -154,12 +181,22 @@
   }
   
   /**
+   * Extracts data table labels and row values from a function or string, and 
+   * and converts them into an array of arrays. 
+   *
+   * Method also converts numeric string data to pure/primitive number types.
+   *
+   * Method enforces several rules regarding row data:
+   *
+   * + balanced borders
+   * + no empty columns
+   * + no duplicated column headers
+   * + all rows identical length
+   * + at least one row of data after headers
+   *
    * @private 
-   * @method parseDataTable() accepts a function or string and extracts the data 
-   *  table labels and row values as an array of arrays.  parseDataTable() enforces several 
-   *  rules regarding row data - balanced borders, no empty columns, no duplicated column 
-   *  headers, all rows identical length, at least one row of data after headers - and 
-   *  converts numeric string data to pure/primitive number types.
+   * @method parseDataTable
+   * @param function or string
    * @returns array of table row data arrays.
    */
   function parseDataTable(fnBody) {
@@ -182,12 +219,12 @@
         
         // empty column
         if (str.match(/[\|][\|]/g)) {
-          throw new Error('where-data table has unbalanced columns: ' + str);
+          throw new Error('where.js table has unbalanced columns: ' + str);
         }
         
         row = balanceRowData(str);
         
-        // visiting label row
+        // visiting label row - set size for data row iterations
         if (typeof size != 'number') {
           shouldNotHaveDuplicateLabels(row);
           size = row.length;
@@ -195,9 +232,9 @@
 
         // data row length
         if (size !== row.length) {
-          throw new Error('where-data table has unbalanced row; expected ' + size + 
-                          ' columns but has ' + row.length + ': [' + row.join(', ') + 
-                          ']');
+          throw new Error('where.js table has unbalanced row; expected ' + 
+                          size + ' columns but has ' + row.length + ': [' + 
+                          row.join(', ') + ']');
         }
 
         convertNumerics(row);
@@ -205,9 +242,8 @@
       }
     }
     
-    // verifying after skipping empty rows
     if (rows.length < 2) {
-      throw new Error('where-data table should contain at least 2 rows but has ' + 
+      throw new Error('where.js table should contain at least 2 rows but has ' + 
                       rows.length);
     }
     
@@ -215,9 +251,10 @@
   }
   
   /**
+   * Checks that row of data is properly formatted with column separators.
+   *
    * @private 
-   * @method balanceRowData() checks that row of data is properly formatted by 
-   *  column separators
+   * @method balanceRowData
    * @param row string of values.
    * @returns row array of values
    */
@@ -228,34 +265,30 @@
     var right = cells[cells.length - 1] === '';    //right border
     
     if (left != right) {
-      throw new Error('where-data table borders are not balanced: ' + row);
+      throw new Error('where.js table borders are not balanced: ' + row);
     }
     
-    if (left) {
-      cells.shift();
-    }
-
-    if (right) {
-      cells.pop();
-    }
+    left && cells.shift();
+    right && cells.pop();
       
     return cells;
   }
   
   /**
+   * Checks that row of data contains no duplicated label values, that is, 
+   * [a,b,c] and not [a,b,b].
+   *
    * @private 
-   * @method shouldNotHaveDuplicateLabels() checks that row of data contains no duplicated 
-   *  data values - mainly used for checking column headers (a,b,c vs. a,b,b).
+   * @method shouldNotHaveDuplicateLabels
    * @param row array of values.
    */
   function shouldNotHaveDuplicateLabels(row) {
-  
     for (var label, visited = {}, j = 0; j < row.length; j += 1) {
     
       label = row[j];
-
+      
       if (visited[label]) {
-        throw new Error('where-data table contains duplicate label \'' + label +
+        throw new Error('where.js table contains duplicate label \'' + label +
                         '\' in [' + row.join(', ') + ']');
       }
       
@@ -264,26 +297,42 @@
   }
   
   /**
+   * Replaces row data with numbers if value is numeric, or a 'quoted' numeric 
+   * string.
+   *
    * @private 
-   * @method convertNumerics() replaces row data with numbers if value is numeric, or a 
-   *  'quoted' numeric string.
+   * @method convertNumerics
    * @param row array of values.
    */
   function convertNumerics(row) {
-  
     for (var t, i = 0; i < row.length; i += 1) {
     
       t = parseFloat(row[i].replace(/\'|\"|\,/g,''));
-      
       isNaN(t) || (row[i] = t);
     }
   }
   
-  
   /**
+   * Provides an enclosed registry for name+function pairings to be used as test 
+   * framework strategies - or ways of hooking into or overriding behavior for a
+   * a given test framework.
    *
+   * Method takes two arguments if registering, one argument if retrieving. The 
+   * first argument is a name string for the strategy.  The second argument is a
+   * function which acts as a "seeding" function when invoked.  If the function 
+   * argument is not provided, method works as a getter; otherwise method 
+   * attempts to register the function with the corresponding name. If the name 
+   * is already taken, an error is thrown.
+   *
+   * When a registered function is returned, it must then be called with a 
+   * context object to "seed" it and return the actual function to be applied.
+   *
+   * @method strategy
+   * @param string
+   * @param function - optional - if provided, strategy() acts as a setter, but 
+   *  if not provided, strategy() acts as a getter.
    */
-  where.strategy = (function whereStrategy() {
+  where.strategy = (function whereStrategy(/* IFFE named only for tests */) {
 
     var registry = {};
 
@@ -293,7 +342,7 @@
         if (fn && typeof fn == 'function') {
             registry[name] = fn;
         } else {
-            throw new Error('where-strategy "' + name + '" is not defined.');
+            throw new Error('where.strategy ["' + name + '"] is not defined.');
         }
       }
       return registry[name];
@@ -337,21 +386,17 @@
       
       /* jasmine 2.x.x. */
       var addExpectationResult = jasmine.Spec.prototype.addExpectationResult;
-      addExpectationResult && (jasmine.Spec.prototype.addExpectationResult = function (passed, data) {
+      addExpectationResult && 
+      (jasmine.Spec.prototype.addExpectationResult = function (passed, data) {
       
-// TODO 29 JAN 2014 
-// STILL TO BE TESTED VIA JAZZ 2
-        
         if (!passed) {
-          //failing.push(data.message);
           test.result = data.message;
         } else {
-          //passing.push(data.message);
           addExpectationResult.call(result, passed, data);
         }          
       });
       
-      /* execute with extreme prejudice */
+      /* execute on currentSpec for jasmine 1.x.x */
       fnTest.apply(currentSpec, [context].concat(value));
     
       /* restore result api */
@@ -360,7 +405,8 @@
       addResult && (result.addResult = addResult);
       
       /* jasmine 2.x.x. */ 
-      addExpectationResult && (jasmine.Spec.prototype.addExpectationResult = addExpectationResult);     
+      addExpectationResult && 
+      (jasmine.Spec.prototype.addExpectationResult = addExpectationResult);     
     };        
   });
   
@@ -377,21 +423,23 @@
                       details.expected;
                       
         if (!context.intercept) {
-          // provide the QUnit sourceFromStacktrace() output
+          // provides QUnit sourceFromStacktrace() output
           test.result = test.result + '\n' + details.source;
         }
       }
     });
     
     return function testQUnit(fnTest, thisTest, value) {
+    
       test = thisTest;
+      
       fnTest.apply({}, [context].concat(value));
     };
   });
   
   // STRATEGY for TAPE ~ bit less elegant than QUnit (surprisingly) but tape's 
   // event-driven reporting allows us to intercept the test result and "skip" it 
-  // due to James' foresight in re-using each tape/test function as an event
+  // due to James' foresight in using each tape/test function as an event
   // emitter AND using the 'result' event handler as a pre-reporting-processor.
   where.strategy('tape', function tapeStrategy(context) {
   
@@ -412,6 +460,4 @@
     };
   });
   
-  
-
 }());

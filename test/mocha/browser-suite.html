@@ -1,0 +1,25 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>where.js Mocha Tests</title>
+  <link rel="stylesheet" href="mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+  <script src="../../where.js"></script>
+  <script src="lib/assert.js"></script>
+  <script src="lib/expect.js"></script>
+  <script src="lib/should.js"></script>
+  
+  <script src="lib/chai.js"></script>
+  
+  <script src="lib/mocha.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="mocha-tests.js"></script>
+  <script>
+    mocha.checkLeaks();
+    mocha.globals(['where']);
+    mocha.run();
+  </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 // $ jasmine-node --verbose test/jasmine.spec.js
-// jasmine.spec.js
+// where.spec.js
 
 if (typeof require == 'function') {
-  // FOR RE-USE ON BROWSER HTML WITHOUT BROWSERIFY.
-  require('../where.js');
+  // enable to re-use in a browser without require.js
+  require('../../where.js');
 }
 
 // should be function

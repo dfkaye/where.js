@@ -6,15 +6,25 @@ data-driven testing for JavaScript frameworks (Jasmine, Mocha, QUnit, & Tape).
 __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 # TODO
-+ where.strategy splits - subdirs, tests for each
-+ make strategy setting more global? 
-+ expose the helper methods? for their own tests? use metafunction to do it??
-+ test node v. browser splits
 + package.json
-+ testem launchers
++ testem launcher for functional suite
+
++ functionality tests
+- npm test 
+- node test/jasmine-where.spec.js 
++ comparison tests
+- npm run jasmine
+- npm run mocha
+- npm run qunit
+- npm run tape
+
++ qunit for browser
 + testling and browersify for tape
-+ travis
+
++ travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png)](https://travis-ci.org/dfkaye/where.js)
+
 + rawgithub links
+
 + readme
   - jasmine - 1.3.1 and 2.0.0
   - mocha - assert, expect.js, should, chai (assert, expect, should)

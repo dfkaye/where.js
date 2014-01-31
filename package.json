@@ -27,9 +27,9 @@
   },
   "scripts": {
     "test": "jasmine-node --verbose ./test/jasmine-where.spec.js",
-    "jasmine": "jasmine-node --verbose ./test/jasmine.spec.js",
-    "mocha": "node ./test/mocha-suite.js",
-    "qunit": "node ./test/qunit-suite.js",
-    "tape": "node ./test/tape-suite.js"
+    "jasmine": "jasmine-node --verbose ./test/jasmine/where.spec.js",
+    "mocha": "node ./test/mocha/mocha-suite.js",
+    "qunit": "node ./test/qunit/qunit-suite.js",
+    "tape": "node ./test/tape/tape-suite.js"
   }
 }

@@ -1,4 +1,4 @@
-// jasmine-where.spec.js
+// jasmine-based where.spec.js
 
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js

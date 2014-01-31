@@ -1,6 +1,9 @@
 // qunit-tests.js
 
-require('../where.js');
+if (typeof require == 'function') {
+  // enable to re-use in a browser without require.js
+  require('../../where.js');
+}
 
 // should be function
 // should pass tape context        
@@ -35,19 +38,19 @@ test('should pass QUnit context', function(assert) {
 
 test('should throw when data-table is malformed', function(assert) {
 
-    throws(
-      function () {
-         where(function(){/*** 
-            | a | b | c |
-            | 1 | 2 | 3 
-            | 2 | 4 | 6 |
-            ***/
-            assert.ok(a + b == c);
-            
-          }, { assert: assert, QUnit: QUnit });
-      },
-      'should throw'
-    );
+  throws(
+    function () {
+       where(function(){/*** 
+          | a | b | c |
+          | 1 | 2 | 3 
+          | 2 | 4 | 6 |
+          ***/
+          assert.ok(a + b == c);
+          
+        }, { assert: assert, QUnit: QUnit });
+    },
+    'should throw'
+  );
  
 });
 
