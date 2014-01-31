@@ -6,7 +6,9 @@ data-driven testing for JavaScript frameworks (Jasmine, Mocha, QUnit, & Tape).
 __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 # TODO
-+ where.strategy splits
++ where.strategy splits - subdirs, tests for each
++ make strategy setting more global? 
++ expose the helper methods? for their own tests? use metafunction to do it??
 + test node v. browser splits
 + package.json
 + testem launchers
