@@ -1,4 +1,8 @@
-// where-sandbox
+
+
+// where.js
+
+
 ;(function whereSandox() {
 
   if (typeof global != "undefined") {
@@ -109,11 +113,16 @@
                      test.result + ')\n';
       
       if (test.result != PASSED) {
+      
         failing.push(test);
+        
         // always log failures
-        console.log(test.message);        
-      } else {      
+        console.log(test.message);
+        
+      } else {
+      
         passing.push(test);
+        
         if (context.log) {
           console.log(test.message);
         }

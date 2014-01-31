@@ -1,7 +1,7 @@
 {
   "name": "where.js",
   "version": "0.0.0",
-  "description": "data-driven test method for mocha, jasmine, qunit and tape",
+  "description": "data-driven test method for js frameworks (mocha, jasmine, qunit, tape)",
   "homepage" : "https://github.com/dfkaye/where.js",
   "author": {
     "name": "david kaye (@dfkaye)",
@@ -26,7 +26,7 @@
     "url": "git://github.com/dfkaye/where.js.git"
   },
   "scripts": {
-    "test": "jasmine-node --verbose ./test/jasmine.spec.js",
+    "test": "jasmine-node --verbose ./test/jasmine-where.spec.js",
     "jasmine": "jasmine-node --verbose ./test/jasmine.spec.js",
     "mocha": "node ./test/mocha-suite.js",
     "qunit": "node ./test/qunit-suite.js",
