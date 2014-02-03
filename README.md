@@ -7,6 +7,8 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 # working now
 
++ travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png)](https://travis-ci.org/dfkaye/where.js)
+
 + functionality tests using jasmine
 - npm test 
 - node test/where/where.spec.js
@@ -34,7 +36,7 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 # TODO
 + document qunit-tap for qunit node-suite
 + add testling config for tape suite
-+ travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png)](https://travis-ci.org/dfkaye/where.js)
++ 
 + readme
   - jasmine - 1.3.1 and 2.0.0
   - mocha - assert, expect.js, should, chai (assert, expect, should)
