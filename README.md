@@ -11,7 +11,7 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 + functionality tests using jasmine
 - npm test 
-- node test/where/where.spec.js
+- node jasmine-node --verbose ./test/where/where.spec.js
 
 + framework strategy comparison tests
 - npm run jasmine
@@ -36,7 +36,6 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 # TODO
 + document qunit-tap for qunit node-suite
 + add testling config for tape suite
-+ 
 + readme
   - jasmine - 1.3.1 and 2.0.0
   - mocha - assert, expect.js, should, chai (assert, expect, should)

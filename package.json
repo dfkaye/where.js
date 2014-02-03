@@ -31,7 +31,7 @@
     "mocha": "node ./test/mocha/node-suite.js",
     "qunit": "node ./test/qunit/node-suite.js",
     "tape": "node ./test/tape/node-suite.js",
-    "testem": "testem -l jasmine -t ./test/where/browser-suite.html",
+    "testem": "testem -l where -t ./test/where/browser-suite.html",
     "testem-jasmine": "testem -l jasmine -t ./test/jasmine/browser-suite.html",
     "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
     "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",

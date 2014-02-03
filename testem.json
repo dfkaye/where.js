@@ -1,7 +1,7 @@
 {
   "launchers": {
-    "core" : {
-      "command": "jasmine-node --verbose ./test/jasmine-where.spec.js"
+    "where" : {
+      "command": "jasmine-node --verbose ./test/where/where.spec.js"
     },  
     "jasmine" : {
       "command": "jasmine-node --verbose --matchall ./test/jasmine/where-spec.js"
