@@ -7,8 +7,7 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 # working now
 
-+ travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png)](https://travis-ci.org/dfkaye/where.js)
-
++ travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 + functionality tests using jasmine
   - npm test
   - node jasmine-node --verbose ./test/where/where.spec.js
