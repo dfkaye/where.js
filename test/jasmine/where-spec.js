@@ -1,5 +1,5 @@
-// $ jasmine-node --verbose test/jasmine.spec.js
-// where.spec.js
+// $ jasmine-node --verbose test/jasmine/where-spec.js
+// where-spec.js
 
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js

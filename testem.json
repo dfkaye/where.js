@@ -1,9 +1,19 @@
 {
-  "framework": "jasmine2",
-  "test_page" : "./test/jasmine/browser/suite.html",
   "launchers": {
-    "j" : {
+    "core" : {
       "command": "jasmine-node --verbose ./test/jasmine-where.spec.js"
-    }  
-  }  
+    },  
+    "jasmine" : {
+      "command": "jasmine-node --verbose --matchall ./test/jasmine/where-spec.js"
+    },
+    "mocha" : {
+      "command": "node ./test/mocha/node-suite.js"
+    },
+    "qunit" : {
+      "command": "node ./test/qunit/node-suite.js"
+    },
+    "tape" : {
+      "command": "browserify ./test/tape/node-suite.js -o ./test/tape/tape-bundle.js && node ./test/tape/node-suite.js"
+    }    
+  }
 }

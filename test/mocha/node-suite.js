@@ -1,6 +1,8 @@
 
-// run mocha programmatically
-// https://github.com/itaylor/qunit-mocha-ui
+// mocha/node-suite.js
+
+// This runs with mocha programmatically rather than from the command line.
+// how-to-with-comments taken from https://github.com/itaylor/qunit-mocha-ui
 
 // mocha has 148 contributors as of 30 JAN 2014 v 1.17.1
 

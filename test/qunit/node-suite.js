@@ -1,5 +1,5 @@
 
-// qunit-suite.js
+// qunit/node-suite.js
 
 /*Owner@OWNER-PC /c/projects/where-sandbox
 $ node test/qunit-suite.js

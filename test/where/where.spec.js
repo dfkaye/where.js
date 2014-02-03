@@ -2,7 +2,7 @@
 
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js
-  require('../where.js');
+  require('../../where.js');
 }
 
 describe('where.js jasmine spec', function () {

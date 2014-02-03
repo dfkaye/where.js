@@ -1,5 +1,6 @@
 
-// node test/tape-suite
+// node test/tape/node-suite
+
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js
   require('../../where.js');

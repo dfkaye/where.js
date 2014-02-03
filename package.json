@@ -26,10 +26,15 @@
     "url": "git://github.com/dfkaye/where.js.git"
   },
   "scripts": {
-    "test": "jasmine-node --verbose ./test/jasmine-where.spec.js",
-    "jasmine": "jasmine-node --verbose ./test/jasmine/where.spec.js",
-    "mocha": "node ./test/mocha/mocha-suite.js",
-    "qunit": "node ./test/qunit/qunit-suite.js",
-    "tape": "node ./test/tape/tape-suite.js"
+    "test": "jasmine-node --verbose ./test/where/where.spec.js",
+    "jasmine": "jasmine-node --verbose --matchall ./test/jasmine/where-spec",
+    "mocha": "node ./test/mocha/node-suite.js",
+    "qunit": "node ./test/qunit/node-suite.js",
+    "tape": "node ./test/tape/node-suite.js",
+    "testem": "testem -l jasmine -t ./test/where/browser-suite.html",
+    "testem-jasmine": "testem -l jasmine -t ./test/jasmine/browser-suite.html",
+    "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
+    "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",
+    "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"    
   }
 }
