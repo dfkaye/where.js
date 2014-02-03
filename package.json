@@ -11,7 +11,7 @@
     "jasmine-node": "1.x.x"
   },
   "license": "MIT",
-  "main": "./vm-shim.js",
+  "main": "./where.js",
   "peerDependencies": {
     "chai": ">= 1.x",
     "expect.js": ">= 0.2",
