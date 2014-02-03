@@ -10,28 +10,28 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 + travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png)](https://travis-ci.org/dfkaye/where.js)
 
 + functionality tests using jasmine
-- npm test 
-- node jasmine-node --verbose ./test/where/where.spec.js
+  - npm test
+  - node jasmine-node --verbose ./test/where/where.spec.js
 
 + framework strategy comparison tests
-- npm run jasmine
-- npm run mocha
-- npm run qunit
-- npm run tape
+  - npm run jasmine
+  - npm run mocha
+  - npm run qunit
+  - npm run tape
 
 + testem launchers
-- npm run testem
-- npm run testem-jasmine
-- npm run testem-mocha
-- npm run testem-qunit
-- npm run testem-tape
+  - npm run testem
+  - npm run testem-jasmine
+  - npm run testem-mocha
+  - npm run testem-qunit
+  - npm run testem-tape
 
 + rawgithub links
-- https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html
-- https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html
-- https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html
-- https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html
-- https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html
+  - https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html
+  - https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html
+  - https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html
+  - https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html
+  - https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html
 
 # TODO
 + document qunit-tap for qunit node-suite
