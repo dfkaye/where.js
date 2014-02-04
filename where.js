@@ -2,6 +2,7 @@
  * @name where.js
  * @author david kaye (@dfkaye)
  * @date 31 JAN 2014
+ * @license MIT
  *
  * where.js enables data-driven testing with JavaScript test runners such as 
  * Mocha, Jasmine, QUnit and Tape in node.js and browser environments.
@@ -9,26 +10,46 @@
  * WARNING: where() is a global function so as not to attach itself to any 
  * specific framework.
  *
- * Simple example:
+ * @example - simple: default strategy, global expectation, no logging:
  *
- *  var results = where(function() {
+ *  it('should work', function () {
+ *
+ *    where(function() {
  *      /***
  *      a | b | c
  *      1 | 2 | 3
  *      ***\/
  *
- *    expect(Math.max(a,b)).to.be(c);
+ *      expect(Math.max(a,b)).to.be(c);
  *    
- *  }, { expect: expect, jasmine: jasmine, intercept: 1, log: 1 });
+ *    });
+ *  });
+ * 
+ * @example - context: QUnit strategy, non-global expectation method, and 
+ *            failure interception:
  *
- *  expect(results.passing.length).toBe(1);
- *  expect(results.values.length).toBe(2);
+ *  test('should not throw when intercept specified', function(assert) {
  *
+ *    var results = where(function(){
+ *      /***
+ *      | a | b | c |
+ *      | 1 | 2 | 2 |
+ *      | 7 | 5 | c |
+ *      ***\/ // <- escaped for comments only
+ *
+ *      assert.equal(Math.max(a, b), c, 
+ *                  'Math.max(' + a + ',' + b + ') should be ' + c);
+ *  
+ *    }, { assert: assert, QUnit: QUnit, intercept: 1});
+ *
+ *    // assert results after data tests
+ *    assert.equal(results.failing.length, 1, 'should be one failing');
+ *    assert.equal(results.passing.length, 1, 'should be one passing');
+ *  });
+ * 
  * Documentation and source at 
  * + github.com/dfkaye/where.js
  * + npmjs.org/dfkaye/where.js
- *
- * License: MIT
  *
  */
 ;(function whereSandox(/* named IFFE for testing purposes - not exported */){
@@ -56,21 +77,25 @@
    * expectations into a data array, passing each array row into a new 
    * Function() that contains the original function body's expectation 
    * statements.
-   *
-   * @method where
-   * @param function containing data table and expectations 
-   * @param object - context object for injecting local arguments to the new 
-   *  test function, mainly for placing non-global assert|expect methods into 
-   *  the test, and for specifying output flags (intercept, log). 
-   *
-   * context output flags - log, intercept 
-   *  + if {log: 1} is specified, the row data under test is always logged to 
+   
+   * Function accepts a second optional context argument for specifying 
+   * non-global expectation methods into the test (e.g., expect: expect), a 
+   * strategy or test runner (e.g., strategy: 'qunit'), and output flags (e.g., 
+   * intercept: 1, log: 1).
+   
+   * There are two output flags - log, intercept:
+   *  + If {log: 1} is specified, the row data under test is always logged to 
    *    the console; otherwise only failing rows are logged.
-   *  + if {intercept: 1} is specified, where attempts to suppress errors from 
-   *    appearing in the testrunner's reports as failed; otherwise, if it is NOT 
+   *  + If {intercept: 1} is specified, where attempts to suppress errors from 
+   *    appearing in the test runner's reports as failed. If intercept is NOT 
    *    specified, an error containing all failures as a single message is 
    *    thrown after all rows have been tested.
    *
+   * @global
+   * @function where
+   * @param {Function} fn - Function containing data table and expectations. 
+   * @param {Object} [context] - Optional argument for injecting local arguments 
+   *  and output flags to the new test function.
    * @returns object for further use in other expectations, containing arrays 
    *  for failing and passing tests, and a values array representing the parsed 
    *  data for each row, including labels.
@@ -163,6 +188,8 @@
   }
   
   
+  // HELPER METHODS
+  
   /**
    * Iterates over array of failing items, concatenates their messages, and 
    * throws an error with the merged messages.
@@ -182,12 +209,10 @@
   
   /**
    * Extracts data table labels and row values from a function or string, and 
-   * and converts them into an array of arrays. 
-   *
-   * Method also converts numeric string data to pure/primitive number types.
+   * and converts them into an array of arrays. Method also converts numeric 
+   * string data to pure/primitive number types.
    *
    * Method enforces several rules regarding row data:
-   *
    * + balanced borders
    * + no empty columns
    * + no duplicated column headers
@@ -195,9 +220,9 @@
    * + at least one row of data after headers
    *
    * @private 
-   * @method parseDataTable
-   * @param function or string
-   * @returns array of table row data arrays.
+   * @function parseDataTable
+   * @param {Function|String} fnBody
+   * @returns {Array} - table data row arrays
    */
   function parseDataTable(fnBody) {
 
@@ -254,9 +279,9 @@
    * Checks that row of data is properly formatted with column separators.
    *
    * @private 
-   * @method balanceRowData
-   * @param row string of values.
-   * @returns row array of values
+   * @function balanceRowData
+   * @param {String} row - String of row data values.
+   * @returns {Array} - row data values
    */
   function balanceRowData(row) {
   
@@ -275,12 +300,12 @@
   }
   
   /**
-   * Checks that row of data contains no duplicated label values, that is, 
-   * [a,b,c] and not [a,b,b].
+   * Checks that row of data contains no duplicated label values, i.e., [a,b,c] 
+   * and not [a,b,b].
    *
    * @private 
-   * @method shouldNotHaveDuplicateLabels
-   * @param row array of values.
+   * @function shouldNotHaveDuplicateLabels
+   * @param {Array} row - row data values.
    */
   function shouldNotHaveDuplicateLabels(row) {
     for (var label, visited = {}, j = 0; j < row.length; j += 1) {
@@ -301,8 +326,8 @@
    * string.
    *
    * @private 
-   * @method convertNumerics
-   * @param row array of values.
+   * @function convertNumerics
+   * @param {Array} row - row data values.
    */
   function convertNumerics(row) {
     for (var t, i = 0; i < row.length; i += 1) {
@@ -312,10 +337,18 @@
     }
   }
   
+  
+  // STRATEGY
+  // TODO - YET ANOTHER REFACTORING:
+  //    PROVIDE A LIST METHOD TO SHOW ALL STRATEGIES REGISTERED
+  //    EASE UP LOOKUP'S CLEVERNESS
+  //    EXAMPLE OF DEFINING CUSTOM STRATEGY
+  
+  
   /**
    * Provides an enclosed registry for name+function pairings to be used as test 
    * framework strategies - or ways of hooking into or overriding behavior for a
-   * a given test framework.
+   * given test framework.
    *
    * Method takes two arguments if registering, one argument if retrieving. The 
    * first argument is a name string for the strategy.  The second argument is a
@@ -326,17 +359,25 @@
    *
    * When a registered function is returned, it must then be called with a 
    * context object to "seed" it and return the actual function to be applied.
-   *
-   * @method strategy
-   * @param string
-   * @param function - optional - if provided, strategy() acts as a setter, but 
-   *  if not provided, strategy() acts as a getter.
+   * 
+   * @function strategy
+   * @memberof where
+   * @static
+   * @param {String} name
+   * @param {function} [fn] - The seed function to be associated with the given
+   *  name.  If provided, the strategy() call acts as a setter. If not provided, 
+   *  strategy() acts as a getter.
+   * @returns {Function} Lookup function for getting and setting a strategy.
+   * @throws {Error} when a 'set' call is made on a name already registered.
    */
   where.strategy = (function whereStrategy(/* IFFE named only for tests */) {
 
+    /**
+     * @private
+     */
     var registry = {};
 
-    return function strategy(name, fn) {
+    return function lookup(name, fn) {
     
       if (!(name in registry)) {
         if (fn && typeof fn == 'function') {
@@ -350,6 +391,9 @@
   }());
   
   // STRATEGY for MOCHA, the default try-catch strategy
+  //
+  // does not require a context argument with a strategy
+  
   where.strategy('mocha', function mochaStrategy(context) {
   
     return function testMocha(fnTest, test, value) {
@@ -362,8 +406,15 @@
   });
   
   // STRATEGY for JASMINE ~ I once respected thee.
+  //
+  // requires context argument with strategy defined as { jasmine: jasmine }
+
   where.strategy('jasmine', function jasmineStrategy(context) {
 
+    // TODO - enforce jasmine: jasmine convention in context
+    //var jasmine = context.jasmine;
+    //
+    
     var currentSpec = /* jasmine 1.x.x. */ jasmine.getEnv().currentSpec || 
                       /* jasmine 2.x.x. */ { result : { } };
     var result = /* jasmine 1.x.x. */ currentSpec.results_ ||
@@ -411,6 +462,9 @@
   });
   
   // STRATEGY for QUnit ~ surprisingly elegant!
+  //
+  // requires context argument with strategy defined as { QUnit: QUnit }
+  
   where.strategy('QUnit', function qunitStrategy(context) {
     
     var test;
@@ -441,6 +495,10 @@
   // event-driven reporting allows us to intercept the test result and "skip" it 
   // due to James' foresight in using each tape/test function as an event
   // emitter AND using the 'result' event handler as a pre-reporting-processor.
+  //
+  // requires context argument with strategy defined as { tape: tapeRef } where
+  // tapeRef is the current tape test (or t) method
+  
   where.strategy('tape', function tapeStrategy(context) {
   
     return function testTape(fnTest, test, value) {
