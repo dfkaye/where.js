@@ -5,6 +5,7 @@ Data-driven test method for JavaScript frameworks (Jasmine, Mocha, QUnit, and
 Tape).
 
 __[4 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
+
 __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 # works on my machine
@@ -34,6 +35,8 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
   - https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html
   - https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html
 
+
+  
 # TODO
 + apply qunit-tap in the browser suite with testem?
 + add testling config for tape suite
@@ -59,8 +62,12 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 + post
 + add coffeescript support with a mocha or tape example
 
+# ISSUE
+  + triple star comments `/***` not (easily) supported in Coffeescript - could 
+    convert to `/*`
 
-# documentation started
+
+# documentation starts...
 
 Provides a `where()` clause for data table tests, similar to Cucumber's 
 scenario-outline 
@@ -136,14 +143,14 @@ than this:
 story
 -----
 
+This replaces my [jasmine-where](https://github.com/dfkaye/jasmine-where) and 
+[jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects which 
+will be __deprecated__.
+
 Borrowing from Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
 `where()` accepts a function and inspects its string value, converts the triple-
 commented data-table into an array of values, uses the labels as variables or 
 symbols in a new Function().
-
-Each `where()` clause works best with only one expectation clause at the moment 
-(still debating whether it's worth supporting multiple expects in a single 
-`where()`).
 
 format
 ------
