@@ -146,12 +146,37 @@ describe('where.js jasmine spec', function () {
                 5f |      5 | 10f | 1
           ***/
           
-          // /* using precisions for famous 5.985 vs 5.98499999999999999999999999 bugz */
+          /* 
+           * using precisions for famous .1 + .2 == 0.30000000000000004 
+           * and 5.985 vs 5.98499999999999999999999999 bugs 
+           */
           var s = (a + b).toPrecision(p)
           expect(+s).toBe(c) // implicit conversion with prefixed +
         });
+        
        }).not.toThrow();
-    });   
+    });
+    
+    // contributed via issues by @jamonholmgren 4 FEB 2014
+    it('should instantiate objects with correct keys', function () {
+    
+      where(function () {
+        /***
+          a | b | c
+          1 | 2 | 3
+          6 | 12 | 18
+        ***/
+        
+        var obj = new Obj(a,b,c); // DIY instantiation
+        expect(obj.a + obj.b).toEqual(obj.c);
+
+        // quick array test
+        expect([a,b,c].reverse()).toEqual([c,b,a]);
+        
+      }, { Obj: function (a,b,c) { this.a = a; this.b = b; this.c = c;} });
+      
+    });
+    
   });   
 
   /* MALFORMED TABLE */
