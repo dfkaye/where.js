@@ -18,8 +18,6 @@ var tape = require('tape');
 // should log all data when specified
 // should not throw when intercept specified
 
-console.log('where() with tape');
-
 tape('should be a function', function (test) {
   test.plan(1);
   test.equal(typeof where, 'function');

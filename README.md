@@ -4,28 +4,22 @@ where.js
 Data-driven test method for JavaScript frameworks (Jasmine, Mocha, QUnit, and 
 Tape).
 
-__[4 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
-
-__[30 JAN 2014 ~ COMING SOON ~ REALLY]__
+__[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 # works on my machine
 
 + travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 
-# yes, there are tests - [scroll down](#tests)...
-
-# ISSUES
+# TODO
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
 + need more sophisticated object-creation examples
-
-# TODO
++ support passing null, undefined, booleans, and '' 
 + add testling config for tape suite
 + try testling with another test framework?
 + add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
-
 + README documentation
-  + context: test-method-reference, strategy, intercept, log
+  + reorganize this - too sprawling or verbose
   + strategies
     - jasmine - 1.3.1 and 2.0.0
     - mocha - assert, expect.js, should, chai (assert, expect, should)
@@ -35,12 +29,12 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
         QUnit") - github.com/twada/qunit-tap
     - tape - @substack's event-driven TDD flavored TAP project for testling
       + add dom-console for tape browser suite (browserify tape-bundle)
-    - how to add a custom strategy
-  + vendor dir contains browser versions of mocha, expect.js, assert.js, should, 
-      chai, qunit, jasmine-2.0.0
+    - custom strategy
 + version bump
 + npm publish
 + post
+
+# Yes, [there are tests](#tests)...
 
 # documentation starts...
 
@@ -169,7 +163,7 @@ Cucumber and Fit:
     });
 
     
-Numeric data
+numeric data
 ------------
 
 __Numeric data is automatically coerced to the `Number` type.__
@@ -225,25 +219,174 @@ expectation in a `where()` test will appear similar to:
 
 results
 -------
-results:
-values
-failing
-passing
+
+`where()` returns a `results` object with three arrays for all `values` derived 
+from the data table, `passing` tests, and `failing` tests.  The first row in the 
+`values` array (`results.values[0]`) is the row of names.  
+
+The following snip shows how to refer to each array in the results:
+
+    it('should pass with correct data and expectation', function () {
+      var results = where(function(){/***
+         a | b | c
+         1 | 2 | 2
+         4 | 3 | 4
+         6 | 6 | 6
+        ***/
+        expect(Math.max(a, b)).toBe(c);
+      });
+      
+      expect(results.values.length).toBe(4);
+      expect(results.passing.length).toBe(3);
+      expect(results.failing.length).toBe(0);
+    });
+
 
 context
 -------
-context:
-log
-intercept
-strategy
 
-strategy
---------
-strategy:
-mocha
-jasmine
-QUnit
-tape
+THIS IS THE CRITICAL PIECE OF THE PUZZLE.
+
+`where` accepts up to two arguments. The first is the function containing the 
+data table and assertions.  
+
+The second, optional but _recommended_, argument is a `context` or configuration 
+object that allows you to specify the test strategy (or library) in use, and 
+pass non-global items to the test function (a library's assert or expect or test 
+method, e.g.).
+
+The following snip shows that `context` is itself made available for inspection 
+inside the test function:
+
+    where(function(){/***
+         a | b | c
+         0 | 0 | 0
+        ***/
+        
+        expect(context.expect).toBe(expect);
+        
+    }, { expect: expect});
+
+You may also use it to enable logging all test output to the console, enable 
+interception of failing tests (to try preventing them appearing as failed even 
+if they are expected to fail - in other words, make a fail into a pass), and/or 
+add information or references to be used in the test function.
+
+The following snip shows a test with logging and interception, specifies the 
+test library as jasmine, and passes the expect function:
+
+    it('should pass with correct data and expectation', function () {
+    
+      var results = where(function(){/***
+         a | b | c
+         1 | 2 | 2
+         4 | 3 | 4
+         6 | 6 | 6
+        ***/
+        
+        expect(Math.max(a, b)).toBe(c);
+        
+      }, { log: 1, intercept: 1, strategy: 'jasmine', expect: expect });
+      
+      expect(results.values.length).toBe(4);
+      expect(results.passing.length).toBe(3);
+      expect(results.failing.length).toBe(0);
+    });
+
+WARNING: In event-based test libraries like QUnit and tape, pure interception is 
+not always successful - an assertion that fails is always reported as failed.
+
+# strategy
+
+where.js comes with four strategies pre-defined for each testing library 
+supported initially.  A strategy can be defined in one of three ways:
+
++ `{ strategy: <name> }`
++ `{ <name>: 1 }`
++ `{ <name>: <name> }`
+
+## mocha (default)
+
+The default strategy is a basic try+catch used by mocha.  You do not need to 
+specify it when using mocha.  
+
++ `{ strategy: 'mocha` }
++ `{ mocha: 1 }`
++ `{ mocha: mocha }` (if mocha is defined elsewhere in your tests and you wish  
+    to use it within the test function itself)
+
+However, unless you are using should.js, you must specify which assertion method 
+your test relies on:
+
++ `{ expect: expect }`
++ `{ assert: assert }`
++ `{ expect: chai.expect }`
++ `{ assert: chai.assert }`
+
+__TODO__ link assert.js for browser - github.com/Jxck/assert
+The mocha `assert` browser tests in this repo rely on assert.js
+
+## jasmine
+
+For use with jasmine, specify one of the following:
+
++ `{ strategy: 'jasmine` }
++ `{ jasmine: 1 }`
++ `{ jasmine: jasmine }` (jasmine is defined globally in both node and browsers)
+
+## QUnit
+
+For use with QUnit, you must specify the QUnit strategy as follows:
+
++ `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
+
+__TODO__ link
+The QUnit tests in this repo rely on qunit-tap 
+qunit-tap ("A TAP Output Producer Plugin for 
+        QUnit") - github.com/twada/qunit-tap
+
+## tape
+
+For use with tape, you must specify the tape strategy as follows:
+
++ `tape: [test | t]` 
+
+This is due to James' (@substack) approach of passing the tape test reference 
+into the callback and (brilliantly) re-using that as both a results cache and as 
+an emitter for 'result' events.
+
+    var test = require('tape');
+
+    test('should pass tape context', function(t) {
+          
+      var results = where(function(){/***
+        | a | b | c |
+        | 0 | 0 | 0 |
+        ***/
+        
+        // use the context reference to 'tape' to test itself
+        tape.equal(tape, context.tape, 'should find tape');
+
+      }, { tape: t });
+      
+      t.equal(results.passing.length, 1);
+      t.end();
+    });
+
+custom strategy
+---------------
+
+__TODO__
+   
+more sophisticated example
+--------------------------
+
+__TODO__ [ object instance creation example]
+
+null, undefined, true|false, and '' values
+------------------------------------------
+
+__TODO__
 
 
 tests
@@ -265,8 +408,8 @@ versions of test suites.  Here's how they stack up:
 testem
 ------
 
-Using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) to 
-drive tests in multiple browsers.
+I'm using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) 
+to drive tests in node.js and in multiple browsers.
 
 The core tests use jasmine-2.0.0 (requires testem v0.6.3 or 
 later) in browsers, and jasmine-node (which uses jasmine 1.3.1 internally) on 
@@ -294,9 +437,12 @@ appropriate browser test page for each):
 browser suites
 --------------
 
-The `browser-suites` rely on stored versions of each library in the /vendor 
-directory, rather than the /testem directory, so they can be used as standalone 
-web pages.  You can view them directly on rawgithub:
+The `browser-suites` rely on browser versions of each library stored in the 
+/vendor directory (mocha, expect.js, assert.js, should, chai, qunit, qunit-tap, 
+and jasmine-2.0.0), rather than the /testem directory, so they can be viewed as 
+standalone pages with no dependency on testem.  
+
+You can view them directly on rawgithub:
   - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
   - [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
   - [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
@@ -305,4 +451,4 @@ web pages.  You can view them directly on rawgithub:
 
 # License
 
-MIT
+MIT OR JSON
