@@ -301,18 +301,18 @@ not always successful - an assertion that fails is always reported as failed.
 where.js comes with four strategies pre-defined for each testing library 
 supported initially.  A strategy can be defined in one of three ways:
 
-+ `{ strategy: <name> }`
++ `{ strategy: '<quoted-name>' }`
 + `{ <name>: 1 }`
-+ `{ <name>: <name> }`
++ `{ <name>: <name-object-reference> }`
 
 ## mocha (default)
 
 The default strategy is a basic try+catch used by mocha.  You do not need to 
 specify it when using mocha.  
 
-+ `{ strategy: 'mocha` }
++ `{ strategy: 'mocha' }`
 + `{ mocha: 1 }`
-+ `{ mocha: mocha }` (if mocha is defined elsewhere in your tests and you wish  
++ `{ mocha: mocha }` (when mocha is defined elsewhere in your tests and you wish  
     to use it within the test function itself)
 
 However, unless you are using should.js, you must specify which assertion method 
@@ -330,7 +330,7 @@ The mocha `assert` browser tests in this repo rely on assert.js
 
 For use with jasmine, specify one of the following:
 
-+ `{ strategy: 'jasmine` }
++ `{ strategy: 'jasmine' }`
 + `{ jasmine: 1 }`
 + `{ jasmine: jasmine }` (jasmine is defined globally in both node and browsers)
 
