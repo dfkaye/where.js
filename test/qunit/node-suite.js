@@ -21,7 +21,6 @@ QUnit.config. options:
   requireExpects - If true, QUnit-TAP prints expected assertion count
   updateRate
  */
-QUnit.init();
 
 var tap = qunitTap(QUnit, util.puts);
 tap.config.showExpectationOnFailure = 1;
@@ -29,6 +28,9 @@ tap.config.showTestNameOnFailure = 0;
 tap.config.showModuleNameOnFailure = 0;
 tap.config.showSourceOnFailure = 0; // this turns off the noisy stack trace
 
+/*
+ * explicit init() and start() calls needed on node.js
+ */
+QUnit.init();
 require('./qunit-tests');
-
 QUnit.start();

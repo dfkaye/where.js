@@ -11,60 +11,91 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 # works on my machine
 
 + travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
-+ functionality tests using jasmine
-  - npm test
-  - node jasmine-node --verbose ./test/where/where.spec.js
 
-+ framework strategy comparison tests
-  - npm run jasmine
-  - npm run mocha
-  - npm run qunit
-  - npm run tape
+tests
+-----
 
-+ testem launchers
-  - npm run testem
-  - npm run testem-jasmine
-  - npm run testem-mocha
-  - npm run testem-qunit
-  - npm run testem-tape
+The goal of making where.js run in "any" test framework required making numerous 
+versions of test suites.  Here's how they stack up:
 
-+ rawgithub links
-  - https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html
-  - https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html
-  - https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html
-  - https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html
-  - https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html
++ where.js core functionality tests using jasmine-node
+  - `npm test`
+  - `node jasmine-node --verbose ./test/where/where.spec.js`
+
++ framework strategy comparison tests on node.js
+  - `npm run jasmine`
+  - `npm run mocha`
+  - `npm run qunit`
+  - `npm run tape`
+
+testem
+------
+
+Using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) to 
+drive tests in multiple browsers for jasmine-2.0.0 as well as for jasmine-node 
+(which uses jasmine 1.3.1).  
+
+The `testem.json` file defines launchers for the different frameworks for both 
+node.js and browser suites:
+  - `testem -l where` # the core tests
+  - `testem -l jasmine`
+  - `testem -l mocha`
+  - `testem -l qunit`
+  - `testem -l tape` # this runs browserify on the tape suite 
+
+npm testem scripts
+------------------
+
+The `package.json` file defines scripts to call the testem launchers (with the 
+appropriate browser test page for each):
+  - `npm run testem`
+  - `npm run testem-jasmine`
+  - `npm run testem-mocha`
+  - `npm run testem-qunit`
+  - `npm run testem-tape`
+
+browser suites
+--------------
+
+The `browser-suites` can be viewed as standalone web pages, with no dependency 
+on testem.  You can view these pages directly on rawgithub:
+  - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
+  - [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
+  - [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
+  - [qunit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
+  - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
 
-  
+# ISSUES
++ triple star comments `/***` not (easily) supported in Coffeescript - could 
+    convert to `/*`
++ need more sophisticated object-creation examples
+
+
 # TODO
-+ apply qunit-tap in the browser suite with testem?
 + add testling config for tape suite
 + try testling with another test framework?
-+ readme
-  - table, format (no preprocessor, just fun with Function constructors).
-  - context: test-method-reference, strategy, intercept, log
-  - examples from jasmine-where readme.
-+ strategies
-  - jasmine - 1.3.1 and 2.0.0
-  - mocha - assert, expect.js, should, chai (assert, expect, should)
-    + assert.js for browser - github.com/Jxck/assert
-  - qunit - qunit-tap, dist/qunit.js
-    + using qunitjs on node with qunit-tap ("A TAP Output Producer Plugin for 
-      QUnit") - github.com/twada/qunit-tap
-  - tape - @substack's event-driven TDD flavored TAP project for testling
-    + add dom-console for tape browser suite (browserify tape-bundle)
-  - how to add a custom strategy
-+ vendor dir contains browser versions of mocha, expect.js, assert.js, should, 
-    chai, qunit, jasmine-2.0.0
++ add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
+
++ README documentation
+  + context: test-method-reference, strategy, intercept, log
+  + strategies
+    - jasmine - 1.3.1 and 2.0.0
+    - mocha - assert, expect.js, should, chai (assert, expect, should)
+      + assert.js for browser - github.com/Jxck/assert
+    - qunit - qunit-tap, dist/qunit.js
+      + using qunitjs on node with qunit-tap ("A TAP Output Producer Plugin for 
+        QUnit") - github.com/twada/qunit-tap
+    - tape - @substack's event-driven TDD flavored TAP project for testling
+      + add dom-console for tape browser suite (browserify tape-bundle)
+    - how to add a custom strategy
+  + vendor dir contains browser versions of mocha, expect.js, assert.js, should, 
+      chai, qunit, jasmine-2.0.0
 + version bump
 + npm publish
 + post
-+ add coffeescript support with a mocha or tape example
 
-# ISSUE
-  + triple star comments `/***` not (easily) supported in Coffeescript - could 
-    convert to `/*`
+
 
 
 # documentation starts...
@@ -88,11 +119,10 @@ install
     
     git clone https://github.com/dfkaye/where.js.git
   
-important
----------
+important: global
+-----------------
 
-Including or requiring `where.js` adds a `where()` method to the **global** 
-namespace, for example:
+Running `where.js` adds a `where()` method to the **global** namespace:
 
     require('where.js');
     assert(typeof where === 'function');
@@ -111,7 +141,7 @@ namespace, for example:
 justify
 -------
 
-Easier to modify this
+Easier to read and modify this
     
     it('description', function () {
     
@@ -127,7 +157,7 @@ Easier to modify this
       
     });
 
-than this:
+than this
 
     it('description', function () {
     
@@ -143,23 +173,28 @@ than this:
 story
 -----
 
-This replaces my [jasmine-where](https://github.com/dfkaye/jasmine-where) and 
-[jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects which 
-will be __deprecated__.
+where.js replaces both [jasmine-where](https://github.com/dfkaye/jasmine-where) 
+and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects 
+which are now _deprecated_.
 
 Borrowing from Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
-`where()` accepts a function and inspects its string value, converts the triple-
-commented data-table into an array of values, uses the labels as variables or 
-symbols in a new Function().
+`where()` accepts a function and inspects its string value, converts the 
+commented data-table into an array of values, and applies the labels as argument 
+names in a new Function().
+
+(I'll relate some additional lessons learned from this project down below or 
+elsewhere.)
 
 format
 ------
 
-Data tables must contain at least two rows, the first row containing symbols to 
-be used as variables in the expectation, whereas the remaining rows must contain 
-data for each symbol.
+Similar to Cucumber and Spock, where.js data tables must contain at least two 
+rows. The first row must contain the names to be used as variables in the 
+expectation. The remaining rows must contain data values for each name.  Values 
+must be separated by the pipe | character.
 
-For example:
+For example, a, b, and c are named as variables in the table, and used in the 
+expectation - without having to be defined or var'd:
 
     it('should pass with correct data and expectation', function () {
       where(function(){/***
@@ -172,7 +207,11 @@ For example:
       });
     });
 
-Tables may also contain left and right borders, similar to Cucumber and Fit:
+borders
+-------
+
+Tables may also optionally contain left and right edge borders, similar to 
+Cucumber and Fit:
 
     it('should pass with left and right table borders', function () {
       where(function(){/***
@@ -186,17 +225,21 @@ Tables may also contain left and right borders, similar to Cucumber and Fit:
     });
 
     
-Numeric data is automatically coerced to Number type
-----------------------------------------------------
+Numeric data
+------------
 
-Supports `Math.max(a, b)` to avoid re-typing `Math.max(Number(a), Number(b))`.
+_Numeric data is automatically coerced to the `Number` type._
 
-Everything can use `toBe()` (strict equality) - no need to rely on `toMatch()`.
+That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
+`Math.max(Number(a), Number(b))`.
 
-However, where `Math` is involved there is usually an octal, signed, comma, or 
-precision bug waiting.  All but precision are handled automatically; however, 
-you can get precision into your tests by adding another column, as seen in the 
-test created to verify numeric conversions work:
+That also means every test can use strict equality, so you don't need to rely 
+on matchers.
+
+_However_, where `Math` is involved there is usually an octal, signed, comma, or 
+precision bug waiting.  where.js handles all but precision automatically.  You 
+can get precision into your tests by adding another column, as seen in the test 
+created to verify that numeric conversions work:
 
     where(function(){/***
     
@@ -221,17 +264,20 @@ test created to verify numeric conversions work:
       expect(+s).toBe(c) // but prefixed '+' uses implicit conversion to number.
     });
 
+    
 output
 ------
 
-A passing `where()` clause has no effect on the usual jasmine output. 
+A passing `where()` test has no effect on the defect test runner reporter 
+output.
 
 When an expectation fails, the data-table labels plus the row of values for the 
 current expectation are added to the *current* failing item. Every failed 
-expectation in a `where()` clause will appear similar to:
+expectation in a `where()` test will appear similar to:
 
      [a | b | c] : 
      [1 | 2 | x] (Error: Expected 2 to be 'x'.)
+
 
 inspect return values
 ---------------------

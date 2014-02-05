@@ -11,12 +11,24 @@
     
     <script src="../../where.js"></script>
     <script src="../../vendor/qunit/qunit.js"></script>
+    <script src="../../vendor/qunit-tap/qunit-tap.js"></script>
     <script>
       if (location.href.indexOf('://localhost:7357') != -1) {
         <!-- testem goes between framework and specs/tests -->
         document.write('<script src="/testem.js">' + '<\/' + 'script>');
       }
-    </script>    
+    </script>
+    <script>
+      // enable tap to write qunit output to the console
+      var tap = qunitTap(QUnit, function() { 
+        console.log.apply(console, arguments);
+      });
+
+      tap.config.showExpectationOnFailure = 1;
+      tap.config.showTestNameOnFailure = 0;
+      tap.config.showModuleNameOnFailure = 0;
+      tap.config.showSourceOnFailure = 0; // turn off noisy stack trace     
+    </script>
     <script src="./qunit-tests.js"></script>
   </body>
 </html>

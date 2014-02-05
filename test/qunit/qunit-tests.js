@@ -120,7 +120,6 @@ test('should log errors by default', function(assert) {
       | a | b | c |
       | 1 | 2 | 2 |
       | 3 | 2 | 1 |
-      | 3 | 2 | 3 |
       
       ***/
       
@@ -135,8 +134,8 @@ test('should log errors by default', function(assert) {
     // RESTORE console.log
     console.log = log;    
   }
-  
-  assert.equal(message, last, 'should log [3 | 2 | 1] error');
+
+  assert.equal(message, last.replace('# ', ''), 'should log [3 | 2 | 1] error');
   
   // RESTORE console.log -- just being safe
   console.log = log;    
