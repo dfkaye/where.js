@@ -32,8 +32,8 @@ testem
 ------
 
 Using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) to 
-drive tests in multiple browsers for jasmine-2.0.0 as well as for jasmine-node 
-(which uses jasmine 1.3.1).  
+drive tests in multiple browsers for jasmine-2.0.0 (requires testem v0.6.3 or 
+later) as well as for jasmine-node (which uses jasmine 1.3.1 internally).  
 
 The `testem.json` file defines launchers for the different frameworks for both 
 node.js and browser suites:
