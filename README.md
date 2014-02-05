@@ -12,65 +12,12 @@ __[30 JAN 2014 ~ COMING SOON ~ REALLY]__
 
 + travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 
-tests
------
-
-The goal of making where.js run in "any" test framework required making numerous 
-versions of test suites.  Here's how they stack up:
-
-+ where.js core functionality tests using jasmine-node
-  - `npm test`
-  - `node jasmine-node --verbose ./test/where/where.spec.js`
-
-+ framework strategy comparison tests on node.js
-  - `npm run jasmine`
-  - `npm run mocha`
-  - `npm run qunit`
-  - `npm run tape`
-
-testem
-------
-
-Using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) to 
-drive tests in multiple browsers for jasmine-2.0.0 (requires testem v0.6.3 or 
-later) as well as for jasmine-node (which uses jasmine 1.3.1 internally).  
-
-The `testem.json` file defines launchers for the different frameworks for both 
-node.js and browser suites:
-  - `testem -l where` # the core tests
-  - `testem -l jasmine`
-  - `testem -l mocha`
-  - `testem -l qunit`
-  - `testem -l tape` # this runs browserify on the tape suite 
-
-npm testem scripts
-------------------
-
-The `package.json` file defines scripts to call the testem launchers (with the 
-appropriate browser test page for each):
-  - `npm run testem`
-  - `npm run testem-jasmine`
-  - `npm run testem-mocha`
-  - `npm run testem-qunit`
-  - `npm run testem-tape`
-
-browser suites
---------------
-
-The `browser-suites` can be viewed as standalone web pages, with no dependency 
-on testem.  You can view these pages directly on rawgithub:
-  - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
-  - [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
-  - [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
-  - [qunit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
-  - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
-
+# yes, there are tests - [scroll down](#tests)...
 
 # ISSUES
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
 + need more sophisticated object-creation examples
-
 
 # TODO
 + add testling config for tape suite
@@ -94,9 +41,6 @@ on testem.  You can view these pages directly on rawgithub:
 + version bump
 + npm publish
 + post
-
-
-
 
 # documentation starts...
 
@@ -228,7 +172,7 @@ Cucumber and Fit:
 Numeric data
 ------------
 
-_Numeric data is automatically coerced to the `Number` type._
+__Numeric data is automatically coerced to the `Number` type.__
 
 That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
 `Math.max(Number(a), Number(b))`.
@@ -279,25 +223,86 @@ expectation in a `where()` test will appear similar to:
      [1 | 2 | x] (Error: Expected 2 to be 'x'.)
 
 
-inspect return values
----------------------
+results
+-------
 results:
 values
 failing
 passing
 
+context
+-------
 context:
 log
 intercept
 strategy
 
+strategy
+--------
 strategy:
 mocha
 jasmine
 QUnit
 tape
 
-    
+
+tests
+-----
+
+The goal of making where.js run in "any" test framework required making numerous 
+versions of test suites.  Here's how they stack up:
+
++ where.js core functionality tests using jasmine-node
+  - `npm test`
+  - `node jasmine-node --verbose ./test/where/where.spec.js`
+
++ framework strategy comparison tests on node.js
+  - `npm run jasmine`
+  - `npm run mocha`
+  - `npm run qunit`
+  - `npm run tape`
+
+testem
+------
+
+Using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) to 
+drive tests in multiple browsers.
+
+The core tests use jasmine-2.0.0 (requires testem v0.6.3 or 
+later) in browsers, and jasmine-node (which uses jasmine 1.3.1 internally) on 
+node.js.
+
+The `testem.json` file defines launchers for the different frameworks for both 
+node.js and browser suites:
+  - `testem -l where` # core tests using jasmine
+  - `testem -l jasmine` 
+  - `testem -l mocha`
+  - `testem -l qunit`
+  - `testem -l tape` # runs browserify on the tape suite 
+
+npm testem scripts
+------------------
+
+The `package.json` file defines scripts to call the testem launchers (with the 
+appropriate browser test page for each):
+  - `npm run testem`
+  - `npm run testem-jasmine`
+  - `npm run testem-mocha`
+  - `npm run testem-qunit`
+  - `npm run testem-tape`
+
+browser suites
+--------------
+
+The `browser-suites` rely on stored versions of each library in the /vendor 
+directory, rather than the /testem directory, so they can be used as standalone 
+web pages.  You can view them directly on rawgithub:
+  - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
+  - [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
+  - [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
+  - [qunit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
+  - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
+
 # License
 
 MIT
