@@ -120,6 +120,9 @@ Borrowing from Richard Rodger's [mstring](https://github.com/rjrodger/mstring),
 commented data-table into an array of values, and applies the labels as argument 
 names in a new Function().
 
+`where()` accepts a second [`context`](#context) argument that allows you to 
+inject other information or references into the test function.
+
 (I'll relate some additional lessons learned from this project down below or 
 elsewhere.)
 
@@ -206,7 +209,7 @@ created to verify that numeric conversions work:
 output
 ------
 
-A passing `where()` test has no effect on the defect test runner reporter 
+A passing `where()` test has no effect on the test runner's default reporter 
 output.
 
 When an expectation fails, the data-table labels plus the row of values for the 
@@ -245,7 +248,7 @@ The following snip shows how to refer to each array in the results:
 context
 -------
 
-THIS IS THE CRITICAL PIECE OF THE PUZZLE.
+THIS IS THE CRITICAL "LIBRARY-AGNOSTIC" PIECE OF THE PUZZLE.
 
 `where` accepts up to two arguments. The first is the function containing the 
 data table and assertions.  
@@ -451,4 +454,4 @@ You can view them directly on rawgithub:
 
 # License
 
-MIT OR JSON
+MIT for now, JSON eventually
