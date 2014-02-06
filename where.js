@@ -262,7 +262,7 @@
                           row.join(', ') + ']');
         }
 
-        convertNumerics(row);
+        convertTypes(row);
         rows.push(row);        
       }
     }
@@ -322,18 +322,31 @@
   }
   
   /**
-   * Replaces row data with numbers if value is numeric, or a 'quoted' numeric 
-   * string.
+   * Replaces row data value string with falsy/truthy or numeric value.
    *
    * @private 
-   * @function convertNumerics
+   * @function convertTypes
    * @param {Array} row - row data values.
    */
-  function convertNumerics(row) {
-    for (var t, i = 0; i < row.length; i += 1) {
-    
-      t = parseFloat(row[i].replace(/\'|\"|\,/g,''));
-      isNaN(t) || (row[i] = t);
+  function convertTypes(row) {
+    for (var v, i = 0; i < row.length; i += 1) {
+       
+      v = row[i];
+      
+      if (v.match(/undefined|null|true|false/)) {
+      
+        // convert falsy values
+        if (v === "undefined") row[i] = undefined;
+        if (v === "null") row[i] = null;
+        if (v === "true") row[i] = true;
+        if (v === "false") row[i] = false;
+        
+      } else {
+      
+        // convert numerics
+        v = parseFloat(v.replace(/\'|\"|\,/g,''));
+        isNaN(v) || (row[i] = v);        
+      }
     }
   }
   

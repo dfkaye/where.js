@@ -157,26 +157,6 @@ describe('where.js jasmine spec', function () {
        }).not.toThrow();
     });
     
-    // contributed via issues by @jamonholmgren 4 FEB 2014
-    it('should instantiate objects with correct keys', function () {
-    
-      where(function () {
-        /***
-          a | b | c
-          1 | 2 | 3
-          6 | 12 | 18
-        ***/
-        
-        var obj = new Obj(a,b,c); // DIY instantiation
-        expect(obj.a + obj.b).toEqual(obj.c);
-
-        // quick array test
-        expect([a,b,c].reverse()).toEqual([c,b,a]);
-        
-      }, { Obj: function (a,b,c) { this.a = a; this.b = b; this.c = c;} });
-      
-    });
-    
   });   
 
   /* MALFORMED TABLE */
@@ -471,4 +451,58 @@ describe('where.js jasmine spec', function () {
     
   });
 
+  describe('object tests', function () {
+    // contributed via issues by @jamonholmgren 4 FEB 2014
+    it('should instantiate objects with correct keys', function () {
+    
+      where(function () {
+        /***
+          a | b | c
+          1 | 2 | 3
+          6 | 12 | 18
+        ***/
+        
+        var obj = new Obj(a,b,c); // DIY instantiation
+        expect(obj.a + obj.b).toEqual(obj.c);
+
+        // quick array test
+        expect([a,b,c].reverse()).toEqual([c,b,a]);
+        
+      }, { Obj: function (a,b,c) { this.a = a; this.b = b; this.c = c;} });
+      
+    });
+  });
+  
+  describe('truthy falsy tests', function () {
+    it('should accept null, undefined, true, false', function () {
+    
+      where(function () {
+        /***
+          a    | b         | c     | d
+          null | undefined | false | true
+        ***/
+        
+        expect(a).toBe(null);
+        expect(b).toBe(undefined);
+        expect(c).toBe(false);
+        expect(d).toBe(true);        
+
+      });
+      
+    });
+  });
+  
+  describe('Math tests', function () {
+    it('should accept Math constants', function () {
+    
+      where(function () {
+        /***
+          a | b | c
+          6 | 12 | 18
+        ***/
+        
+      });
+      
+    });
+  });
 });

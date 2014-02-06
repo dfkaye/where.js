@@ -12,8 +12,7 @@ __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 # TODO
 
-+ ! test quoted string data !
-+ support tables with `null`, `undefined`, `true|false`, and `''` data values
++ ! test quoted string and quoted empty string data !
 + add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
@@ -208,6 +207,24 @@ created to verify that numeric conversions work:
       expect(+s).toBe(c) // but prefixed '+' uses implicit conversion to number.
     });
 
+null, undefined, true, false values
+-----------------------------------
+
+Truthy/falsy values are also automatically converted as per this passing test:
+
+      where(function () {
+        /***
+          a    | b         | c     | d
+          null | undefined | false | true
+        ***/
+        
+        expect(a).toBe(null);
+        expect(b).toBe(undefined);
+        expect(c).toBe(false);
+        expect(d).toBe(true);        
+
+      });
+
 output
 ------
 
@@ -376,20 +393,18 @@ an emitter for 'result' events.
       t.end();
     });
 
+    
 custom strategy
 ---------------
 
 __TODO__
-   
+
+
 more sophisticated example
 --------------------------
 
 __TODO__ [ object instance creation example]
 
-null, undefined, true|false, and '' values
-------------------------------------------
-
-__TODO__
 
 
 tests
