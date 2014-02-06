@@ -1,42 +1,30 @@
-where.js
-========
+[![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 
-Data-driven test method for JavaScript frameworks (Jasmine, Mocha, QUnit, and 
-Tape).
++ [testling __TODO__]
 
 __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
+# [TODO](#TODO)...
+
+where.js
+========
+
+Data-driven test method for JavaScript test libraries on node.js and browsers.
+
 # works on my machine
 
-+ travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
++ [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
+  - [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
++ [mocha](http://visionmedia.github.io/mocha/)
+  - assert (on node.js) and [assert.js](https://github.com/Jxck/assert) on browser
+  - [expect.js](https://github.com/LearnBoost/expect.js)
+  - [should.js](https://github.com/visionmedia/should.js)
+  + [chai](http://chaijs.com/) (assert, expect, should)
++ [QUnit](http://qunitjs.com/)
++ [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
+  TAP project for [testling](http://ci.testling.com/)
 
-# TODO
-
-+ add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
-+ triple star comments `/***` not (easily) supported in Coffeescript - could 
-    convert to `/*`
-+ need more sophisticated object-creation examples
-
-+ add testling config for tape suite
-+ try testling with another test framework?
-
-+ README documentation
-  + reorganize docs - too sprawling or verbose
-  + strategies
-    - jasmine - 1.3.1 and 2.0.0
-    - mocha - assert, expect.js, should, chai (assert, expect, should)
-      + assert.js for browser - github.com/Jxck/assert
-    - qunit - qunit-tap, dist/qunit.js
-      + using qunitjs on node with qunit-tap ("A TAP Output Producer Plugin for 
-        QUnit") - github.com/twada/qunit-tap
-    - tape - @substack's event-driven TDD flavored TAP project for testling
-      + add dom-console for tape browser suite (browserify tape-bundle)
-    - custom strategy
-+ version bump
-+ npm publish
-+ post
-
-# Yes, [there are tests](#tests)...
+# [tests](#tests)...
 
 # documentation starts now...
 
@@ -280,10 +268,10 @@ The following snip shows how to refer to each array in the results:
       expect(results.failing.length).toBe(0);
     });
 
-context
--------
+context specifier
+-----------------
 
-THIS IS THE CRITICAL "LIBRARY-AGNOSTIC" PIECE OF THE PUZZLE.
+__THIS IS THE CRITICAL "LIBRARY-AGNOSTIC" PIECE OF THE PUZZLE.__
 
 `where` accepts up to two arguments. The first is the function containing the 
 data table and assertions.  
@@ -361,8 +349,8 @@ your test relies on:
 + `{ expect: chai.expect }`
 + `{ assert: chai.assert }`
 
-__TODO__ link assert.js for browser - github.com/Jxck/assert
-The mocha `assert` browser tests in this repo rely on assert.js
+### The mocha `assert` browser tests in this repo rely on 
+[assert.js](http://github.com/Jxck/assert)
 
 ## jasmine
 
@@ -378,10 +366,9 @@ For use with QUnit, you must specify the QUnit strategy as follows:
 
 + `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
 
-__TODO__ link
-The QUnit tests in this repo rely on qunit-tap 
-qunit-tap ("A TAP Output Producer Plugin for 
-        QUnit") - github.com/twada/qunit-tap
+### The QUnit tests in this repo rely on 
+[qunit-tap](//https://github.com/twada/qunit-tap), "A TAP Output Producer Plugin 
+for QUnit."
 
 ## tape
 
@@ -411,7 +398,13 @@ an emitter for 'result' events.
       t.end();
     });
 
-    
+### dom-console
+
+A copy of my dom-console library is included in the browser suite for tape, and 
+can be found in the [test/util](/test/util) folder. The dom-console merely 
+writes console.log statements to the DOM.
+
+
 custom strategy
 ---------------
 
@@ -423,6 +416,17 @@ more sophisticated example
 
 __TODO__ [ object instance creation example]
 
+
+coffeescript
+--------------------------
+
+__TODO__ [ multiline string delimiter issue ]
+
+
+testling with mocha
+-------------------
+
+__TODO__
 
 
 tests
@@ -447,9 +451,11 @@ testem
 I'm using Toby Ho's MAGNIFICENT [testem](https://github.com/airportyh/testem) 
 to drive tests in node.js and in multiple browsers.
 
-The core tests use jasmine-2.0.0 (requires testem v0.6.3 or 
-later) in browsers, and jasmine-node (which uses jasmine 1.3.1 internally) on 
-node.js.
+The core tests use 
+[jasmine-2.0.0](http://jasmine.github.io/2.0/introduction.html) (which requires 
+testem v0.6.3 or later) in browsers, and Misko Hevery's
+[jasmine-node](https://github.com/mhevery/jasmine-node) (which uses jasmine 
+1.3.1 internally) on node.js.
 
 The `testem.json` file defines launchers for the different frameworks for both 
 node.js and browser suites:
@@ -482,9 +488,29 @@ You can view them directly on rawgithub:
   - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
   - [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
   - [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
-  - [qunit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
+  - [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
   - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
+  
+# TODO
++ add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
++ triple star comments `/***` not (easily) supported in Coffeescript - could 
+    convert to `/*`
++ need more sophisticated object-creation examples
++ add testling config for tape suite
++ try testling with another test framework?
++ README documentation
+  + reorganize docs - too sprawling or verbose
+  + strategy ui needs re-visiting - strings vs objects
+    - jasmine - assume global or double as 'context.jasmine'
+    - QUnit - assume global or double as 'context.QUnit'
+    - tape - t function serves double as 'context.tape'
+    - custom strategy
++ version bump
++ npm publish
++ post
+
+  
 # License
 
 MIT for now, JSON eventually
