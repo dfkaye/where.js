@@ -12,7 +12,6 @@ __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 # TODO
 
-+ ! test quoted string and quoted empty string data !
 + add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
@@ -225,6 +224,24 @@ Truthy/falsy values are also automatically converted as per this passing test:
 
       });
 
+quoted strings
+--------------
+
+Data with quoted strings are preserved.
+
+      where(function () {
+        /***
+          a  | b  | c    | d    | e   | f
+          '' | "" | "''" | '""' | ' ' | ' faff '
+        ***/
+        expect(a).toBe('\'\'');
+        expect(b).toBe('\"\"');
+        expect(c).toBe('\"\'\'\"');
+        expect(d).toBe('\'"\"\'');
+        expect(e).toBe('\' \'');
+        expect(f).toBe('\' faff \'');
+      });
+      
 output
 ------
 

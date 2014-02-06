@@ -156,8 +156,36 @@ describe('where.js jasmine spec', function () {
         
        }).not.toThrow();
     });
+
+    it('should convert null, undefined, true, false automatically', function () {
+      where(function () {
+        /***
+          a    | b         | c     | d
+          null | undefined | false | true
+        ***/
+        expect(a).toBe(null);
+        expect(b).toBe(undefined);
+        expect(c).toBe(false);
+        expect(d).toBe(true);        
+      });
+    });
     
-  });   
+    it('should not modify quoted values', function () {
+      where(function () {
+        /***
+          a  | b  | c    | d    | e   | f
+          '' | "" | "''" | '""' | ' ' | ' faff '
+        ***/
+        expect(a).toBe('\'\'');
+        expect(b).toBe('\"\"');
+        expect(c).toBe('\"\'\'\"');
+        expect(d).toBe('\'"\"\'');
+        expect(e).toBe('\' \'');
+        expect(f).toBe('\' faff \'');
+      });
+    });
+  });
+  
 
   /* MALFORMED TABLE */
   
@@ -473,24 +501,7 @@ describe('where.js jasmine spec', function () {
     });
   });
   
-  describe('truthy falsy tests', function () {
-    it('should accept null, undefined, true, false', function () {
-    
-      where(function () {
-        /***
-          a    | b         | c     | d
-          null | undefined | false | true
-        ***/
-        
-        expect(a).toBe(null);
-        expect(b).toBe(undefined);
-        expect(c).toBe(false);
-        expect(d).toBe(true);        
 
-      });
-      
-    });
-  });
   
   describe('Math tests', function () {
     it('should accept Math constants', function () {

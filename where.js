@@ -197,6 +197,7 @@
    * @private 
    * @method throwFailingResults() 
    * @param row array of failing items.
+   * @throws {Error} containing all failure messages
    */
   function throwFailingResults(failing) {
   
@@ -240,13 +241,6 @@
       // skips empty rows
       if (str.match(/\S+/)) {
 
-        str = str.replace(/\s+/g, '');
-        
-        // empty column
-        if (str.match(/[\|][\|]/g)) {
-          throw new Error('where.js table has unbalanced columns: ' + str);
-        }
-        
         row = balanceRowData(str);
         
         // visiting label row - set size for data row iterations
@@ -276,27 +270,45 @@
   }
   
   /**
-   * Checks that row of data is properly formatted with column separators.
+   * Checks that row of data is properly formatted with column separators, and 
+   * returns array of trimmed row values.
    *
    * @private 
    * @function balanceRowData
-   * @param {String} row - String of row data values.
+   * @param {String} str - String of row data values.
    * @returns {Array} - row data values
+   * @throws {Error} when table has unbalanced borders or empty data cells.
    */
-  function balanceRowData(row) {
+  function balanceRowData(str) {
   
-    var cells = row.split(SEP);
-    var left  = cells[0] === '';    //left border
-    var right = cells[cells.length - 1] === '';    //right border
+    var row;
     
-    if (left != right) {
-      throw new Error('where.js table borders are not balanced: ' + row);
+    // empty column
+    if (str.replace(/\s+/g, '').match(/[\|][\|]/g)) {
+      throw new Error('where.js table has unbalanced columns: ' + str);
     }
     
-    left && cells.shift();
-    right && cells.pop();
-      
-    return cells;
+    // trim row string and split into data array
+    row = str.replace(/^\s+|\s+$/gm, '').split(SEP);
+    
+    // check for left and right borders
+    var left = row[0] === '';
+    var right = row[row.length - 1] === '';
+    
+    if (left != right) {
+      throw new Error('where.js table borders are not balanced: ' + str);
+    }
+    
+    // remove empty border tokens
+    left && row.shift();
+    right && row.pop();
+    
+    // trim each value
+    for (var i = 0; i < row.length; i += 1) {
+      row[i] = row[i].replace(/^\s+|\s+$/gm, '');
+    }
+    
+    return row;
   }
   
   /**
@@ -332,7 +344,7 @@
     for (var v, i = 0; i < row.length; i += 1) {
        
       v = row[i];
-      
+
       if (v.match(/undefined|null|true|false/)) {
       
         // convert falsy values
