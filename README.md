@@ -11,15 +11,19 @@ __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 + travis [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 
 # TODO
+
++ ! test quoted string data !
++ support tables with `null`, `undefined`, `true|false`, and `''` data values
++ add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
 + need more sophisticated object-creation examples
-+ support passing null, undefined, booleans, and '' 
+
 + add testling config for tape suite
 + try testling with another test framework?
-+ add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
+
 + README documentation
-  + reorganize this - too sprawling or verbose
+  + reorganize docs - too sprawling or verbose
   + strategies
     - jasmine - 1.3.1 and 2.0.0
     - mocha - assert, expect.js, should, chai (assert, expect, should)
@@ -36,13 +40,13 @@ __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 # Yes, [there are tests](#tests)...
 
-# documentation starts...
+# documentation starts now...
 
-Provides a `where()` clause for data table tests, similar to Cucumber's 
-scenario-outline 
-[Examples](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines) 
+__where.js__ provides a `where()` function for driving tests with data tables, 
+similar to Cucumber's  
+[`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines) 
 and Spock's 
-[where blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks).
+[`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks).
 
 Also inspired by:
 + JP Castro's (@jphpsf)
@@ -113,9 +117,9 @@ story
 
 where.js replaces both [jasmine-where](https://github.com/dfkaye/jasmine-where) 
 and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects 
-which are now _deprecated_.
+which are now __deprecated__.
 
-Borrowing from Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
+In imitation of Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
 `where()` accepts a function and inspects its string value, converts the 
 commented data-table into an array of values, and applies the labels as argument 
 names in a new Function().
@@ -165,7 +169,6 @@ Cucumber and Fit:
       });
     });
 
-    
 numeric data
 ------------
 
@@ -205,7 +208,6 @@ created to verify that numeric conversions work:
       expect(+s).toBe(c) // but prefixed '+' uses implicit conversion to number.
     });
 
-    
 output
 ------
 
@@ -218,7 +220,6 @@ expectation in a `where()` test will appear similar to:
 
      [a | b | c] : 
      [1 | 2 | x] (Error: Expected 2 to be 'x'.)
-
 
 results
 -------
@@ -243,7 +244,6 @@ The following snip shows how to refer to each array in the results:
       expect(results.passing.length).toBe(3);
       expect(results.failing.length).toBe(0);
     });
-
 
 context
 -------
@@ -411,7 +411,7 @@ versions of test suites.  Here's how they stack up:
 testem
 ------
 
-I'm using Toby Ho's MAGNIFICENT [testemjs](https://github.com/airportyh/testem) 
+I'm using Toby Ho's MAGNIFICENT [testem](https://github.com/airportyh/testem) 
 to drive tests in node.js and in multiple browsers.
 
 The core tests use jasmine-2.0.0 (requires testem v0.6.3 or 
