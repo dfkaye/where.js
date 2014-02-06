@@ -173,8 +173,8 @@ describe('where.js jasmine spec', function () {
     it('should not modify quoted values', function () {
       where(function () {
         /***
-          a  | b  | c    | d    | e   | f
-          '' | "" | "''" | '""' | ' ' | ' faff '
+          a  | b  | c    | d    | e   | f        | g
+          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined'
         ***/
         expect(a).toBe('\'\'');
         expect(b).toBe('\"\"');
@@ -182,6 +182,7 @@ describe('where.js jasmine spec', function () {
         expect(d).toBe('\'"\"\'');
         expect(e).toBe('\' \'');
         expect(f).toBe('\' faff \'');
+        expect(g).toBe('\'undefined\'');
       });
     });
   });

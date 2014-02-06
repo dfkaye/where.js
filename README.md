@@ -231,8 +231,8 @@ Data with quoted strings are preserved.
 
       where(function () {
         /***
-          a  | b  | c    | d    | e   | f
-          '' | "" | "''" | '""' | ' ' | ' faff '
+          a  | b  | c    | d    | e   | f        | g
+          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined'
         ***/
         expect(a).toBe('\'\'');
         expect(b).toBe('\"\"');
@@ -240,6 +240,7 @@ Data with quoted strings are preserved.
         expect(d).toBe('\'"\"\'');
         expect(e).toBe('\' \'');
         expect(f).toBe('\' faff \'');
+        expect(f).toBe('\'undefined\'');
       });
       
 output
