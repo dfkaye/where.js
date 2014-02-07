@@ -1,17 +1,25 @@
-[![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
+where.js
+========
 
-+ [testling __TODO__]
+library-agnostic `where()` clause for driving JavaScript tests with data tables, 
+similar to Cucumber 
+[`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines) 
+or Spock 
+[`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks). 
+
+also inspired by:
++ JP Castro's (@jphpsf)
+    [DRYing Up Your JavaScript Jasmine Tests With the Data Provider Pattern]
+    (http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
++ Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
 __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 # [TODO](#TODO)...
 
-where.js
-========
-
-Data-driven test method for JavaScript test libraries on node.js and browsers.
-
 # works on my machine
+
+[![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
   - [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
@@ -24,31 +32,19 @@ Data-driven test method for JavaScript test libraries on node.js and browsers.
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
 
++ [testling __TODO__]
+
 # [tests](#tests)...
 
 # documentation starts now...
 
-__where.js__ provides a `where()` function for driving tests with data tables, 
-similar to Cucumber's  
-[`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines) 
-and Spock's 
-[`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks).
-
-Also inspired by:
-+ JP Castro's (@jphpsf)
-    [DRYing Up Your JavaScript Jasmine Tests With the Data Provider Pattern]
-    (http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
-+ Richard Rodger's [mstring](https://github.com/rjrodger/mstring)
-
-install
--------
+# install
 
     npm install where.js
     
     git clone https://github.com/dfkaye/where.js.git
   
-important: global
------------------
+# important: global assignment
 
 Running `where.js` adds a `where()` method to the **global** namespace:
 
@@ -66,14 +62,13 @@ Running `where.js` adds a `where()` method to the **global** namespace:
     assert(typeof window.where === 'function');
     // => true
     
-justify
--------
+# justify
 
 Easier to read and modify this
     
     it('description', function () {
-    
-      where(function(){/*** 
+      where(function(){
+        /*** 
           a  |  b  |  c
           1  |  2  |  2
           4  |  3  |  4
@@ -82,28 +77,25 @@ Easier to read and modify this
         
         expect(a + b)).toBe(c);
       });
-      
     });
 
 than this
 
     it('description', function () {
-    
       [[1, 2, 2],
        [4, 3, 4],
        [6, 6, 6]].forEach(function(row, r, rows) {
                
         expect(Number(row[0]) + Number(row[1])).toBe(Number(row[2]));
       });
-      
     });
     
-story
------
+# story
 
-where.js replaces both [jasmine-where](https://github.com/dfkaye/jasmine-where) 
-and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects 
-which are now __deprecated__.
+where.js merges both basic algorithms and lessons learned from my earlier 
+[jasmine-where](https://github.com/dfkaye/jasmine-where) 
+and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects, 
+which are now __deprecated__ as of this release.
 
 In imitation of Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
 `where()` accepts a function and inspects its string value, converts the 
@@ -116,16 +108,15 @@ inject other information or references into the test function.
 (I'll relate some additional lessons learned from this project down below or 
 elsewhere.)
 
-format
-------
+# format
 
 Similar to Cucumber and Spock, where.js data tables must contain at least two 
 rows. The first row must contain the names to be used as variables in the 
 expectation. The remaining rows must contain data values for each name.  Values 
 must be separated by the pipe | character.
 
-For example, a, b, and c are named as variables in the table, and used in the 
-expectation - without having to be defined or var'd:
+For example, `a`, `b`, and `c` are named as variables in the table, and used in 
+the expectation - without having to be defined or var'd:
 
     it('should pass with correct data and expectation', function () {
       where(function(){/***
@@ -138,8 +129,7 @@ expectation - without having to be defined or var'd:
       });
     });
 
-borders
--------
+# borders
 
 Tables may also optionally contain left and right edge borders, similar to 
 Cucumber and Fit:
@@ -158,7 +148,7 @@ Cucumber and Fit:
 numeric data
 ------------
 
-__Numeric data is automatically coerced to the `Number` type.__
+__Numeric data is automatically converted to the `Number` type.__
 
 That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
 `Math.max(Number(a), Number(b))`.
@@ -171,8 +161,8 @@ precision bug waiting.  where.js handles all but precision automatically.  You
 can get precision into your tests by adding another column, as seen in the test 
 created to verify that numeric conversions work:
 
-    where(function(){/***
-    
+    where(function(){
+      /***
             a     |    b     |    c     |  p
             
             0     |    1     |    1     |  1
@@ -194,10 +184,9 @@ created to verify that numeric conversions work:
       expect(+s).toBe(c) // but prefixed '+' uses implicit conversion to number.
     });
 
-null, undefined, true, false values
------------------------------------
+# null, undefined, true, false values
 
-Truthy/falsy values are also automatically converted as per this passing test:
+Truthy/falsy values are also automatically converted as per this test:
 
       where(function () {
         /***
@@ -212,8 +201,7 @@ Truthy/falsy values are also automatically converted as per this passing test:
 
       });
 
-quoted strings
---------------
+# quoted values
 
 Data with quoted strings are preserved.
 
@@ -231,8 +219,7 @@ Data with quoted strings are preserved.
         expect(f).toBe('\'undefined\'');
       });
       
-output
-------
+# output
 
 A passing `where()` test has no effect on the test runner's default reporter 
 output.
@@ -244,8 +231,7 @@ expectation in a `where()` test will appear similar to:
      [a | b | c] : 
      [1 | 2 | x] (Error: Expected 2 to be 'x'.)
 
-results
--------
+# results
 
 `where()` returns a `results` object with three arrays for all `values` derived 
 from the data table, `passing` tests, and `failing` tests.  The first row in the 
@@ -268,8 +254,7 @@ The following snip shows how to refer to each array in the results:
       expect(results.failing.length).toBe(0);
     });
 
-context specifier
------------------
+# context specifier
 
 __THIS IS THE CRITICAL "LIBRARY-AGNOSTIC" PIECE OF THE PUZZLE.__
 
@@ -333,8 +318,8 @@ supported initially.  A strategy can be defined in one of three ways:
 
 ## mocha (default)
 
-The default strategy is a basic try+catch used by mocha.  You do not need to 
-specify it when using mocha.  
+The default strategy is a basic try+catch used by mocha. *You do not need to 
+specify a strategy when using mocha.* 
 
 + `{ strategy: 'mocha' }`
 + `{ mocha: 1 }`
@@ -348,6 +333,10 @@ your test relies on:
 + `{ assert: assert }`
 + `{ expect: chai.expect }`
 + `{ assert: chai.assert }`
+
+*(Both mocha's should.js and chai's should.js add a `should` method to 
+`Object.prototype`, brilliantly making every object assertable - except those, 
+not surprisingly, created by the `Object.create()` method.)*
 
 ### The mocha `assert` browser tests in this repo rely on 
 [assert.js](http://github.com/Jxck/assert)
@@ -376,13 +365,13 @@ For use with tape, you must specify the tape strategy as follows:
 
 + `tape: [test | t]` 
 
-This is due to James' (@substack) approach of passing the tape test reference 
-into the callback and (brilliantly) re-using that as both a results cache and as 
-an emitter for 'result' events.
+This is due to James' (@substack) approach of passing the tape `test` reference 
+into the callback as `t` and ingeniously re-using that as both a results cache 
+and as an emitter for 'result' events.
 
     var test = require('tape');
 
-    test('should pass tape context', function(t) {
+    test('should pass tape context', function(t) { // t is test, test is tape...
           
       var results = where(function(){/***
         | a | b | c |
@@ -400,9 +389,10 @@ an emitter for 'result' events.
 
 ### dom-console
 
-A copy of my dom-console library is included in the browser suite for tape, and 
-can be found in the [test/util](/test/util) folder. The dom-console merely 
-writes console.log statements to the DOM.
+A copy of my [dom-console](https://github.com/dfkaye/dom-console) library is 
+included in the browser suite for tape, and can be found in the 
+[test/util](/test/util) folder. The dom-console merely writes `console.log()` 
+statements to a list in the DOM.
 
 
 custom strategy
@@ -501,6 +491,7 @@ You can view them directly on rawgithub:
 + try testling with another test framework?
 + README documentation
   + reorganize docs - too sprawling or verbose
+  + strategy 'purpose' needs explaining (try+catch vs events vs ?)
   + strategy ui needs re-visiting - strings vs objects
     - jasmine - assume global or double as 'context.jasmine'
     - QUnit - assume global or double as 'context.QUnit'
