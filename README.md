@@ -513,7 +513,9 @@ You can view them directly on rawgithub:
     - custom strategy needs explaining
 
 
-# CONCLUSION ~ RECOMMENDED TOOLS
+# CONCLUSION 
+
+## RECOMMENDED TOOLS
 
 + __mocha__ - non-invasive try+catch, with multiple reporter support, just works.
 + __should.js (or chai/should)__ - ignore the disingenuous FUD from purists and 
