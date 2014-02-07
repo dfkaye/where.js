@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
+
 where.js
 ========
 
@@ -17,7 +19,7 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 
 # works on my machine
 
-[![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
+see the [tests](#tests)...
 
 # libraries tested and supported so far
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
@@ -30,8 +32,6 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 + [QUnit](http://qunitjs.com/)
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
-
-# see the [tests](#tests)...
 
 # install
 
@@ -513,23 +513,7 @@ You can view them directly on rawgithub:
     - custom strategy needs explaining
 
 
-# CONCLUSIONS
-
-## TESTLING RANT
-
-The unhelpfulness of error messages ("missing ';' on line 1" of a *browserified* 
-file) is the last straw.  We shouldn't have to keep fighting the anti-browser, 
-anti-BDD bias of a free service that's supposed to ease cross-browser JavaScript 
-testing.  Yes, it's free, thank you, but if you can't support it *as free* then 
-have we really improved anything?
-
-## JASMINE RANT
-
-The addition of the `boot` file (which assumes browser environments) for jasmine 
-2.0.0, plus the removal of the `currentSpec` property from `jasmine.getEnv()` 
-make plain that jasmine is still a ball of mud.
-
-## RECOMMENDED TOOLS
+# CONCLUSION ~ RECOMMENDED TOOLS
 
 + __mocha__ - non-invasive try+catch, with multiple reporter support, just works.
 + __should.js (or chai/should)__ - ignore the disingenuous FUD from purists and 
