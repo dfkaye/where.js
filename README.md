@@ -338,12 +338,15 @@ your test relies on:
 `Object.prototype`, brilliantly making every object assertable - except those, 
 not surprisingly, created by the `Object.create()` method.)*
 
-### The mocha `assert` browser tests in this repo rely on 
-[assert.js](http://github.com/Jxck/assert)
+*The mocha `assert` browser tests in this repo rely on 
+[assert.js](http://github.com/Jxck/assert), "a port of the Node.js standard 
+assertion library for the browser."*
 
 ## jasmine
 
-For use with jasmine, specify one of the following:
+Because jasmine also uses a try+catch approach, you do not need to specify 
+jasmine as the test strategy *unless you want to intercept 
+failing tests.*  Specify the jasmine strategy with one of the following:
 
 + `{ strategy: 'jasmine' }`
 + `{ jasmine: 1 }`
@@ -351,17 +354,17 @@ For use with jasmine, specify one of the following:
 
 ## QUnit
 
-For use with QUnit, you must specify the QUnit strategy as follows:
+When using QUnit, you __must__ specify the QUnit strategy as follows:
 
 + `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
 
-### The QUnit tests in this repo rely on 
+*The QUnit tests in this repo rely on 
 [qunit-tap](//https://github.com/twada/qunit-tap), "A TAP Output Producer Plugin 
-for QUnit."
+for QUnit."*
 
 ## tape
 
-For use with tape, you must specify the tape strategy as follows:
+For use with tape, you __must__ specify the tape strategy as follows:
 
 + `tape: [test | t]` 
 
@@ -387,12 +390,10 @@ and as an emitter for 'result' events.
       t.end();
     });
 
-### dom-console
-
-A copy of my [dom-console](https://github.com/dfkaye/dom-console) library is 
+*A copy of my [dom-console](https://github.com/dfkaye/dom-console) library is 
 included in the browser suite for tape, and can be found in the 
 [test/util](/test/util) folder. The dom-console merely writes `console.log()` 
-statements to a list in the DOM.
+statements to a list in the DOM.*
 
 
 custom strategy
