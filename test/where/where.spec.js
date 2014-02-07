@@ -46,6 +46,31 @@ describe('where.js jasmine spec', function () {
        }).toThrow();
     });
     
+    it('should remove line comments', function () {
+      expect(function () {
+        where(function(){
+          /***
+            | a | b | c |
+            | 1 | 2 | 2 | // should pass
+          //| 4 | 3 | x | (should not execute)
+          ***/
+          expect(Math.max(a, b)).toBe(c);
+        });
+       }).not.toThrow();
+    });
+    
+    it('should throw when all data rows are commented', function () {
+      expect(function () {
+        where(function(){
+          /*** 
+              a  |  b  |  c
+          //  1  |  2  |  2 // should fail
+          ***/
+          expect(Math.max(a, b)).toBe(Number(c));
+        });
+       }).toThrow();
+    });
+
     it('should not throw if missing expectation', function () {
       expect(function () {
         where(function(){/*** 
@@ -79,16 +104,7 @@ describe('where.js jasmine spec', function () {
       });
     });
     
-    it('should throw if borders not balanced', function() {
-      expect(function () {
-        where(function(){/*** 
-          | a | b | c 
-          | t | o | to
-          ***/
-          expect(a + b).toBe(c);
-        });
-      }).toThrow();
-    });
+
 
     it('should return results', function () {
       var results = where(function(){/*** 
@@ -267,6 +283,17 @@ describe('where.js jasmine spec', function () {
         ***/});
        }).toThrow();
     });
+    
+    it('should throw if borders not balanced', function() {
+      expect(function () {
+        where(function(){/*** 
+          | a | b | c 
+          | t | o | to
+          ***/
+          expect(a + b).toBe(c);
+        });
+      }).toThrow();
+    });    
   });
 
   

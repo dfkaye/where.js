@@ -52,7 +52,7 @@
  * + npmjs.org/dfkaye/where.js
  *
  */
-;(function whereSandox(/* named IFFE for testing purposes - not exported */){
+!(typeof where == 'undefined') || (function whereSandox(/* named IFFE for tests */){
 
   // This makes where() a global function so as not to attach itself to any 
   // specific framework.
@@ -107,7 +107,8 @@
     }
     
     context = context || {};
-
+    //context = context || strategy;
+    
     // long stretch of procedural code here
     
     var fs = fn.toString();
@@ -146,11 +147,11 @@
      * strategy method is returned, it is immediately invoked with the context 
      * object and returns the "seeded" method for the given strategy.
      */
-    var strategy = where.strategy(context.strategy || 
-                                  (context.jasmine && 'jasmine') || 
-                                  (context.QUnit && 'QUnit') || 
-                                  (context.tape && 'tape') || 
-                                  (context.mocha || 'mocha'))(context);
+    var applyStrategy = where.strategy(context.strategy || 
+                                       (context.jasmine && 'jasmine') || 
+                                       (context.QUnit && 'QUnit') || 
+                                       (context.tape && 'tape') || 
+                                       (context.mocha || 'mocha'))(context);
     
     var test, i;   
 
@@ -158,7 +159,8 @@
     for (i = 1; i < values.length; i += 1) {
     
       test = { result: PASSED };
-      strategy(fnTest, test, values[i]);
+      
+      applyStrategy(fnTest, test, values[i]);
       
       // each strategy modifies test.result if the test fails.
       test.message = traceLabels + '\n [' + values[i].join(PAD) + '] (' + 
@@ -228,10 +230,16 @@
   function parseDataTable(fnBody) {
 
     var fs = fnBody.toString();
-    var table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//);
-    var data = table[0].replace(/[\/\*]*[\r]*[\*\/]*/g, '').split('\n');
-    var rows = [];
     
+    // find data table comment
+    var table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//)[0];
+    
+    // convert table into an array of row data
+    var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
+                       .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
+                       .split('\n'); // and split by newline
+    
+    var rows = [];
     var str, row, size, i;
     
     for (i = 0; i < data.length; i++) {
@@ -318,6 +326,7 @@
    * @private 
    * @function shouldNotHaveDuplicateLabels
    * @param {Array} row - row data values.
+   * @throws {Error} when a duplicate is detected
    */
   function shouldNotHaveDuplicateLabels(row) {
     for (var label, visited = {}, j = 0; j < row.length; j += 1) {
@@ -367,6 +376,7 @@
   // TODO - YET ANOTHER REFACTORING:
   //    PROVIDE A LIST METHOD TO SHOW ALL STRATEGIES REGISTERED
   //    EASE UP LOOKUP'S CLEVERNESS
+  //    make context specification easier, more global
   //    EXAMPLE OF DEFINING CUSTOM STRATEGY
   
   

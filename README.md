@@ -145,6 +145,29 @@ Cucumber and Fit:
       });
     });
 
+# line comments
+
+Table rows may contain line comments.
+
+      where(function(){/***
+        | a | b | c |
+        | 1 | 2 | 2 |  // should pass
+        | 4 | 3 | x |  // should fail
+        ***/
+        expect(Math.max(a, b)).toBe(c);
+      });
+      
+A commented row is ignored.
+
+      where(function(){
+        /***
+          | a | b | c |
+          | 1 | 2 | 2 | // should pass
+        //| 4 | 3 | x | (should not execute)
+        ***/
+        expect(Math.max(a, b)).toBe(c);
+      });
+
 numeric data
 ------------
 
