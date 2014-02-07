@@ -531,17 +531,18 @@ describe('where.js jasmine spec', function () {
   
 
   
-  describe('Math tests', function () {
-    it('should accept Math constants', function () {
+  // describe('Math tests', function () {
+    // it('should accept Math constants', function () {
     
-      where(function () {
-        /***
-          a | b | c
-          6 | 12 | 18
-        ***/
+    // /* oops better implement something here... */
+      // where(function () {
+        // /***
+          // a | b | c
+          // 6 | 12 | 18
+        // ***/
         
-      });
+      // });
       
-    });
-  });
+    // });
+  // });
 });
