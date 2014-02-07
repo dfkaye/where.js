@@ -13,9 +13,7 @@ also inspired by:
     (http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
 + Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
-__[30 JAN - 7 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
-
-# [TODO](#TODO)...
+Mostly ready for prime time, though still some things [to do](#TODO).
 
 # works on my machine
 
@@ -33,13 +31,7 @@ __[30 JAN - 7 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
 
-+ [testling __HAS ISSUES_] 
-testling script runs only the tape suite 
-[![browser support](https://ci.testling.com/dfkaye/where.js.png)](http://ci.testling.com/dfkaye/where.js)
-
-# [tests](#tests)...
-
-# documentation starts now...
+# see the [tests](#tests)...
 
 # install
 
@@ -95,7 +87,7 @@ than this
     
 # story
 
-where.js merges both basic algorithms and lessons learned from my earlier 
+where.js merges both the basic algorithms and lessons learned from my earlier 
 [jasmine-where](https://github.com/dfkaye/jasmine-where) 
 and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects, 
 which are now __deprecated__ as of this release.
@@ -302,7 +294,7 @@ inside the test function:
         
         expect(context.expect).toBe(expect);
         
-    }, { expect: expect});
+    }, { expect: expect}); // <= context
 
 You may also use it to enable logging all test output to the console, enable 
 interception of failing tests (to try preventing them appearing as failed even 
@@ -410,7 +402,7 @@ and as an emitter for 'result' events.
         // use the context reference to 'tape' to test itself
         tape.equal(tape, context.tape, 'should find tape');
 
-      }, { tape: t });
+      }, { tape: t });  // <= context
       
       t.equal(results.passing.length, 1);
       t.end();
@@ -438,12 +430,6 @@ coffeescript
 --------------------------
 
 __TODO__ [ multiline string delimiter issue ]
-
-
-testling with mocha
--------------------
-
-__TODO__
 
 
 tests
@@ -497,9 +483,9 @@ browser suites
 --------------
 
 The `browser-suites` rely on browser versions of each library stored in the 
-/vendor directory (mocha, expect.js, assert.js, should, chai, qunit, qunit-tap, 
-and jasmine-2.0.0), rather than the /testem directory, so they can be viewed as 
-standalone pages with no dependency on testem.  
+[/vendor](/tree/master/vendor) directory (mocha, expect.js, assert.js, should, 
+chai, qunit, qunit-tap, and jasmine-2.0.0), rather than your system's `/testem` 
+directory, so they can be viewed as static pages.  
 
 You can view them directly on rawgithub:
   - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
@@ -513,25 +499,45 @@ You can view them directly on rawgithub:
 + add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
-+ need more sophisticated object-creation examples
-
-+ add testling config for tape suite [anti-BDD bias plus jasmine is ball of mud]
-+ try testling with another test framework??
-  - [jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) reporter by miller madeiros
++ need more sophisticated object-creation examples (line comment stuff?)
++ explore jasmine tap reporter by Miller Medeiros (@millermedeiros)
+  - [jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) 
 
 + README documentation
   + reorganize docs - too sprawling or verbose
-  + strategy 'purpose' needs explaining (try+catch vs events vs ?)
+  + strategy 'purpose' needs better explaining (try+catch vs events vs ?)
   + strategy ui needs re-visiting - strings vs objects
     - jasmine - assume global or double as 'context.jasmine'
     - QUnit - assume global or double as 'context.QUnit'
     - tape - t function serves double as 'context.tape'
-    - custom strategy
-+ version bump
-+ npm publish
-+ post
+    - custom strategy needs explaining
 
-  
+
+# CONCLUSIONS
+
+## TESTLING RANT
+
+The unhelpfulness of error messages ("missing ';' on line 1" of a *browserified* 
+file) is the last straw.  We shouldn't have to keep fighting the anti-browser, 
+anti-BDD bias of a free service that's supposed to ease cross-browser JavaScript 
+testing.  Yes, it's free, thank you, but if you can't support it *as free* then 
+have we really improved anything?
+
+## JASMINE RANT
+
+The addition of the `boot` file (which assumes browser environments) for jasmine 
+2.0.0, plus the removal of the `currentSpec` property from `jasmine.getEnv()` 
+make plain that jasmine is still a ball of mud.
+
+## RECOMMENDED TOOLS
+
++ __mocha__ - non-invasive try+catch, with multiple reporter support, just works.
++ __should.js (or chai/should)__ - ignore the disingenuous FUD from purists and 
+maintainability experts regarding `Object.prototype.should`, `should` makes test 
+assertions easy to write, because `assertions.should.be.easy.to.write`.
++ __testem__ - easy to configure live-reload harness that just works.
++ __travis__ - free service with multiple environment support that just works.
+
 # License
 
 MIT for now, JSON eventually

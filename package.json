@@ -1,6 +1,6 @@
 {
   "name": "where.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "data-driven test method for js frameworks (mocha, jasmine, qunit, tape)",
   "homepage" : "https://github.com/dfkaye/where.js",
   "author": {
@@ -36,19 +36,5 @@
     "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
     "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",
     "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"    
-  },
-  "testling": {
-    "scripts": [
-      "./test/tape/node-suite.js"    
-    ],
-    "browsers" : [
-      "ie/6..latest",
-      "chrome/latest",
-      "firefox/latest",
-      "safari/latest",
-      "opera/latest",
-      "iphone/6", 
-      "ipad/6"
-    ]
-  }  
+  } 
 }
