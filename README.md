@@ -33,11 +33,8 @@ __[30 JAN - 7 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
 
-+ [testling __TODO__]
-
-testling script pulls in the core suite but specifies the mocha harness and uses 
-[jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) reporter by miller madeiros
-
++ [testling __HAS ISSUES_] 
+testling script runs only the tape suite 
 [![browser support](https://ci.testling.com/dfkaye/where.js.png)](http://ci.testling.com/dfkaye/where.js)
 
 # [tests](#tests)...
@@ -517,8 +514,11 @@ You can view them directly on rawgithub:
 + triple star comments `/***` not (easily) supported in Coffeescript - could 
     convert to `/*`
 + need more sophisticated object-creation examples
-+ add testling config for tape suite
-+ try testling with another test framework?
+
++ add testling config for tape suite [anti-BDD bias plus jasmine is ball of mud]
++ try testling with another test framework??
+  - [jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) reporter by miller madeiros
+
 + README documentation
   + reorganize docs - too sprawling or verbose
   + strategy 'purpose' needs explaining (try+catch vs events vs ?)

@@ -1,4 +1,4 @@
-(function() {
+;(function() {
     if (! jasmine) {
         throw new Exception("jasmine library does not exist in global namespace!");
     }

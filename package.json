@@ -39,15 +39,8 @@
   },
   "testling": {
     "scripts": [
-      "./vendor/jasmine-2.0.0/jasmine.js",
-      "./vendor/jasmine-2.0.0/jasmine-html.js",
-      "./vendor/jasmine-2.0.0/boot.js",
-      "./where.js",
-      "./test/where/where.spec.js",
-      "./vendor/jasmine-tap/jasmine-tap.js",      
-      "./vendor/jasmine-tap/runner.js"      
+      "./test/tape/node-suite.js"    
     ],
-    "harness": "mocha",
     "browsers" : [
       "ie/6..latest",
       "chrome/latest",
