@@ -36,5 +36,26 @@
     "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
     "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",
     "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"    
-  }
+  },
+  "testling": {
+    "scripts": [
+      "./vendor/jasmine-2.0.0/jasmine.js",
+      "./vendor/jasmine-2.0.0/jasmine-html.js",
+      "./vendor/jasmine-2.0.0/boot.js",
+      "./where.js",
+      "./test/where/where.spec.js",
+      "./vendor/jasmine-tap/jasmine-tap.js",      
+      "./vendor/jasmine-tap/runner.js"      
+    ],
+    "harness": "mocha",
+    "browsers" : [
+      "ie/6..latest",
+      "chrome/latest",
+      "firefox/latest",
+      "safari/latest",
+      "opera/latest",
+      "iphone/6", 
+      "ipad/6"
+    ]
+  }  
 }

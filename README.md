@@ -13,7 +13,7 @@ also inspired by:
     (http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
 + Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
-__[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
+__[30 JAN - 7 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 # [TODO](#TODO)...
 
@@ -21,6 +21,7 @@ __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
 
 [![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
 
+# libraries tested and supported so far
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
   - [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
 + [mocha](http://visionmedia.github.io/mocha/)
@@ -33,6 +34,11 @@ __[30 JAN - 5 FEB 2014 ~ IN PROGRESS ~ ACTUAL DOCUMENTATION]__
   TAP project for [testling](http://ci.testling.com/)
 
 + [testling __TODO__]
+
+testling script pulls in the core suite but specifies the mocha harness and uses 
+[jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) reporter by miller madeiros
+
+[![browser support](https://ci.testling.com/dfkaye/where.js.png)](http://ci.testling.com/dfkaye/where.js)
 
 # [tests](#tests)...
 
