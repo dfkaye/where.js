@@ -103,7 +103,45 @@ inject other information or references into the test function.
 (I'll relate some additional lessons learned from this project down below or 
 elsewhere.)
 
-# format
+# triple-asterisk comments
+
+A data table inside a where() function should be enclosed between start `/***` 
+and end `***/` 3-asterisk comments.
+
+      where(function(){
+        /***        // start
+         a | b | c
+         1 | 2 | 2
+         4 | 3 | 4
+         6 | 6 | 6
+        ***/        // end
+        
+        expect(Math.max(a, b)).toBe(c);
+      });
+
+### coffee-script comments
+
+As of Jan 2014, the 3-asterisk comment sequences are the only item not directly 
+translatable to CoffeeScript.  The workaround is to use CoffeeScript's mechanism 
+for [embedded JavaScript](http://coffeescript.org/#embedded) by placing backtick 
+( \` ) characters before the start `/***` and and after end `***/` comment
+sequences.
+
+      where ->
+      
+        `/***
+        
+         a | b | c
+         1 | 2 | 2
+         4 | 3 | 4
+         6 | 6 | 6
+         
+        ***/`
+        
+        expect(Math.max(a, b)).toBe c
+        return      
+
+# table format
 
 Similar to Cucumber and Spock, where.js data tables must contain at least two 
 rows. The first row must contain the names to be used as variables in the 
@@ -425,13 +463,7 @@ more sophisticated example
 
 __TODO__ [ object instance creation example]
 
-
-coffeescript
---------------------------
-
-__TODO__ [ multiline string delimiter issue ]
-
-
+        
 tests
 -----
 
@@ -496,28 +528,23 @@ You can view them directly on rawgithub:
 
   
 # TODO
-+ add coffeescript support with a mocha or tape example (resolve /*** vs /*!)
-+ triple star comments `/***` not (easily) supported in Coffeescript - could 
-    convert to `/*`
-+ need more sophisticated object-creation examples (line comment stuff?)
++ more sophisticated testing examples (line comment stuff?)
 + explore jasmine tap reporter by Miller Medeiros (@millermedeiros)
   - [jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) 
-
-+ README documentation
-  + reorganize docs - too sprawling or verbose
-  + strategy 'purpose' needs better explaining (try+catch vs events vs ?)
-  + strategy ui needs re-visiting - strings vs objects
-    - jasmine - assume global or double as 'context.jasmine'
-    - QUnit - assume global or double as 'context.QUnit'
-    - tape - t function serves double as 'context.tape'
-    - custom strategy needs explaining
++ reorganize docs - too sprawling or verbose
++ strategy 'purpose' needs better explaining (try+catch vs events vs ?)
++ strategy ui needs re-visiting - strings vs objects
+  - jasmine - assume global or double as 'context.jasmine'
+  - QUnit - assume global or double as 'context.QUnit'
+  - tape - t function serves double as 'context.tape'
+  - custom strategy needs explaining
 
 
 # CONCLUSION 
 
 ## RECOMMENDED TOOLS
 
-+ __mocha__ - non-invasive try+catch, with multiple reporter support, just works.
++ __mocha__ - non-invasive try+catch, multiple reporter support, just works.
 + __should.js (or chai/should)__ - ignore the disingenuous FUD from purists and 
 maintainability experts regarding `Object.prototype.should`, `should` makes test 
 assertions easy to write, because `assertions.should.be.easy.to.write`.
