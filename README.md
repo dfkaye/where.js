@@ -259,7 +259,7 @@ Truthy/falsy values are also automatically converted as per this test:
 
 # string data vs. empty data
 
-Data with quoted strings are preserved.
+While data with quoted strings are preserved,
 
     it('should handle quoted values', function () {
       where(function () {
@@ -278,8 +278,29 @@ Data with quoted strings are preserved.
       });
     });
     
-    
-    
+*empty* data should be formatted with outer table borders:
+
+      it('should throw when empty data missing separators', function() {
+        expect(function() {
+          where(function() {
+            /***
+             a 
+                // interpreted as missing row, not as row with empty data
+            ***/
+            expect(a).toBe('');
+          });
+        }).toThrow();
+      });
+      
+      it('should not throw when empty data is separated', function() {
+        where(function() {
+          /***
+          | a |
+          |   | // interpreted as row with empty data
+          ***/
+          expect(a).toBe('');
+        });
+      });
     
 # output
 
