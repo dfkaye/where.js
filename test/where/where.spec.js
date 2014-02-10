@@ -5,11 +5,11 @@ if (typeof require == 'function') {
   require('../../where.js');
 }
 
-describe('where.js jasmine spec', function () {
+describe('where.js [core jasmine spec]', function () {
 
    /* CHARACTERIZATION TESTS */
 
-  describe('where characteristics', function () {
+  describe('API', function () {
       
     it('should be global', function() {
       expect(typeof where).toBe('function');
@@ -19,7 +19,7 @@ describe('where.js jasmine spec', function () {
       expect(where.length).toBe(2);
     });
     
-    it('should accept context with jasmine and expect specified', function () {
+    it('should accept context arg with jasmine and expect props', function () {
       where(function(){/*** 
           a  |  b  |  c
           1  |  2  |  3
@@ -46,7 +46,7 @@ describe('where.js jasmine spec', function () {
        }).toThrow();
     });
     
-    it('should remove line comments', function () {
+    it('should ignore line comments', function () {
       expect(function () {
         where(function(){
           /***
@@ -59,7 +59,7 @@ describe('where.js jasmine spec', function () {
        }).not.toThrow();
     });
     
-    it('should throw when all data rows are commented', function () {
+    it('should throw when all data rows are line-commented', function () {
       expect(function () {
         where(function(){
           /*** 
@@ -104,8 +104,6 @@ describe('where.js jasmine spec', function () {
       });
     });
     
-
-
     it('should return results', function () {
       var results = where(function(){/*** 
           a  |  b  |  c
@@ -186,12 +184,12 @@ describe('where.js jasmine spec', function () {
       });
     });
     
-    it('should not modify quoted values', function () {
+    it('should handle quoted values', function () {
       where(function () {
         /***
-          a  | b  | c    | d    | e   | f        | g
-          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined'
-        ***/
+          a  | b  | c    | d    | e   | f        | g           | unquoted
+          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined' | a b
+          ***/
         expect(a).toBe('\'\'');
         expect(b).toBe('\"\"');
         expect(c).toBe('\"\'\'\"');
@@ -199,10 +197,88 @@ describe('where.js jasmine spec', function () {
         expect(e).toBe('\' \'');
         expect(f).toBe('\' faff \'');
         expect(g).toBe('\'undefined\'');
+        expect(unquoted).toBe('a b');
       });
     });
-  });
+    
+    
+    // describe('math data', function() {
+      
+    // });  
+    
+    });
+
   
+    describe('empty data', function() {
+    
+      it('should throw when empty data missing separators', function() {
+        expect(function() {
+          where(function() {
+            /***
+             a 
+                // interpreted as missing row, not as row with empty data
+            ***/
+            expect(a).toBe('');
+          });
+        }).toThrow();
+      });
+      
+      it('should not throw when empty data is separated', function() {
+        where(function() {
+          /***
+          | a |
+          |   | // interpreted as row with empty data
+          ***/
+          expect(a).toBe('');
+        });
+      });
+      
+      it('should throw when missing last value', function () {
+        expect(function () {
+          where(function(){/*** 
+            a  |  b  |  c
+            1  |  2  |
+          ***/});
+        }).toThrow();
+      });
+      
+      it('should not throw when empty last value is bordered', function () {
+        expect(function () {
+          where(function(){/*** 
+          |  a  |  b  |  c |
+          |  1  |  2  |    |
+          ***/});
+        }).not.toThrow();
+      });
+      
+      it('should throw when missing first value', function () {
+        expect(function () {
+          where(function(){/*** 
+            a  |  b  |  c
+               |  1  |  2
+          ***/});
+        }).toThrow();
+      });
+      
+      it('should not throw when empty first value is bordered', function () {
+        expect(function () {
+          where(function(){/*** 
+          |  a  |  b  |  c |
+          |     |  1  |  2|
+          ***/});
+        }).not.toThrow();
+      });
+      
+      it('should not throw when missing inner value', function () {
+        expect(function () {
+          where(function(){/*** 
+            a  |  b  |  c
+            1  |     | 2
+          ***/});
+        }).not.toThrow();
+      });
+      
+    });
 
   /* MALFORMED TABLE */
   
@@ -221,7 +297,7 @@ describe('where.js jasmine spec', function () {
        }).toThrow();
     });
     
-    it('should throw when function has only one row in data-table', function () {
+    it('should throw when table contains only one row', function () {
       expect(function () {
         where(function(){/*** 
           a  |  b  |  c 
@@ -229,7 +305,7 @@ describe('where.js jasmine spec', function () {
        }).toThrow();
     });
 
-    it('should throw with duplicate labels', function () {
+    it('should throw when table contains duplicate labels', function () {
       expect(function () {
         where(function(){/***
           a | a
@@ -238,53 +314,17 @@ describe('where.js jasmine spec', function () {
         });
       }).toThrow();
     });
-     
-    it('should throw when function has un-separated items in data-table', function () {
+         
+    it('should throw when table data not properly separated', function () {
       expect(function () {
         where(function(){/*** 
           a  |  b  |  c
-          6  
+          6     4     0
         ***/});
        }).toThrow();
     });
     
-    it('should throw when missing last value', function () {
-      expect(function () {
-        where(function(){/*** 
-          a  |  b  |  c
-          1  |  2  |
-        ***/});
-      }).toThrow();
-    });
-     
-    it('should throw when missing first value', function () {
-      expect(function () {
-        where(function(){/*** 
-          a  |  b  |  c
-             |  1  |  2
-        ***/});
-      }).toThrow();
-    });
-     
-    it('should throw when missing inner value', function () {
-      expect(function () {
-        where(function(){/*** 
-          a  |  b  |  c
-          1  |     | 2
-        ***/});
-      }).toThrow();
-    });
-    
-    it('should throw when missing separator in data-table', function () {
-      expect(function () {
-        where(function(){/*** 
-          a  |  b  |  c
-          6     4  |  0
-        ***/});
-       }).toThrow();
-    });
-    
-    it('should throw if borders not balanced', function() {
+    it('should throw when table borders are not balanced', function() {
       expect(function () {
         where(function(){/*** 
           | a | b | c 
@@ -481,7 +521,7 @@ describe('where.js jasmine spec', function () {
    ***/
   describe('non-intercepted failing tests', function () {
 
-    it("stack trace ~ 'should contain at least 2 rows but has 0'", function () {
+    it("should generate stack trace with 'should contain at least 2 rows but has 0'", function () {
       
       // stub out console.log - then restore it afterwards.
       var log = console.log;

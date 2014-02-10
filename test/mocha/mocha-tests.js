@@ -16,7 +16,7 @@ if (typeof require == 'function') {
 // should log all data when specified
 // should not throw when intercept specified
 
-describe('where(fn, context)', function(done) {
+describe('where.js [mocha tests]', function(done) {
   
   // ASSERT
   

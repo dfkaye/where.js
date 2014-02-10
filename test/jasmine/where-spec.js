@@ -16,7 +16,7 @@ if (typeof require == 'function') {
 // should log all data when specified
 // should not throw when intercept specified
     
-describe('where() with jasmine', function () {
+describe('where.js [jasmine tests]', function () {
 
   it('should be function', function () {
     expect(typeof where).toBe('function');

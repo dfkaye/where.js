@@ -15,7 +15,7 @@ if (typeof require == 'function') {
 // should log all data when specified
 // should not throw when intercept specified
 
-QUnit.module("where() with QUnit");
+QUnit.module('where.js [QUnit tests]');
 
 test('should be a function', function () {
   QUnit.assert.equal(typeof where, 'function');

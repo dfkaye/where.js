@@ -9078,7 +9078,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
  * + npmjs.org/dfkaye/where.js
  *
  */
-!(typeof where == 'undefined') || (function whereSandox(/* named IFFE for tests */){
+;(function whereSandox(/* named IFFE for tests */){
 
   // This makes where() a global function so as not to attach itself to any 
   // specific framework.
@@ -9256,10 +9256,16 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   function parseDataTable(fnBody) {
 
     var fs = fnBody.toString();
-    var table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//);
-    var data = table[0].replace(/[\/\*]*[\r]*[\*\/]*/g, '').split('\n');
-    var rows = [];
     
+    // find data table comment
+    var table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//)[0];
+    
+    // convert table into an array of row data
+    var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
+                     .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
+                     .split('\n'); // and split by newline
+    
+    var rows = [];
     var str, row, size, i;
     
     for (i = 0; i < data.length; i++) {
@@ -9312,13 +9318,23 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     var row;
     
     // empty column
-    if (str.replace(/\s+/g, '').match(/[\|][\|]/g)) {
-      throw new Error('where.js table has unbalanced columns: ' + str);
-    }
+    //if (str.replace(/\s+/g, '').match(/[\|][\|]/g)) {
+    //console.log(str.replace(/\s+/g, '').match(/[\|][\|]/g)[0]);
+    //  throw new Error('where.js table has unbalanced columns: ' + str);
+    //}
     
     // trim row string and split into data array
-    row = str.replace(/^\s+|\s+$/gm, '').split(SEP);
+    str = str.replace(/^\s+|\s+$/gm, '');
     
+    var lb = str.charAt(0) === SEP;
+    var rb = str.charAt(str.length - 1) === SEP;
+    
+    if (lb != rb) {
+      throw new Error('where.js table has unbalanced columns: ' + str);
+    }
+
+    row = str.split(SEP);
+
     // check for left and right borders
     var left = row[0] === '';
     var right = row[row.length - 1] === '';
@@ -9373,6 +9389,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     for (var v, i = 0; i < row.length; i += 1) {
        
       v = row[i];
+      
+      if (v == '') console.log(v);
 
       if (v.match(/undefined|null|true|false/)) {
       

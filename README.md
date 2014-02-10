@@ -124,7 +124,7 @@ and end `***/` 3-asterisk comments.
 As of Jan 2014, the 3-asterisk comment sequences are the only item not directly 
 translatable to CoffeeScript.  The workaround is to use CoffeeScript's mechanism 
 for [embedded JavaScript](http://coffeescript.org/#embedded) by placing backtick 
-( \` ) characters before the start `/***` and and after end `***/` comment
+( \` ) characters before the start `/***` and after the end `***/` comment
 sequences.
 
       where ->
@@ -257,24 +257,30 @@ Truthy/falsy values are also automatically converted as per this test:
 
       });
 
-# quoted values
+# string data vs. empty data
 
 Data with quoted strings are preserved.
 
+    it('should handle quoted values', function () {
       where(function () {
         /***
-          a  | b  | c    | d    | e   | f        | g
-          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined'
-        ***/
+          a  | b  | c    | d    | e   | f        | g           | unquoted
+          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined' | a b
+          ***/
         expect(a).toBe('\'\'');
         expect(b).toBe('\"\"');
         expect(c).toBe('\"\'\'\"');
         expect(d).toBe('\'"\"\'');
         expect(e).toBe('\' \'');
         expect(f).toBe('\' faff \'');
-        expect(f).toBe('\'undefined\'');
+        expect(g).toBe('\'undefined\'');
+        expect(unquoted).toBe('a b');
       });
-      
+    });
+    
+    
+    
+    
 # output
 
 A passing `where()` test has no effect on the test runner's default reporter 
