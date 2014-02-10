@@ -341,7 +341,7 @@ The following snip shows how to refer to each array in the results:
 
 __THIS IS THE CRITICAL "LIBRARY-AGNOSTIC" PIECE OF THE PUZZLE.__
 
-`where` accepts up to two arguments. The first is the function containing the 
+`where()` accepts up to two arguments. The first is the function containing the 
 data table and assertions.  
 
 The second, optional but _recommended_, argument is a `context` or configuration 
@@ -359,7 +359,7 @@ inside the test function:
         
         expect(context.expect).toBe(expect);
         
-    }, { expect: expect}); // <= context
+    }, { expect: expect }); // <= context
 
 You may also use it to enable logging all test output to the console, enable 
 interception of failing tests (to try preventing them appearing as failed even 
