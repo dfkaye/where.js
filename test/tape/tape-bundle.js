@@ -9164,6 +9164,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     
     var failing = [];
     var passing = [];
+    //var data = { labels: labels, values: values };
     var results = { failing: failing, passing: passing, values: values };
     
     /*
@@ -9262,8 +9263,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     
     // convert table into an array of row data
     var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
-                     .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
-                     .split('\n'); // and split by newline
+                    .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
+                    .split('\n'); // and split by newline
     
     var rows = [];
     var str, row, size, i;
@@ -9272,7 +9273,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
       str = data[i].replace(/[\|][\s*]/g,'|').replace(/[\s]*[\|]/g, '|');
       
-      // skips empty rows
+      // skip empty rows
       if (str.match(/\S+/)) {
 
         row = balanceRowData(str);
@@ -9291,6 +9292,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         }
 
         convertTypes(row);
+        
         rows.push(row);        
       }
     }
@@ -9315,37 +9317,25 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    */
   function balanceRowData(str) {
   
-    var row;
+    var left, right, row;
     
-    // empty column
-    //if (str.replace(/\s+/g, '').match(/[\|][\|]/g)) {
-    //console.log(str.replace(/\s+/g, '').match(/[\|][\|]/g)[0]);
-    //  throw new Error('where.js table has unbalanced columns: ' + str);
-    //}
-    
-    // trim row string and split into data array
+    // trim row string...
     str = str.replace(/^\s+|\s+$/gm, '');
     
-    var lb = str.charAt(0) === SEP;
-    var rb = str.charAt(str.length - 1) === SEP;
-    
-    if (lb != rb) {
-      throw new Error('where.js table has unbalanced columns: ' + str);
-    }
-
-    row = str.split(SEP);
-
     // check for left and right borders
-    var left = row[0] === '';
-    var right = row[row.length - 1] === '';
+    left = str.charAt(0) === SEP;
+    right = str.charAt(str.length - 1) === SEP;
     
     if (left != right) {
-      throw new Error('where.js table borders are not balanced: ' + str);
+      throw new Error('where.js table has unbalanced column borders: ' + str);
     }
-    
+
+    // ... and split into data array
+    row = str.split(SEP);
+
     // remove empty border tokens
-    left && row.shift();
-    right && row.pop();
+    row[0] === '' && row.shift();
+    row[row.length - 1] === '' && row.pop();
     
     // trim each value
     for (var i = 0; i < row.length; i += 1) {
@@ -9390,8 +9380,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
        
       v = row[i];
       
-      if (v == '') console.log(v);
-
       if (v.match(/undefined|null|true|false/)) {
       
         // convert falsy values
@@ -9540,17 +9528,47 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   
   where.strategy('QUnit', function qunitStrategy(context) {
     
+    // this code reminds me of java for some reason...
+    
     var test;
+    var realPush;
+    var interceptingPush;
+        
+    if (context.intercept) {
     
-    context.QUnit.log(function onResult(details) {
-    
-      if (!details.result) {
+      /*
+       * this block attempts to capture test assertions, reset them to passing 
+       * (i.e., they are expected to fail), and push them to QUnit's assertions
+       * list with the real 'push()' method.
+       */
+      interceptingPush = function overridingAssertionsPush(details) {
+        if (!details.result) {
+          details.result = !details.result;
+        }
+        realPush.call(QUnit.config.current.assertions, details);
+      };
       
+      // override on start
+      context.QUnit.testStart(function(detail) {
+        realPush = QUnit.config.current.assertions.push;
+        QUnit.config.current.assertions.push = interceptingPush;
+      });
+    
+      // undo override on done
+      context.QUnit.testDone(function(detail) {
+        QUnit.config.current.assertions.push = realPush;
+      });
+    }
+
+    context.QUnit.log(function onResult(details) {
+      if (!details.result) {
+        
+        // overwrite default result with non-passing result detail
         test.result = 'Error: expected ' + details.actual + ' to be ' + 
                       details.expected;
                       
         if (!context.intercept) {
-          // provides QUnit sourceFromStacktrace() output
+          // this adds the QUnit sourceFromStacktrace() output
           test.result = test.result + '\n' + details.source;
         }
       }
@@ -9559,7 +9577,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     return function testQUnit(fnTest, thisTest, value) {
     
       test = thisTest;
-      
+
       fnTest.apply({}, [context].concat(value));
     };
   });

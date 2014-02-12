@@ -122,7 +122,7 @@ test('should not log passing tests on Node.js, should log in browser', function(
     | 1 | 2 | 2 |
     ***/
     // force pass
-    QUnit.push(true, 2, 'hi ', 'force pass');
+    QUnit.push(true, 2, 'x', 'force pass');
     
   }, { assert: assert, QUnit: QUnit });
 
