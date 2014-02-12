@@ -85,9 +85,7 @@ test('should throw unintercepted failing tests', function(assert) {
         // logic fork in QUnit between ok() and the other assertions, 
         // which leads to different logging and assertion queue paths
         assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
-        //    QUnit.push(false, 2, 'x', 'should fail');
-
-            //throw Error('error');
+        // QUnit.push(false, 2, 'x', 'should fail');
         
       }, { assert: assert, QUnit: QUnit});
     },
@@ -112,11 +110,9 @@ test('should not log passing tests on Node.js, should log in browser', function(
 
   // stub out console.log - then restore it afterward
   var log = console.log;
-  var message;
   var count = 0;
   
-  console.log = function (msg) {
-    message = msg;
+  console.log = function () {
     count += 1;
   };
   
@@ -125,8 +121,8 @@ test('should not log passing tests on Node.js, should log in browser', function(
     | a | b | c |
     | 1 | 2 | 2 |
     ***/
-    QUnit.push(true, 2, 'x', 'should pass');
-    //assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
+    // force pass
+    QUnit.push(true, 2, 'hi ', 'force pass');
     
   }, { assert: assert, QUnit: QUnit });
 

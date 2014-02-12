@@ -605,14 +605,6 @@ You can view them directly on rawgithub:
 
 ## CONCLUSIONS 
 
-Test libraries make assumptions.  Not all test libraries expose hooks for 
-intercepting failure messages.  That is a big design issue, as it means there's 
-no direct way to plug in to the "lifecycle" of a test, peform transforms, etc., 
-(as if they were made before the JavaScript world hear about streams).  It also 
-means their reporters are tightly coupled with their test runners.  *Which means 
-some libraries themselves do not benefit from their own stated purpose - to ease 
-test-driven development.*
-
 I started with jasmine-where back when (October 2013) as a self-assessment and 
 found both v1.3.1 and v2.0.0-rc3 were a bit tricky but not difficult to 
 intercept.  With jasmine 2.0.0 (first stable in late December) a fundamental 
@@ -621,12 +613,25 @@ simplifying my own jasmine-where and jasmine-intercept projects.  Thinking I was
 just not that great at this anymore, I took on the whole `where.js` concept in 
 January 2014 to invalidate that bit of self-doubt in a hurry.
 
-## WHAT I FOUND OUT 
+## WHAT I FOUND OUT
+
+Test libraries make assumptions.  Not everyone designs with "lifecycle" in mind. 
+Not all test libraries expose hooks for intercepting messages.  That could be a 
+blocking issue when you need a way to plug in to the lifecycle of a test, 
+perform transforms, etc.  It also means their reporters are tightly coupled with 
+their test runners.  *Which means some libraries themselves do not benefit from 
+their own stated purpose - to ease test-driven development.*
 
 QUnit was surprisingly easy to hook *some* information, but impossible to trap 
-completely.  It's really best used with another reporting utility like qunit-tap
-so that you can ignore the tightly-coupled mess of the HTML reporter. That's a 
-strike against it.
+completely.  You can force a failing result in QUnit with this:
+
+    QUnit.push(false, actual, expected, "force fail message");
+    
+But QUnit's legacy lifecycle doesn't expose a way for testers to intercept 
+messages to the HTML reporter (which is just visual rather than logical 
+inspection anyway).  So I recommend using it with another reporting utility like 
+qunit-tap so that you can ignore the tightly-coupled mess of the HTML reporter. 
+That's a strike against it.
 
 Same goes for Tape except that there is no HTML reporter for it, as it is a test 
 library for node.js projects.  With Tape in the browser, you need browserify - 
@@ -638,6 +643,12 @@ and reporter.  Taking assert, expect and should to the browser required only one
 library to be ported - assert.js.  Working with chai was even easier - no port 
 needed for the browser. 
 
+Not all browsers handle the test lifecycle the same way.  This was not a 
+surprise so much as annoyance.  IE, Chrome and Opera report two failures in the 
+QUnit suite whereas Firefox reports only one.  The failures are expected so we 
+really want to see NO failures.  And failures are reported first in the console 
+regardless of their occurrence in the test suite (that could be a side-effect of
+using qunit-tap).
 
 After this experience, I recommend the following tools for JavaScript TDD:
 
@@ -647,6 +658,7 @@ maintainability experts regarding `Object.prototype.should`, `should` makes test
 assertions easy to write, because `assertions.should.be.easy.to.write`.
 + __testem__ - easy to configure live-reload harness that just works.
 + __travis__ - free service with multiple environment support that just works.
+
 
 # License
 

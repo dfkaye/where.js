@@ -502,38 +502,47 @@
   
   where.strategy('QUnit', function qunitStrategy(context) {
     
-    var test;
-    var assertionsPush;
+    // this code reminds me of java for some reason...
     
-    function overrideAssertionsPush(details) {
-      if (!details.result) {
-        details.result = !details.result;
-      }
-      assertionsPush.call(QUnit.config.current.assertions, details);
-    };
+    var test;
+    var realPush;
+    var interceptingPush;
         
     if (context.intercept) {
     
+      /*
+       * this block attempts to capture test assertions, reset them to passing 
+       * (i.e., they are expected to fail), and push them to QUnit's assertions
+       * list with the real 'push()' method.
+       */
+      interceptingPush = function overridingAssertionsPush(details) {
+        if (!details.result) {
+          details.result = !details.result;
+        }
+        realPush.call(QUnit.config.current.assertions, details);
+      };
+      
+      // override on start
       context.QUnit.testStart(function(detail) {
-        assertionsPush = QUnit.config.current.assertions.push;
-        QUnit.config.current.assertions.push = overrideAssertionsPush;
+        realPush = QUnit.config.current.assertions.push;
+        QUnit.config.current.assertions.push = interceptingPush;
       });
     
+      // undo override on done
       context.QUnit.testDone(function(detail) {
-        QUnit.config.current.assertions.push = assertionsPush;
+        QUnit.config.current.assertions.push = realPush;
       });
     }
 
     context.QUnit.log(function onResult(details) {
-    
       if (!details.result) {
         
-        // overwrite with non-passing result
+        // overwrite default result with non-passing result detail
         test.result = 'Error: expected ' + details.actual + ' to be ' + 
                       details.expected;
                       
         if (!context.intercept) {
-          // provides QUnit sourceFromStacktrace() output
+          // this adds the QUnit sourceFromStacktrace() output
           test.result = test.result + '\n' + details.source;
         }
       }
