@@ -152,7 +152,8 @@ For example, `a`, `b`, and `c` are named as variables in the table, and used in
 the expectation - without having to be defined or var'd:
 
     it('should pass with correct data and expectation', function () {
-      where(function(){/***
+      where(function(){
+        /***
          a | b | c
          1 | 2 | 2
          4 | 3 | 4
@@ -168,7 +169,8 @@ Tables may also optionally contain left and right edge borders, similar to
 Cucumber and Fit:
 
     it('should pass with left and right table borders', function () {
-      where(function(){/***
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 4 | 3 | 4 |
@@ -182,7 +184,8 @@ Cucumber and Fit:
 
 Table rows may contain line comments.
 
-      where(function(){/***
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |  // should pass
         | 4 | 3 | x |  // should fail
@@ -322,7 +325,8 @@ derived from the data table, `passing` tests, and `failing` tests.
 The following snip shows how to refer to each array in the results:
 
     it('should pass with correct data and expectation', function () {
-      var results = where(function(){/***
+      var results = where(function(){
+        /***
          a | b | c
          1 | 2 | 2
          4 | 3 | 4
@@ -352,7 +356,8 @@ method, e.g.).
 The following snip shows that `context` is itself made available for inspection 
 inside the test function:
 
-    where(function(){/***
+    where(function(){
+        /***
          a | b | c
          0 | 0 | 0
         ***/
@@ -488,7 +493,8 @@ and as an emitter for 'result' events.
 
     test('should pass tape context', function(t) { // t is test, test is tape...
           
-      var results = where(function(){/***
+      var results = where(function(){
+        /***
         | a | b | c |
         | 0 | 0 | 0 |
         ***/
