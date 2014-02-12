@@ -496,7 +496,9 @@
     };        
   });
   
-  // STRATEGY for QUnit ~ surprisingly not bad!
+  // STRATEGY for QUnit ~ surprisingly not bad! however, complete interception 
+  // of expected failures is not possible in the HTML Reporter as currently 
+  // implemented (QUnit v1.13 as of this writing 12-FEB-2014.
   //
   // requires context argument with strategy defined as { QUnit: QUnit }
   
