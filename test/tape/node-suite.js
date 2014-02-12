@@ -25,7 +25,8 @@ tape('should be a function', function (test) {
 
 tape('should pass tape context', function(test) {
       
-  var results = where(function(){/***
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -43,11 +44,12 @@ tape('should throw when data-table is malformed', function (test) {
 
   test.throws(
     function() {
-      where(function(){/*** 
-      | a | b | c |
-      | 1 | 2 | 3 
-      | 2 | 4 | 6 |
-      ***/
+      where(function(){
+        /*** 
+        | a | b | c |
+        | 1 | 2 | 3 
+        | 2 | 4 | 6 |
+        ***/
       });
     },
     'should throw'
@@ -57,7 +59,8 @@ tape('should throw when data-table is malformed', function (test) {
 
 tape('should return results', function(test) {
       
-  var results = where(function(){/***
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -65,7 +68,7 @@ tape('should return results', function(test) {
     
     tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
 
-  }, { tape: test});
+  }, { tape: test });
   
   test.equal(results.values.length, 3, '3 value rows');
   test.equal(results.failing.length, 0, 'no failing assertions');
@@ -78,13 +81,14 @@ tape('should throw unintercepted errors', function(test) {
 
   test.throws(
     function() {
-      where(function(){/***
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | c |
         ***/
         tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
         
-      }, { tape: test});
+      }, { tape: test });
     },
     "should throw"
   );
@@ -95,13 +99,14 @@ tape('should throw unintercepted errors', function(test) {
 // UNCOMMENT THIS TEST TO SEE STACK OUTPUT FOR FAILING WHERE() ASSERTION
 // tape('this test should fail with intercept off', function(test) {
   
-    // where(function() {/***
+    // where(function() {
+      // /***
       // | a | b | c |
       // | 3 | 5 | 9 |
       // ***/
       // tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
     
-  // }, { tape: test});
+  // }, { tape: test });
   
   // test.end();
 // });
@@ -110,13 +115,12 @@ tape('should log errors by default', function(test) {
 
   test.throws(
     function() {
-      where(function(){/***
-      
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 3 | 2 | 1 |
         | 3 | 2 | 3 |
-        
         ***/
         
         tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
@@ -140,11 +144,10 @@ tape('should log all data when specified', function(test) {
   
   console.log = function () {
     count += 1;
-    log.apply(console, arguments);
   }
   
-  var results = where(function(){/***
-  
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -152,34 +155,33 @@ tape('should log all data when specified', function(test) {
     
     tape.equal(context.log, 1, 'should see context.log');        
     
-  }, { tape: test, log: 1});
+  }, { tape: test, log: 1 });
   
   // RESTORE console.log
   console.log = log;
   
   test.ok(count / results.passing.length > 0, 'should call log for each row');
-
   test.end();
 });
 
 tape('should not throw when intercept specified', function(test) {
 
   var results;
-  
+
   test.doesNotThrow(
     function() {
-      results = where(function(){/***
-      
+      results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | c |
         ***/
         tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
         
-      }, { tape: test, intercept: 1});
+      }, { tape: test, intercept: 1 });
     }
   );
-  
+
   test.equal(results.failing.length, 1, 'should be one failing');
   test.equal(results.passing.length, 1, 'should be one passing');
   test.end();

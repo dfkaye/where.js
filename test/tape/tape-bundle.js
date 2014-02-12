@@ -8863,7 +8863,8 @@ tape('should be a function', function (test) {
 
 tape('should pass tape context', function(test) {
       
-  var results = where(function(){/***
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -8881,11 +8882,12 @@ tape('should throw when data-table is malformed', function (test) {
 
   test.throws(
     function() {
-      where(function(){/*** 
-      | a | b | c |
-      | 1 | 2 | 3 
-      | 2 | 4 | 6 |
-      ***/
+      where(function(){
+        /*** 
+        | a | b | c |
+        | 1 | 2 | 3 
+        | 2 | 4 | 6 |
+        ***/
       });
     },
     'should throw'
@@ -8895,7 +8897,8 @@ tape('should throw when data-table is malformed', function (test) {
 
 tape('should return results', function(test) {
       
-  var results = where(function(){/***
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -8903,7 +8906,7 @@ tape('should return results', function(test) {
     
     tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
 
-  }, { tape: test});
+  }, { tape: test });
   
   test.equal(results.values.length, 3, '3 value rows');
   test.equal(results.failing.length, 0, 'no failing assertions');
@@ -8916,13 +8919,14 @@ tape('should throw unintercepted errors', function(test) {
 
   test.throws(
     function() {
-      where(function(){/***
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | c |
         ***/
         tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
         
-      }, { tape: test});
+      }, { tape: test });
     },
     "should throw"
   );
@@ -8933,13 +8937,14 @@ tape('should throw unintercepted errors', function(test) {
 // UNCOMMENT THIS TEST TO SEE STACK OUTPUT FOR FAILING WHERE() ASSERTION
 // tape('this test should fail with intercept off', function(test) {
   
-    // where(function() {/***
+    // where(function() {
+      // /***
       // | a | b | c |
       // | 3 | 5 | 9 |
       // ***/
       // tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
     
-  // }, { tape: test});
+  // }, { tape: test });
   
   // test.end();
 // });
@@ -8948,13 +8953,12 @@ tape('should log errors by default', function(test) {
 
   test.throws(
     function() {
-      where(function(){/***
-      
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 3 | 2 | 1 |
         | 3 | 2 | 3 |
-        
         ***/
         
         tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
@@ -8978,11 +8982,10 @@ tape('should log all data when specified', function(test) {
   
   console.log = function () {
     count += 1;
-    log.apply(console, arguments);
   }
   
-  var results = where(function(){/***
-  
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -8990,34 +8993,33 @@ tape('should log all data when specified', function(test) {
     
     tape.equal(context.log, 1, 'should see context.log');        
     
-  }, { tape: test, log: 1});
+  }, { tape: test, log: 1 });
   
   // RESTORE console.log
   console.log = log;
   
   test.ok(count / results.passing.length > 0, 'should call log for each row');
-
   test.end();
 });
 
 tape('should not throw when intercept specified', function(test) {
 
   var results;
-  
+
   test.doesNotThrow(
     function() {
-      results = where(function(){/***
-      
+      results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | c |
         ***/
         tape.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
         
-      }, { tape: test, intercept: 1});
+      }, { tape: test, intercept: 1 });
     }
   );
-  
+
   test.equal(results.failing.length, 1, 'should be one failing');
   test.equal(results.passing.length, 1, 'should be one passing');
   test.end();
@@ -9522,7 +9524,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     };        
   });
   
-  // STRATEGY for QUnit ~ surprisingly elegant!
+  // STRATEGY for QUnit ~ surprisingly not bad!
   //
   // requires context argument with strategy defined as { QUnit: QUnit }
   
@@ -9535,7 +9537,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     var interceptingPush;
         
     if (context.intercept) {
-    
+      
       /*
        * this block attempts to capture test assertions, reset them to passing 
        * (i.e., they are expected to fail), and push them to QUnit's assertions
@@ -9545,7 +9547,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         if (!details.result) {
           details.result = !details.result;
         }
-        realPush.call(QUnit.config.current.assertions, details);
+        //realPush.call(QUnit.config.current.assertions, details);
       };
       
       // override on start
@@ -9582,30 +9584,43 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     };
   });
   
-  // STRATEGY for TAPE ~ bit less elegant than QUnit (surprisingly) but tape's 
-  // event-driven reporting allows us to intercept the test result and "skip" it 
-  // due to James' foresight in using each tape/test function as an event
+  // STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
+  // contraction?). tape's event-driven reporting allows us to turn off the 
+  // the default test reports so that expected failures are not reported as 
+  // failed.  James' foresight in using each tape/test function as an event
   // emitter AND using the 'result' event handler as a pre-reporting-processor.
   //
-  // requires context argument with strategy defined as { tape: tapeRef } where
-  // tapeRef is the current tape test (or t) method
+  // requires context argument with strategy defined as { tape: test | t } where
+  // [test | t] is the current test (or t) method
   
   where.strategy('tape', function tapeStrategy(context) {
   
     return function testTape(fnTest, test, value) {
     
-      context.tape.on('result', function onResult(result) {
+      var listeners;
       
+      // turn off tape's automatic reporting (pass/fail counts) 
+      if (context.intercept) {
+        listeners = context.tape._events['result'];
+        context.tape.removeAllListeners('result');        
+      }
+      
+      context.tape.on('result', function onResult(result) {
         if (!result.ok) {
-          result.skip = true;
           test.result = 'Error: expected ' + result.actual + ' to be ' + 
                         result.expected;
         }
-        
         context.tape.removeListener('result', onResult);
       });
       
       fnTest.apply({}, [context].concat(value));
+      
+      // restore tape's result reporting
+      if (context.intercept) {
+        for (var i = 0; i < listeners.length; ++i) {
+          context.tape.on('result', listeners[i]);
+        }
+      }      
     };
   });
   

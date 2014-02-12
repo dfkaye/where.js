@@ -496,7 +496,7 @@
     };        
   });
   
-  // STRATEGY for QUnit ~ surprisingly elegant!
+  // STRATEGY for QUnit ~ surprisingly not bad!
   //
   // requires context argument with strategy defined as { QUnit: QUnit }
   
@@ -509,7 +509,7 @@
     var interceptingPush;
         
     if (context.intercept) {
-    
+      
       /*
        * this block attempts to capture test assertions, reset them to passing 
        * (i.e., they are expected to fail), and push them to QUnit's assertions
@@ -519,7 +519,7 @@
         if (!details.result) {
           details.result = !details.result;
         }
-        realPush.call(QUnit.config.current.assertions, details);
+        //realPush.call(QUnit.config.current.assertions, details);
       };
       
       // override on start
@@ -556,30 +556,43 @@
     };
   });
   
-  // STRATEGY for TAPE ~ bit less elegant than QUnit (surprisingly) but tape's 
-  // event-driven reporting allows us to intercept the test result and "skip" it 
-  // due to James' foresight in using each tape/test function as an event
+  // STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
+  // contraction?). tape's event-driven reporting allows us to turn off the 
+  // the default test reports so that expected failures are not reported as 
+  // failed.  James' foresight in using each tape/test function as an event
   // emitter AND using the 'result' event handler as a pre-reporting-processor.
   //
-  // requires context argument with strategy defined as { tape: tapeRef } where
-  // tapeRef is the current tape test (or t) method
+  // requires context argument with strategy defined as { tape: test | t } where
+  // [test | t] is the current test (or t) method
   
   where.strategy('tape', function tapeStrategy(context) {
   
     return function testTape(fnTest, test, value) {
     
-      context.tape.on('result', function onResult(result) {
+      var listeners;
       
+      // turn off tape's automatic reporting (pass/fail counts) 
+      if (context.intercept) {
+        listeners = context.tape._events['result'];
+        context.tape.removeAllListeners('result');        
+      }
+      
+      context.tape.on('result', function onResult(result) {
         if (!result.ok) {
-          result.skip = true;
           test.result = 'Error: expected ' + result.actual + ' to be ' + 
                         result.expected;
         }
-        
         context.tape.removeListener('result', onResult);
       });
       
       fnTest.apply({}, [context].concat(value));
+      
+      // restore tape's result reporting
+      if (context.intercept) {
+        for (var i = 0; i < listeners.length; ++i) {
+          context.tape.on('result', listeners[i]);
+        }
+      }      
     };
   });
   

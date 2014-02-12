@@ -477,7 +477,7 @@ for QUnit."*
 
 For use with tape, you __must__ specify the tape strategy as follows:
 
-+ `tape: [test | t]` 
++ `{ tape: [test | t] }` 
 
 This is due to James' (@substack) approach of passing the tape `test` reference 
 into the callback as `t` and ingeniously re-using that as both a results cache 
@@ -649,6 +649,8 @@ QUnit suite whereas Firefox reports only one.  The failures are expected so we
 really want to see NO failures.  And failures are reported first in the console 
 regardless of their occurrence in the test suite (that could be a side-effect of
 using qunit-tap).
+
+
 
 After this experience, I recommend the following tools for JavaScript TDD:
 
