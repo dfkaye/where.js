@@ -199,86 +199,82 @@ describe('where.js [core jasmine spec]', function () {
         expect(g).toBe('\'undefined\'');
         expect(unquoted).toBe('a b');
       });
-    });
+    }); 
     
-    
-    // describe('math data', function() {
-      
-    // });  
-    
-    });
+  });
 
+  /* empty vs. bordered data */
+
+  describe('empty vs. bordered data', function() {
   
-    describe('empty data', function() {
-    
-      it('should throw when empty data missing separators', function() {
-        expect(function() {
-          where(function() {
-            /***
-             a 
-                // interpreted as missing row, not as row with empty data
-            ***/
-            expect(a).toBe('');
-          });
-        }).toThrow();
-      });
-      
-      it('should not throw when empty data is separated', function() {
+    it('should throw when empty data missing separators', function() {
+      expect(function() {
         where(function() {
           /***
-          | a |
-          |   | // interpreted as row with empty data
+           a 
+              // interpreted as missing row, not as row with empty data
           ***/
           expect(a).toBe('');
         });
-      });
-      
-      it('should throw when missing last value', function () {
-        expect(function () {
-          where(function(){/*** 
-            a  |  b  |  c
-            1  |  2  |
-          ***/});
-        }).toThrow();
-      });
-      
-      it('should not throw when empty last value is bordered', function () {
-        expect(function () {
-          where(function(){/*** 
-          |  a  |  b  |  c |
-          |  1  |  2  |    |
-          ***/});
-        }).not.toThrow();
-      });
-      
-      it('should throw when missing first value', function () {
-        expect(function () {
-          where(function(){/*** 
-            a  |  b  |  c
-               |  1  |  2
-          ***/});
-        }).toThrow();
-      });
-      
-      it('should not throw when empty first value is bordered', function () {
-        expect(function () {
-          where(function(){/*** 
-          |  a  |  b  |  c |
-          |     |  1  |  2|
-          ***/});
-        }).not.toThrow();
-      });
-      
-      it('should not throw when missing inner value', function () {
-        expect(function () {
-          where(function(){/*** 
-            a  |  b  |  c
-            1  |     | 2
-          ***/});
-        }).not.toThrow();
-      });
-      
+      }).toThrow();
     });
+    
+    it('should not throw when empty data is separated', function() {
+      where(function() {
+        /***
+        | a |
+        |   | // interpreted as row with empty data
+        ***/
+        expect(a).toBe('');
+      });
+    });
+    
+    it('should throw when missing last value', function () {
+      expect(function () {
+        where(function(){/*** 
+          a  |  b  |  c
+          1  |  2  |
+        ***/});
+      }).toThrow();
+    });
+    
+    it('should not throw when empty last value is bordered', function () {
+      expect(function () {
+        where(function(){/*** 
+        |  a  |  b  |  c |
+        |  1  |  2  |    |
+        ***/});
+      }).not.toThrow();
+    });
+    
+    it('should throw when missing first value', function () {
+      expect(function () {
+        where(function(){/*** 
+          a  |  b  |  c
+             |  1  |  2
+        ***/});
+      }).toThrow();
+    });
+    
+    it('should not throw when empty first value is bordered', function () {
+      expect(function () {
+        where(function(){/*** 
+        |  a  |  b  |  c |
+        |     |  1  |  2|
+        ***/});
+      }).not.toThrow();
+    });
+    
+    it('should not throw when missing inner value', function () {
+      expect(function () {
+        where(function(){/*** 
+          a  |  b  |  c
+          1  |     | 2
+        ***/});
+      }).not.toThrow();
+    });
+    
+  });
 
   /* MALFORMED TABLE */
   
@@ -569,20 +565,4 @@ describe('where.js [core jasmine spec]', function () {
     });
   });
   
-
-  
-  // describe('Math tests', function () {
-    // it('should accept Math constants', function () {
-    
-    // /* oops better implement something here... */
-      // where(function () {
-        // /***
-          // a | b | c
-          // 6 | 12 | 18
-        // ***/
-        
-      // });
-      
-    // });
-  // });
 });

@@ -23,7 +23,8 @@ test('should be a function', function () {
 
 test('should pass QUnit context', function(assert) {
       
-  var results = where(function(){/***
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -40,14 +41,14 @@ test('should throw when data-table is malformed', function(assert) {
 
   throws(
     function () {
-       where(function(){/*** 
-          | a | b | c |
-          | 1 | 2 | 3 
-          | 2 | 4 | 6 |
-          ***/
-          assert.ok(a + b == c);
-          
-        }, { assert: assert, QUnit: QUnit });
+      where(function(){/*** 
+        | a | b | c |
+        | 1 | 2 | 3   // missing border
+        | 2 | 4 | 6 |
+        ***/
+        assert.ok(a + b == c);
+        
+      }, { assert: assert, QUnit: QUnit });
     },
     'should throw'
   );
@@ -67,12 +68,12 @@ test('should return results', function(assert) {
   }, { assert: assert, QUnit: QUnit });
   
   assert.equal(results.values.length, 3, '3 value rows');
-  assert.equal(results.failing.length, 0, 'no failing assertions');
+  assert.equal(results.failing.length, 0, '0 failing assertions');
   assert.equal(results.passing.length, 2, '2 passing assertions');
 
 });
 
-test('should throw unintercepted errors', function(assert) {
+test('should throw unintercepted failing tests', function(assert) {
 
   throws(
     function() {
@@ -80,11 +81,17 @@ test('should throw unintercepted errors', function(assert) {
         | a | b | c |
         | 1 | 2 | c |
         ***/
+        
+        // logic fork in QUnit between ok() and the other assertions, 
+        // which leads to different logging and assertion queue paths
         assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
+        //    QUnit.push(false, 2, 'x', 'should fail');
+
+            //throw Error('error');
         
       }, { assert: assert, QUnit: QUnit});
     },
-    "should throw"
+    'should throw'
   );
 });
 
@@ -101,47 +108,41 @@ test('should throw unintercepted errors', function(assert) {
        
 // });
 
-test('should log errors by default', function(assert) {
+test('should not log passing tests on Node.js, should log in browser', function(assert) {
 
   // stub out console.log - then restore it afterward
   var log = console.log;
-  
-  var last;
   var message;
-
+  var count = 0;
+  
   console.log = function (msg) {
-    last = msg;
-  }
+    message = msg;
+    count += 1;
+  };
   
-  try {
-  
-    where(function(){/***
+  where(function(){
+    /***
+    | a | b | c |
+    | 1 | 2 | 2 |
+    ***/
+    QUnit.push(true, 2, 'x', 'should pass');
+    //assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
     
-      | a | b | c |
-      | 1 | 2 | 2 |
-      | 3 | 2 | 1 |
-      
-      ***/
-      
-      assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
-      
-    }, { assert: assert, QUnit: QUnit });
-    
-  } catch (err) {
-  
-    message = err.message;
-    
-    // RESTORE console.log
-    console.log = log;    
-  }
+  }, { assert: assert, QUnit: QUnit });
 
-  assert.equal(message, last.replace('# ', ''), 'should log [3 | 2 | 1] error');
+  // RESTORE console.log
+  console.log = log;
   
-  // RESTORE console.log -- just being safe
-  console.log = log;    
+  if (typeof window != 'undefined') {
+    // we're in browser - forked behavior
+    assert.ok(count > 0, 'should log passing test in browsers');
+  } else {
+    // qunitjs on node.js - no logging by default
+    assert.equal(count, 0, 'should not log passing test in qunitjs for node.js');
+  }
 });
 
-test('should log all data when specified', function(assert) {
+test('should log passing tests when specified', function(assert) {
 
   // stub out console.log - then restore it afterward
   var log = console.log;
@@ -150,39 +151,53 @@ test('should log all data when specified', function(assert) {
   
   console.log = function () {
     count += 1;
-    log.apply(console, arguments);
-
-  }
+  };
   
-  var results = where(function(){/***
-  
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
     ***/
-    
     assert.equal(context.log, 1, 'should see context.log');        
     
   }, { assert: assert, QUnit: QUnit, log: 1});
   
-  assert.equal(count, results.passing.length, 'should call log for each row');
-  
   // RESTORE console.log
   console.log = log;
+  
+  if (typeof window != 'undefined') {
+    // we're in browser - forked behavior
+    assert.equal(count, 2 * results.passing.length, 'should log each test');
+  } else {
+    // qunitjs on node.js
+    assert.equal(count, results.passing.length, 'should log each test on node.js');
+  }
+  
 });
 
 test('should not throw when intercept specified', function(assert) {
 
-  var results = where(function(){/***
+  var results;
+  var error;
+  try {
   
-    | a | b | c |
-    | 1 | 2 | 2 |
-    | 7 | 5 | c |
-    ***/
-    assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
-    
-  }, { assert: assert, QUnit: QUnit, intercept: 1});
-  
-  assert.equal(results.failing.length, 1, 'should be one failing');
-  assert.equal(results.passing.length, 1, 'should be one passing');
+    results = where(function(){
+      /***
+      | a | b | c |
+      | 1 | 2 | 2 |
+      | 7 | 5 | c |
+      ***/
+
+      //QUnit.push(false, c, 'should fail');
+      assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
+
+    }, { assert: assert, QUnit: QUnit, intercept: 1  });
+
+  } catch(e) {
+    error = e;
+  }
+  assert.ok(!error, 'should not throw');
+  assert.equal(results.failing.length, 1, 'should be 1 failing');
+  assert.equal(results.passing.length, 1, 'should be 1 passing');
 });

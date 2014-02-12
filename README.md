@@ -94,8 +94,8 @@ which are now __deprecated__ as of this release.
 
 In imitation of Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
 `where()` accepts a function and inspects its string value, converts the 
-commented data-table into an array of values, and applies the labels as argument 
-names in a new Function().
+commented data-table into an array of values, and applies the first row data as 
+argument names in a new Function().
 
 `where()` accepts a second [`context`](#context) argument that allows you to 
 inject other information or references into the test function.
@@ -307,7 +307,7 @@ While data with quoted strings are preserved,
 A passing `where()` test has no effect on the test runner's default reporter 
 output.
 
-When an expectation fails, the data-table labels plus the row of values for the 
+When an expectation fails, the data-table names plus the row of values for the 
 current expectation are added to the *current* failing item. Every failed 
 expectation in a `where()` test will appear similar to:
 
@@ -361,34 +361,62 @@ inside the test function:
         
     }, { expect: expect }); // <= context
 
-You may also use it to enable logging all test output to the console, enable 
-interception of failing tests (to try preventing them appearing as failed even 
-if they are expected to fail - in other words, make a fail into a pass), and/or 
-add information or references to be used in the test function.
+# log
+     
+Normal logging occurs mainly with failing test. You set a nonce property on the 
+context specifier as `log: 1` to enable logging of *all* test output to the 
+console.
 
-The following snip shows a test with logging and interception, specifies the 
-test library as jasmine, and passes the expect function:
-
-    it('should pass with correct data and expectation', function () {
-    
-      var results = where(function(){/***
+      where(function(){
+        /***
          a | b | c
          1 | 2 | 2
          4 | 3 | 4
          6 | 6 | 6
         ***/
-        
         expect(Math.max(a, b)).toBe(c);
         
-      }, { log: 1, intercept: 1, strategy: 'jasmine', expect: expect });
+      }, { log: 1, expect: expect });
+      
+Failed tests or errors will appear as
+
+     [a | b | c] : 
+     [1 | 2 | x] (Error: Expected 2 to be 'x'.)
+     
+Passing tests will appear as
+
+     [a | b | c] : 
+     [1 | 2 | 2] (Passed)
+     
+
+# intercept
+
+Not all test libraries "fail" in the same way.  While some tests "should" fail, 
+they may not always be unexpected.  To prevent expected failures from appearing 
+*as failed* in the test library's reporter (in other words, make a fail into a 
+pass), you can set a nonce property on the context specifier as `intercept: 1` 
+and verify the number of expected failures in the results returned by `where()`:
+
+      var results = where(function(){
+        /***
+         a | b | c
+         1 | 2 | 2
+         4 | 3 | x
+         6 | 6 | 6
+        ***/
+        expect(Math.max(a, b)).toBe(c);
+        
+      }, { intercept: 1, expect: expect });
       
       expect(results.values.length).toBe(4);
-      expect(results.passing.length).toBe(3);
-      expect(results.failing.length).toBe(0);
-    });
+      expect(results.passing.length).toBe(2);
+      expect(results.failing.length).toBe(1);
+      
 
-WARNING: In event-based test libraries like QUnit and tape, pure interception is 
-not always successful - an assertion that fails is always reported as failed.
+__ISSUE__: In event-based test libraries like QUnit and tape, pure interception 
+is not always successful - an assertion that fails is always reported as failed. 
+This behavior will be visited more thoroughly in the refactoring of the 
+`strategy` API (see next section...).
 
 # strategy
 
@@ -555,21 +583,63 @@ You can view them directly on rawgithub:
 
   
 # TODO
-+ more sophisticated testing examples (line comment stuff?)
++ fix intercept in event-based library strategies
++ self-shunt where to test itself more cleanly, progressively
++ results.values => results.data.names and results.data.values
++ clean up the procedural long-method setup code in the where() function
 + explore jasmine tap reporter by Miller Medeiros (@millermedeiros)
   - [jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) 
 + reorganize docs - too sprawling or verbose
-+ strategy 'purpose' needs better explaining (try+catch vs events vs ?)
-+ strategy ui needs re-visiting - strings vs objects
-  - jasmine - assume global or double as 'context.jasmine'
-  - QUnit - assume global or double as 'context.QUnit'
-  - tape - t function serves double as 'context.tape'
++ strategy 
+  - 'purpose' needs better explaining (try+catch vs events vs ?)
   - custom strategy needs explaining
++ strategy - refactoring: 
+  - provide a `list` method returning all strategies registered
+  - ease up on lookup cleverness
+  - make context/strategy specification easier, more global
+  - ui needs re-visiting - strings vs objects
+    - jasmine - assume global or double as 'context.jasmine'
+    - QUnit - assume global or double as 'context.QUnit'
+    - tape - t function serves double as 'context.tape'
 
 
-# CONCLUSION 
+## CONCLUSIONS 
 
-## RECOMMENDED TOOLS
+Test libraries make assumptions.  Not all test libraries expose hooks for 
+intercepting failure messages.  That is a big design issue, as it means there's 
+no direct way to plug in to the "lifecycle" of a test, peform transforms, etc., 
+(as if they were made before the JavaScript world hear about streams).  It also 
+means their reporters are tightly coupled with their test runners.  *Which means 
+some libraries themselves do not benefit from their own stated purpose - to ease 
+test-driven development.*
+
+I started with jasmine-where back when (October 2013) as a self-assessment and 
+found both v1.3.1 and v2.0.0-rc3 were a bit tricky but not difficult to 
+intercept.  With jasmine 2.0.0 (first stable in late December) a fundamental 
+feature was no longer exposed (the currentSpec) which led to - shockingly - 
+simplifying my own jasmine-where and jasmine-intercept projects.  Thinking I was 
+just not that great at this anymore, I took on the whole `where.js` concept in 
+January 2014 to invalidate that bit of self-doubt in a hurry.
+
+## WHAT I FOUND OUT 
+
+QUnit was surprisingly easy to hook *some* information, but impossible to trap 
+completely.  It's really best used with another reporting utility like qunit-tap
+so that you can ignore the tightly-coupled mess of the HTML reporter. That's a 
+strike against it.
+
+Same goes for Tape except that there is no HTML reporter for it, as it is a test 
+library for node.js projects.  With Tape in the browser, you need browserify - 
+which already is a strike against it if you want to drive browser tests.
+
+Mocha was even more surprisingly easy to work with, probably because of TJ's 
+early decision to completely de-couple the assertion system from the test runner 
+and reporter.  Taking assert, expect and should to the browser required only one 
+library to be ported - assert.js.  Working with chai was even easier - no port 
+needed for the browser. 
+
+
+After this experience, I recommend the following tools for JavaScript TDD:
 
 + __mocha__ - non-invasive try+catch, multiple reporter support, just works.
 + __should.js (or chai/should)__ - ignore the disingenuous FUD from purists and 

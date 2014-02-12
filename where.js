@@ -138,6 +138,7 @@
     
     var failing = [];
     var passing = [];
+    //var data = { labels: labels, values: values };
     var results = { failing: failing, passing: passing, values: values };
     
     /*
@@ -236,8 +237,8 @@
     
     // convert table into an array of row data
     var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
-                     .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
-                     .split('\n'); // and split by newline
+                    .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
+                    .split('\n'); // and split by newline
     
     var rows = [];
     var str, row, size, i;
@@ -246,7 +247,7 @@
 
       str = data[i].replace(/[\|][\s*]/g,'|').replace(/[\s]*[\|]/g, '|');
       
-      // skips empty rows
+      // skip empty rows
       if (str.match(/\S+/)) {
 
         row = balanceRowData(str);
@@ -265,6 +266,7 @@
         }
 
         convertTypes(row);
+        
         rows.push(row);        
       }
     }
@@ -289,37 +291,25 @@
    */
   function balanceRowData(str) {
   
-    var row;
+    var left, right, row;
     
-    // empty column
-    //if (str.replace(/\s+/g, '').match(/[\|][\|]/g)) {
-    //console.log(str.replace(/\s+/g, '').match(/[\|][\|]/g)[0]);
-    //  throw new Error('where.js table has unbalanced columns: ' + str);
-    //}
-    
-    // trim row string and split into data array
+    // trim row string...
     str = str.replace(/^\s+|\s+$/gm, '');
     
-    var lb = str.charAt(0) === SEP;
-    var rb = str.charAt(str.length - 1) === SEP;
-    
-    if (lb != rb) {
-      throw new Error('where.js table has unbalanced columns: ' + str);
-    }
-
-    row = str.split(SEP);
-
     // check for left and right borders
-    var left = row[0] === '';
-    var right = row[row.length - 1] === '';
+    left = str.charAt(0) === SEP;
+    right = str.charAt(str.length - 1) === SEP;
     
     if (left != right) {
-      throw new Error('where.js table borders are not balanced: ' + str);
+      throw new Error('where.js table has unbalanced column borders: ' + str);
     }
-    
+
+    // ... and split into data array
+    row = str.split(SEP);
+
     // remove empty border tokens
-    left && row.shift();
-    right && row.pop();
+    row[0] === '' && row.shift();
+    row[row.length - 1] === '' && row.pop();
     
     // trim each value
     for (var i = 0; i < row.length; i += 1) {
@@ -364,8 +354,6 @@
        
       v = row[i];
       
-      if (v == '') console.log(v);
-
       if (v.match(/undefined|null|true|false/)) {
       
         // convert falsy values
@@ -515,11 +503,32 @@
   where.strategy('QUnit', function qunitStrategy(context) {
     
     var test;
+    var assertionsPush;
     
+    function overrideAssertionsPush(details) {
+      if (!details.result) {
+        details.result = !details.result;
+      }
+      assertionsPush.call(QUnit.config.current.assertions, details);
+    };
+        
+    if (context.intercept) {
+    
+      context.QUnit.testStart(function(detail) {
+        assertionsPush = QUnit.config.current.assertions.push;
+        QUnit.config.current.assertions.push = overrideAssertionsPush;
+      });
+    
+      context.QUnit.testDone(function(detail) {
+        QUnit.config.current.assertions.push = assertionsPush;
+      });
+    }
+
     context.QUnit.log(function onResult(details) {
     
       if (!details.result) {
-      
+        
+        // overwrite with non-passing result
         test.result = 'Error: expected ' + details.actual + ' to be ' + 
                       details.expected;
                       
@@ -533,7 +542,7 @@
     return function testQUnit(fnTest, thisTest, value) {
     
       test = thisTest;
-      
+
       fnTest.apply({}, [context].concat(value));
     };
   });
