@@ -316,9 +316,8 @@ expectation in a `where()` test will appear similar to:
 
 # results
 
-`where()` returns a `results` object with three arrays for all `values` derived 
-from the data table, `passing` tests, and `failing` tests.  The first row in the 
-`values` array (`results.values[0]`) is the row of names.  
+`where()` returns a `results` object with arrays for `labels` and `values` 
+derived from the data table, `passing` tests, and `failing` tests.
 
 The following snip shows how to refer to each array in the results:
 
@@ -332,7 +331,8 @@ The following snip shows how to refer to each array in the results:
         expect(Math.max(a, b)).toBe(c);
       });
       
-      expect(results.values.length).toBe(4);
+      expect(results.data.labels.join(',')).toBe("a,b,c");
+      expect(results.data.values.length).toBe(3);
       expect(results.passing.length).toBe(3);
       expect(results.failing.length).toBe(0);
     });
@@ -408,7 +408,8 @@ and verify the number of expected failures in the results returned by `where()`:
         
       }, { intercept: 1, expect: expect });
       
-      expect(results.values.length).toBe(4);
+      expect(results.data.labels.join(',')).toBe("a,b,c");
+      expect(results.data.values.length).toBe(3);
       expect(results.passing.length).toBe(2);
       expect(results.failing.length).toBe(1);
       
@@ -585,7 +586,6 @@ You can view them directly on rawgithub:
 # TODO
 + fix intercept in event-based library strategies
 + self-shunt where to test itself more cleanly, progressively
-+ results.values => results.data.names and results.data.values
 + clean up the procedural long-method setup code in the where() function
 + explore jasmine tap reporter by Miller Medeiros (@millermedeiros)
   - [jasmine-tap](https://github.com/mout/mout/edit/master/tests/lib/jasmine/jasmine-tap.js) 

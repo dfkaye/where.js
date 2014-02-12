@@ -36,7 +36,8 @@ describe('where.js [mocha tests]', function(done) {
       var pass = false;
       
       try {
-        where(function(){/*** 
+        where(function(){
+          /*** 
           a  |  b  |  c 
           ***/
         });
@@ -50,7 +51,8 @@ describe('where.js [mocha tests]', function(done) {
     
     it('should pass', function() {
           
-      var results = where(function(){/***
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -61,7 +63,7 @@ describe('where.js [mocha tests]', function(done) {
         
       }, { assert: assert});
       
-      assert.equal(results.values.length, 3);
+      assert.equal(results.data.values.length, 2);
     });
     
     
@@ -69,7 +71,8 @@ describe('where.js [mocha tests]', function(done) {
     
       assert.throws(function(){
       
-        where(function(){/***
+        where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 3 |
           ***/
@@ -83,8 +86,8 @@ describe('where.js [mocha tests]', function(done) {
     
     it('should log table', function() {
           
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -95,13 +98,13 @@ describe('where.js [mocha tests]', function(done) {
         
       }, { assert: assert, log: 1});
       
-      assert.equal(results.values.length, 3);
+      assert.equal(results.data.values.length, 2);
     });
     
     it('should intercept failing results', function() {
     
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -113,12 +116,13 @@ describe('where.js [mocha tests]', function(done) {
       }, { assert: assert, intercept: 1});
       
       assert.equal(results.failing.length, 1);
-      assert.equal(results.values.length, 3);
+      assert.equal(results.data.values.length, 2);
     });
     
     it('should log and intercept', function() {
          
-      var results = where(function(){/***
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -129,7 +133,7 @@ describe('where.js [mocha tests]', function(done) {
       }, { assert: assert, log: 1, intercept: 1});
       
       assert.equal(results.failing.length, 1);
-      assert.equal(results.values.length, 3);
+      assert.equal(results.data.values.length, 2);
     });
   });
   
@@ -148,7 +152,8 @@ describe('where.js [mocha tests]', function(done) {
 
     it('should pass', function() {
           
-      var results = where(function(){/***
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -159,14 +164,15 @@ describe('where.js [mocha tests]', function(done) {
         
       }, { expect: expect });
       
-      expect(results.values.length).to.be(3);
+      expect(results.data.values.length).to.be(2);
     });
     
 
     it('should throw unintercepted errors', function() {
     
       expect(function() {
-        where(function(){/***
+        where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 3 |
           ***/
@@ -181,7 +187,8 @@ describe('where.js [mocha tests]', function(done) {
     
     it('should log data', function() {
           
-      var results = where(function(){/***
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -191,13 +198,13 @@ describe('where.js [mocha tests]', function(done) {
         
       }, { expect: expect, log: 1 });
       
-      expect(results.values.length).to.be(3);
+      expect(results.data.values.length).to.be(2);
     });
     
     it('should intercept failures', function() {
           
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -209,13 +216,13 @@ describe('where.js [mocha tests]', function(done) {
       }, { expect: expect, intercept: 1 });
       
       expect(results.failing.length).to.be(1);
-      expect(results.values.length).to.be(3);    
+      expect(results.data.values.length).to.be(2);    
     });
     
     it('should log and intercept', function() {
           
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -227,7 +234,7 @@ describe('where.js [mocha tests]', function(done) {
       }, { expect: expect, intercept: 1, log: 1 });
       
       expect(results.failing.length).to.be(1);
-      expect(results.values.length).to.be(3);    
+      expect(results.data.values.length).to.be(2);    
     });
   });
   
@@ -244,8 +251,8 @@ describe('where.js [mocha tests]', function(done) {
     
     it('should pass without a context', function() {
     
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         |  a  | b | c |
         |  1  | 2 | 2 |
         |  7  | 5 | 7 |
@@ -255,7 +262,7 @@ describe('where.js [mocha tests]', function(done) {
         Math.max(a, b).should.equal(c);
       });
       
-      results.values.length.should.equal(4);
+      results.data.values.length.should.equal(3);
     });
     
     
@@ -263,7 +270,8 @@ describe('where.js [mocha tests]', function(done) {
 
       (function(){
       
-        where(function(){/***
+        where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 3 |
           ***/
@@ -275,8 +283,8 @@ describe('where.js [mocha tests]', function(done) {
     
     it('should log data', function() {
     
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         |  a  | b | c |
         |  1  | 2 | 2 |
         |  7  | 5 | 7 |
@@ -287,13 +295,13 @@ describe('where.js [mocha tests]', function(done) {
         
       }, {log: 1});
       
-      results.values.length.should.equal(4);
+      results.data.values.length.should.equal(3);
     });
     
     it('should intercept failures', function() {
     
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         |  a  | b | c |
         |  1  | 2 | 2 |
         |  7  | 5 | 7 |
@@ -304,13 +312,13 @@ describe('where.js [mocha tests]', function(done) {
       }, {intercept: 1});
           
       results.failing.length.should.equal(1);
-      results.values.length.should.equal(4);
+      results.data.values.length.should.equal(3);
     });
     
     it('should log and intercept', function() {
     
-      var results = where(function(){/***
-      
+      var results = where(function(){
+        /***
         |  a  | b | c |
         |  1  | 2 | 2 |
         |  7  | 5 | 7 |
@@ -322,7 +330,7 @@ describe('where.js [mocha tests]', function(done) {
       }, {log: 1, intercept: 1});
           
       results.failing.length.should.equal(1);
-      results.values.length.should.equal(4);
+      results.data.values.length.should.equal(3);
     });
     
   });
@@ -349,7 +357,8 @@ describe('where.js [mocha tests]', function(done) {
         var pass = false;
         
         try {
-          where(function(){/*** 
+          where(function(){
+            /*** 
             a  |  b  |  c 
             ***/
           });
@@ -365,7 +374,8 @@ describe('where.js [mocha tests]', function(done) {
       
         var assert = chai.assert;
         
-        var results = where(function(){/***
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
@@ -376,14 +386,15 @@ describe('where.js [mocha tests]', function(done) {
           
         }, { assert: assert});
         
-        assert.equal(results.values.length, 3);
+        assert.equal(results.data.values.length, 2);
       });
       
       
       it('should throw unintercepted errors', function() {
         var assert = chai.assert;
         assert.throws(function() {
-          where(function(){/***
+          where(function(){
+            /***
             | a | b | c |
             | 1 | 2 | 3 |
             ***/
@@ -397,8 +408,8 @@ describe('where.js [mocha tests]', function(done) {
       
         var assert = chai.assert;
         
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
@@ -409,15 +420,15 @@ describe('where.js [mocha tests]', function(done) {
           
         }, { assert: assert, log: 1});
         
-        assert.equal(results.values.length, 3);
+        assert.equal(results.data.values.length, 2);
       });
       
       it('should intercept failing results', function() {
       
         var assert = chai.assert;
         
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
@@ -429,14 +440,15 @@ describe('where.js [mocha tests]', function(done) {
         }, { assert: assert, intercept: 1});
         
         assert.equal(results.failing.length, 1);
-        assert.equal(results.values.length, 3);
+        assert.equal(results.data.values.length, 2);
       });
       
       it('should log and intercept', function() {
       
         var assert = chai.assert;
 
-        var results = where(function(){/***
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
@@ -447,7 +459,7 @@ describe('where.js [mocha tests]', function(done) {
         }, { assert: assert, log: 1, intercept: 1});
         
         assert.equal(results.failing.length, 1);
-        assert.equal(results.values.length, 3);
+        assert.equal(results.data.values.length, 2);
       });
       
     });
@@ -458,7 +470,8 @@ describe('where.js [mocha tests]', function(done) {
       
         var expect = chai.expect;
 
-        var results = where(function(){/***
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
@@ -469,7 +482,7 @@ describe('where.js [mocha tests]', function(done) {
           
         }, { expect: expect });
         
-        expect(results.values.length).to.equal(3);
+        expect(results.data.values.length).to.equal(2);
       });
       
       
@@ -477,7 +490,8 @@ describe('where.js [mocha tests]', function(done) {
         var expect = chai.expect;
         expect(function() {
         
-          where(function(){/***
+          where(function(){
+            /***
             | a | b | c |
             | 1 | 2 | 3 |
             ***/
@@ -492,7 +506,8 @@ describe('where.js [mocha tests]', function(done) {
       
         var expect = chai.expect;
         
-        var results = where(function(){/***
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
@@ -502,19 +517,18 @@ describe('where.js [mocha tests]', function(done) {
           
         }, { expect: expect, log: 1 });
         
-        expect(results.values.length).to.equal(3);
+        expect(results.data.values.length).to.equal(2);
       });
       
       it('should intercept failures', function() {
       
         var expect = chai.expect;
         
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
-          
           ***/
           
           expect(Math.max(a, b)).to.equal(2); // should error on 2nd row
@@ -522,19 +536,18 @@ describe('where.js [mocha tests]', function(done) {
         }, { expect: expect, intercept: 1 });
         
         expect(results.failing.length).to.equal(1);
-        expect(results.values.length).to.equal(3);    
+        expect(results.data.values.length).to.equal(2);    
       });
       
       it('should log and intercept', function() {
       
         var expect = chai.expect;
         
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           | a | b | c |
           | 1 | 2 | 2 |
           | 7 | 5 | 7 |
-          
           ***/
           
           expect(Math.max(a, b)).to.equal(2); // should error on 2nd row
@@ -542,7 +555,7 @@ describe('where.js [mocha tests]', function(done) {
         }, { expect: expect, intercept: 1, log: 1 });
         
         expect(results.failing.length).to.equal(1);
-        expect(results.values.length).to.equal(3);    
+        expect(results.data.values.length).to.equal(2);    
       });
       
     });
@@ -559,8 +572,8 @@ describe('where.js [mocha tests]', function(done) {
       // ~ should is added to Object.prototype
       it('should pass without a context', function() {
       
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           |  a  | b | c |
           |  1  | 2 | 2 |
           |  7  | 5 | 7 |
@@ -570,14 +583,15 @@ describe('where.js [mocha tests]', function(done) {
           Math.max(a, b).should.equal(c);
         });
         
-        results.values.length.should.equal(4);
+        results.data.values.length.should.equal(3);
       });
       
       
       it('should throw unintercepted errors', function() {
         (function(){
         
-          where(function(){/***
+          where(function(){
+            /***
             | a | b | c |
             | 1 | 2 | 3 |
             ***/
@@ -591,8 +605,8 @@ describe('where.js [mocha tests]', function(done) {
       
       it('should log data', function() {
       
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           |  a  | b | c |
           |  1  | 2 | 2 |
           |  7  | 5 | 7 |
@@ -603,13 +617,13 @@ describe('where.js [mocha tests]', function(done) {
           
         }, {log: 1});
         
-        results.values.length.should.equal(4);
+        results.data.values.length.should.equal(3);
       });
       
       it('should intercept failures', function() {
       
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           |  a  | b | c |
           |  1  | 2 | 2 |
           |  7  | 5 | 7 |
@@ -620,13 +634,13 @@ describe('where.js [mocha tests]', function(done) {
         }, {intercept: 1});
             
         results.failing.length.should.equal(1);
-        results.values.length.should.equal(4);
+        results.data.values.length.should.equal(3);
       });
       
       it('should log and intercept', function() {
       
-        var results = where(function(){/***
-        
+        var results = where(function(){
+          /***
           |  a  | b | c |
           |  1  | 2 | 2 |
           |  7  | 5 | 7 |
@@ -638,7 +652,7 @@ describe('where.js [mocha tests]', function(done) {
         }, {log: 1, intercept: 1});
             
         results.failing.length.should.equal(1);
-        results.values.length.should.equal(4);
+        results.data.values.length.should.equal(3);
       });
       
     });

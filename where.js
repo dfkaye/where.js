@@ -125,8 +125,9 @@
     
     fnBody = fnVars + fnBody;
 
-    var values = parseDataTable(fnBody);   
-    var labels = values[0];
+    var data = parseDataTable(fnBody);   
+    var labels = data.labels;
+    var values = data.values;
     var traceLabels = '\n [' + labels.join(PAD) + '] : ';
     
     /*
@@ -138,8 +139,7 @@
     
     var failing = [];
     var passing = [];
-    //var data = { labels: labels, values: values };
-    var results = { failing: failing, passing: passing, values: values };
+    var results = { failing: failing, passing: passing, data: data };
     
     /*
      * Search the strategy cache for the corresponding method to apply to each
@@ -156,8 +156,7 @@
     
     var test, i;   
 
-    // i is 1 to start with first data row (row 0 is the labels row)
-    for (i = 1; i < values.length; i += 1) {
+    for (i = 0; i < values.length; i += 1) {
     
       test = { result: PASSED };
       
@@ -226,7 +225,8 @@
    * @private 
    * @function parseDataTable
    * @param {Function|String} fnBody
-   * @returns {Array} - table data row arrays
+   * @returns {Object} data containing labels and values arrays.  
+   * //{Array} - table data row arrays
    */
   function parseDataTable(fnBody) {
 
@@ -276,7 +276,7 @@
                       rows.length);
     }
     
-    return rows;
+    return { labels: rows[0], values: rows.slice(1) };
   }
   
   /**
@@ -521,7 +521,7 @@
         if (!details.result) {
           details.result = !details.result;
         }
-        //realPush.call(QUnit.config.current.assertions, details);
+        realPush.call(QUnit.config.current.assertions, details);
       };
       
       // override on start

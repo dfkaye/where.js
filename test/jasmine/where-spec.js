@@ -24,7 +24,8 @@ describe('where.js [jasmine tests]', function () {
   
   it('should pass jasmine context', function() {
     
-    var results = where(function(){/***
+    var results = where(function(){
+      /***
       | a | b | c |
       | 1 | 2 | 2 |
       | 7 | 5 | 7 |
@@ -41,7 +42,8 @@ describe('where.js [jasmine tests]', function () {
       var pass = false;
       
       try {
-        where(function(){/*** 
+        where(function(){
+          /*** 
           a  |  b  |  c 
           ***/
         });
@@ -55,7 +57,8 @@ describe('where.js [jasmine tests]', function () {
 
   it('should return results', function() {
         
-    var results = where(function(){/***
+    var results = where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | 7 |
@@ -64,7 +67,7 @@ describe('where.js [jasmine tests]', function () {
         
       }, { jasmine: jasmine, expect: expect });
     
-    expect(results.values.length).toBe(3);
+    expect(results.data.values.length).toBe(2);
     expect(results.failing.length).toBe(0);
     expect(results.passing.length).toBe(2);
 
@@ -74,7 +77,8 @@ describe('where.js [jasmine tests]', function () {
 
     expect(function() {
     
-      where(function() {/***
+      where(function() {
+        /***
         | a | b | c |
         | 1 | 2 | c |
         ***/
@@ -89,7 +93,8 @@ describe('where.js [jasmine tests]', function () {
 // UNCOMMENT THIS TEST TO SEE STACK OUTPUT FOR FAILING WHERE() ASSERTION
 // it('this test should fail with intercept off', function() {
   
-    // where(function() {/***
+    // where(function() {
+      // /***
       // | a | b | c |
       // | 3 | 5 | 9 |
       // ***/
@@ -113,13 +118,12 @@ describe('where.js [jasmine tests]', function () {
     
     try {
     
-      where(function(){/***
-      
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 3 | 2 | 1 |
         | 3 | 2 | 3 |
-        
         ***/
         
         expect(Math.max(a, b)).toBe(c);
@@ -151,8 +155,8 @@ describe('where.js [jasmine tests]', function () {
       count += 1;
     }
     
-    var results = where(function(){/***
-    
+    var results = where(function(){
+      /***
       | a | b | c |
       | 1 | 2 | 2 |
       | 7 | 5 | 7 |
@@ -171,7 +175,8 @@ describe('where.js [jasmine tests]', function () {
   it('should not throw when intercept specified', function() {
 
     expect(function() {
-      var results = where(function() {/***
+      var results = where(function() {
+        /***
         | a | b | c |
         | 1 | 2 | 2 |
         | 7 | 5 | c |

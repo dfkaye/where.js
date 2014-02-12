@@ -113,9 +113,8 @@ describe('where.js [core jasmine spec]', function () {
       });
       
       expect(results.passing.length).toBe(1);
-      expect(results.values.length).toBe(2);
-      // values[0] is the label or header row
-      expect(results.values[0].join(',')).toBe("a,b,c");
+      expect(results.data.values.length).toBe(1);
+      expect(results.data.labels.join(',')).toBe("a,b,c");
     });
     
     it('should ignore empty rows', function () {
@@ -127,7 +126,7 @@ describe('where.js [core jasmine spec]', function () {
         expect(Math.max(a, b)).toBe(Number(c));
       });
       
-      expect(results.values.length).toBe(2);
+      expect(results.data.values.length).toBe(1);
     });
     
     it('should pass with data containing various padding', function () {
@@ -433,7 +432,7 @@ describe('where.js [core jasmine spec]', function () {
 
       expect(results.failing.length).toBe(2);
       expect(results.passing.length).toBe(2);
-      expect(results.failing[0].message).toContain("Expected 2 to be '" + results.values[2][2] + "'.");
+      expect(results.failing[0].message).toContain("Expected 2 to be '" + results.data.values[1][2] + "'.");
       expect(results.failing[1].message).toContain("Expected 5 to be 5.01.");
       
     }); 

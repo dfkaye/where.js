@@ -36,7 +36,7 @@ tape('should pass tape context', function(test) {
 
   }, { t: test, tape: test });
   
-  test.equal(results.values.length, 3);
+  test.equal(results.data.values.length, 2);
   test.end();
 });
 
@@ -70,7 +70,7 @@ tape('should return results', function(test) {
 
   }, { tape: test });
   
-  test.equal(results.values.length, 3, '3 value rows');
+  test.equal(results.data.values.length, 2, '2 value rows');
   test.equal(results.failing.length, 0, 'no failing assertions');
   test.equal(results.passing.length, 2, '2 passing assertions');
 

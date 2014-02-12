@@ -8874,7 +8874,7 @@ tape('should pass tape context', function(test) {
 
   }, { t: test, tape: test });
   
-  test.equal(results.values.length, 3);
+  test.equal(results.data.values.length, 2);
   test.end();
 });
 
@@ -8908,7 +8908,7 @@ tape('should return results', function(test) {
 
   }, { tape: test });
   
-  test.equal(results.values.length, 3, '3 value rows');
+  test.equal(results.data.values.length, 2, '2 value rows');
   test.equal(results.failing.length, 0, 'no failing assertions');
   test.equal(results.passing.length, 2, '2 passing assertions');
 
@@ -9153,8 +9153,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     
     fnBody = fnVars + fnBody;
 
-    var values = parseDataTable(fnBody);   
-    var labels = values[0];
+    var data = parseDataTable(fnBody);   
+    var labels = data.labels;
+    var values = data.values;
     var traceLabels = '\n [' + labels.join(PAD) + '] : ';
     
     /*
@@ -9166,8 +9167,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     
     var failing = [];
     var passing = [];
-    //var data = { labels: labels, values: values };
-    var results = { failing: failing, passing: passing, values: values };
+    var results = { failing: failing, passing: passing, data: data };
     
     /*
      * Search the strategy cache for the corresponding method to apply to each
@@ -9184,8 +9184,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     
     var test, i;   
 
-    // i is 1 to start with first data row (row 0 is the labels row)
-    for (i = 1; i < values.length; i += 1) {
+    for (i = 0; i < values.length; i += 1) {
     
       test = { result: PASSED };
       
@@ -9254,7 +9253,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    * @private 
    * @function parseDataTable
    * @param {Function|String} fnBody
-   * @returns {Array} - table data row arrays
+   * @returns {Object} data containing labels and values arrays.  
+   * //{Array} - table data row arrays
    */
   function parseDataTable(fnBody) {
 
@@ -9304,7 +9304,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                       rows.length);
     }
     
-    return rows;
+    return { labels: rows[0], values: rows.slice(1) };
   }
   
   /**
@@ -9524,7 +9524,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     };        
   });
   
-  // STRATEGY for QUnit ~ surprisingly not bad!
+  // STRATEGY for QUnit ~ surprisingly not bad! however, complete interception 
+  // of expected failures is not possible in the HTML Reporter as currently 
+  // implemented (QUnit v1.13 as of this writing 12-FEB-2014.
   //
   // requires context argument with strategy defined as { QUnit: QUnit }
   
@@ -9547,7 +9549,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         if (!details.result) {
           details.result = !details.result;
         }
-        //realPush.call(QUnit.config.current.assertions, details);
+        realPush.call(QUnit.config.current.assertions, details);
       };
       
       // override on start

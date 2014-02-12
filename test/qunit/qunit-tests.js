@@ -34,14 +34,15 @@ test('should pass QUnit context', function(assert) {
 
   }, { assert: assert, QUnit: QUnit });
   
-  assert.equal(results.values.length, 3);
+  assert.equal(results.data.values.length, 2);
 });
 
 test('should throw when data-table is malformed', function(assert) {
 
   throws(
     function () {
-      where(function(){/*** 
+      where(function(){
+        /*** 
         | a | b | c |
         | 1 | 2 | 3   // missing border
         | 2 | 4 | 6 |
@@ -57,7 +58,8 @@ test('should throw when data-table is malformed', function(assert) {
 
 test('should return results', function(assert) {
       
-  var results = where(function(){/***
+  var results = where(function(){
+    /***
     | a | b | c |
     | 1 | 2 | 2 |
     | 7 | 5 | 7 |
@@ -67,7 +69,7 @@ test('should return results', function(assert) {
 
   }, { assert: assert, QUnit: QUnit });
   
-  assert.equal(results.values.length, 3, '3 value rows');
+  assert.equal(results.data.values.length, 2, '2 value rows');
   assert.equal(results.failing.length, 0, '0 failing assertions');
   assert.equal(results.passing.length, 2, '2 passing assertions');
 
@@ -77,7 +79,8 @@ test('should throw unintercepted failing tests', function(assert) {
 
   throws(
     function() {
-      where(function(){/***
+      where(function(){
+        /***
         | a | b | c |
         | 1 | 2 | c |
         ***/
@@ -96,7 +99,8 @@ test('should throw unintercepted failing tests', function(assert) {
 // UNCOMMENT THIS TEST TO SEE STACK OUTPUT FOR FAILING WHERE() ASSERTION
 // test('this test should fail with intercept off', function(assert) {
   
-    // where(function() {/***
+    // where(function() {
+      // /***
       // | a | b | c |
       // | 3 | 5 | 9 |
       // ***/
