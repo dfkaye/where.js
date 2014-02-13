@@ -264,11 +264,11 @@ Truthy/falsy values are also automatically converted as per this test:
 
 While data with quoted strings are preserved,
 
-    it('should handle quoted values', function () {
+    it('should handle quoted strings', function () {
       where(function () {
         /***
-          a  | b  | c    | d    | e   | f        | g           | unquoted
-          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined' | a b
+          a  | b  | c    | d    | e   | f        | g           | h | normal 
+          '' | "" | "''" | '""' | ' ' | ' faff ' | 'undefined' |   |   a b   
           ***/
         expect(a).toBe('\'\'');
         expect(b).toBe('\"\"');
@@ -277,7 +277,8 @@ While data with quoted strings are preserved,
         expect(e).toBe('\' \'');
         expect(f).toBe('\' faff \'');
         expect(g).toBe('\'undefined\'');
-        expect(unquoted).toBe('a b');
+        expect(h).toBe('');         // empty boxes are empty strings
+        expect(normal).toBe('a b'); // unquoted values are strings
       });
     });
     
