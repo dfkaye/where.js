@@ -90,7 +90,7 @@ tape('should throw unintercepted errors', function(test) {
         
       }, { tape: test });
     },
-    "should throw"
+    "should have thrown"
   );
   
   test.end();

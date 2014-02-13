@@ -51,7 +51,7 @@ test('should throw when data-table is malformed', function(assert) {
         
       }, { assert: assert, QUnit: QUnit });
     },
-    'should throw'
+    'where.js table has unbalanced column borders'
   );
  
 });
@@ -88,11 +88,11 @@ test('should throw unintercepted failing tests', function(assert) {
         // logic fork in QUnit between ok() and the other assertions, 
         // which leads to different logging and assertion queue paths
         assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
-        // QUnit.push(false, 2, 'x', 'should fail');
+        //QUnit.push(false, 2, 'x', 'should fail');
         
       }, { assert: assert, QUnit: QUnit});
     },
-    'should throw'
+    'should have thrown failing tests'
   );
 });
 
@@ -188,8 +188,7 @@ test('should not throw when intercept specified', function(assert) {
       | 1 | 2 | 2 |
       | 7 | 5 | c |
       ***/
-
-      //QUnit.push(false, c, 'should fail');
+      
       assert.equal(Math.max(a, b), c, 'Math.max(' + a + ',' + b + ') should be ' + c);
 
     }, { assert: assert, QUnit: QUnit, intercept: 1  });
@@ -197,7 +196,7 @@ test('should not throw when intercept specified', function(assert) {
   } catch(e) {
     error = e;
   }
-  assert.ok(!error, 'should not throw');
+  assert.ok(!error, 'should not have thrown');
   assert.equal(results.failing.length, 1, 'should be 1 failing');
   assert.equal(results.passing.length, 1, 'should be 1 passing');
 });

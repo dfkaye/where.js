@@ -8928,7 +8928,7 @@ tape('should throw unintercepted errors', function(test) {
         
       }, { tape: test });
     },
-    "should throw"
+    "should have thrown"
   );
   
   test.end();
@@ -9254,7 +9254,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    * @function parseDataTable
    * @param {Function|String} fnBody
    * @returns {Object} data containing labels and values arrays.  
-   * //{Array} - table data row arrays
    */
   function parseDataTable(fnBody) {
 
@@ -9541,10 +9540,11 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     if (context.intercept) {
       
       /*
-       * this block attempts to capture test assertions, reset them to passing 
-       * (i.e., they are expected to fail), and push them to QUnit's assertions
-       * list with the real 'push()' method.
+       * this block attempts to capture failing assertions, reset them to 
+       * passing (i.e., they are expected to fail), and push them to QUnit's 
+       * assertions list with the real 'push()' method.
        */
+       
       interceptingPush = function overridingAssertionsPush(details) {
         if (!details.result) {
           details.result = !details.result;
