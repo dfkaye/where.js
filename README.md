@@ -3,8 +3,7 @@
 where.js
 ========
 
-library-agnostic `where()` clause for driving JavaScript tests with data tables, 
-similar to Cucumber 
+Use data-tables in JavaScript tests, similar to Cucumber 
 [`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines) 
 or Spock 
 [`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks). 
@@ -25,13 +24,18 @@ see the [tests](#tests)...
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
   - [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
 + [mocha](http://visionmedia.github.io/mocha/)
-  - assert (on node.js) and [assert.js](https://github.com/Jxck/assert) on browser
+  - `assert` (on node.js) and [assert.js](https://github.com/Jxck/assert) in the
+    browser
   - [expect.js](https://github.com/LearnBoost/expect.js)
   - [should.js](https://github.com/visionmedia/should.js)
   + [chai](http://chaijs.com/) (assert, expect, should)
 + [QUnit](http://qunitjs.com/)
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
+
+# License
+
+JSON
 
 # install
 
@@ -43,21 +47,26 @@ see the [tests](#tests)...
 
 Running `where.js` adds a `where()` method to the **global** namespace:
 
+node.js:
+
     require('where.js');
+    
     assert(typeof where === 'function');
     // => true
     assert(typeof global.where === 'function');
     // => true
 
+browsers:
+
     <script src="../where.js"></script>
 
-    ...
     assert(typeof where === 'function');
     // => true
     assert(typeof window.where === 'function');
     // => true
     
-# justify
+
+# story
 
 Easier to read and modify this
     
@@ -69,7 +78,6 @@ Easier to read and modify this
           4  |  3  |  4
           6  |  6  |  6
         ***/
-        
         expect(a + b)).toBe(c);
       });
     });
@@ -85,9 +93,7 @@ than this
       });
     });
     
-# story
-
-where.js merges both the basic algorithms and lessons learned from my earlier 
+where.js merges methods and lessons learned from my earlier 
 [jasmine-where](https://github.com/dfkaye/jasmine-where) 
 and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects, 
 which are now __deprecated__ as of this release.
@@ -213,37 +219,41 @@ That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as
 `Math.max(Number(a), Number(b))`.
 
 That also means every test can use strict equality, so you don't need to rely 
-on matchers.
+on regular expression matchers when getting started.
 
 _However_, where `Math` is involved there is usually an octal, signed, comma, or 
 precision bug waiting.  where.js handles all but precision automatically.  You 
 can get precision into your tests by adding another column, as seen in the test 
 created to verify that numeric conversions work:
 
-    where(function(){
-      /***
-            a     |    b     |    c     |  p
-            
-            0     |    1     |    1     |  1
-            0.0   |    1.0   |    1     |  1
-           -1     |   +1     |    0     |  1
-           +1.1   |   -1.2   |   -0.1   |  2
-           08     |   08     |   16     |  2
-            6     |    4     |   10.0   |  3
-            8.030 |   -2.045 |    5.985 |  4
-        1,000.67  | 1345     | 2345.67  |  6
+      where(function(){
+        /***
+              a     |    b     |    c     |  p
+              
+              0     |    1     |    1     |  1
+              0.0   |    1.0   |    1     |  1
+             -1     |   +1     |    0     |  1
+             +1.1   |   -1.2   |   -0.1   |  2
+             08     |   08     |   16     |  2
+              6     |    4     |   10.0   |  3
+              8.030 |   -2.045 |    5.985 |  4
+          1,000.67  | 1345     | 2345.67  |  6
+          
+        ***/
         
-      ***/
-      
-      /* 
-       * using precisions for famous .1 + .2 == 0.30000000000000004 
-       * and 5.985 vs 5.98499999999999999999999999 bugs 
-       */
-      var s = (a + b).toPrecision(p) // toPrecision() returns a string
-      expect(+s).toBe(c) // but prefixed '+' uses implicit conversion to number.
-    });
+        /* 
+         * using precisions for famous .1 + .2 == 0.30000000000000004 
+         * and 5.985 vs 5.98499999999999999999999999 bugs 
+         *
+         * toPrecision() returns a string, so the prefixed '+' uses implicit 
+         * conversion to number.
+         */
+         
+        var s = (a + b).toPrecision(p);
+        expect(+s).toBe(c);
+      });
 
-# null, undefined, true, false values
+# null, undefined, boolean values
 
 Truthy/falsy values are also automatically converted as per this test:
 
@@ -256,8 +266,7 @@ Truthy/falsy values are also automatically converted as per this test:
         expect(a).toBe(null);
         expect(b).toBe(undefined);
         expect(c).toBe(false);
-        expect(d).toBe(true);        
-
+        expect(d).toBe(true);
       });
 
 # string data vs. empty data
@@ -282,7 +291,7 @@ While data with quoted strings are preserved,
       });
     });
     
-*empty* data should be formatted with outer table borders:
+## *empty* data should be formatted with exterior table borders:
 
       it('should throw when empty data missing separators', function() {
         expect(function() {
@@ -311,7 +320,7 @@ While data with quoted strings are preserved,
 A passing `where()` test has no effect on the test runner's default reporter 
 output.
 
-When an expectation fails, the data-table names plus the row of values for the 
+When an expectation fails, the data-table labels plus the row of values for the 
 current expectation are added to the *current* failing item. Every failed 
 expectation in a `where()` test will appear similar to:
 
@@ -357,7 +366,7 @@ method, e.g.).
 The following snip shows that `context` is itself made available for inspection 
 inside the test function:
 
-    where(function(){
+      where(function(){
         /***
          a | b | c
          0 | 0 | 0
@@ -365,12 +374,12 @@ inside the test function:
         
         expect(context.expect).toBe(expect);
         
-    }, { expect: expect }); // <= context
+      }, { expect: expect }); // <= context
 
 # log
      
-Normal logging occurs mainly with failing test. You set a nonce property on the 
-context specifier as `log: 1` to enable logging of *all* test output to the 
+Normal logging occurs mainly with failing tests. You can set a nonce property on 
+the context specifier as `log: 1` to enable logging of *all* test output to the 
 console.
 
       where(function(){
@@ -397,11 +406,12 @@ Passing tests will appear as
 
 # intercept
 
-Not all test libraries "fail" in the same way.  While some tests "should" fail, 
-they may not always be unexpected.  To prevent expected failures from appearing 
-*as failed* in the test library's reporter (in other words, make a fail into a 
-pass), you can set a nonce property on the context specifier as `intercept: 1` 
-and verify the number of expected failures in the results returned by `where()`:
+Not all test libraries support "fail" in the same way - that is, while some 
+tests "should" fail, a library may report the test as failed even though the 
+failure is expected.  To prevent expected failures from appearing *as failed* in 
+a test library's reporter (make a fail into a pass), you can set a nonce 
+property on the context specifier as `intercept: 1` and verify the number of 
+expected failures in the results returned by `where()`:
 
       var results = where(function(){
         /***
@@ -420,10 +430,10 @@ and verify the number of expected failures in the results returned by `where()`:
       expect(results.failing.length).toBe(1);
       
 
-__ISSUE__: In event-based test libraries like QUnit and tape, pure interception 
-is not always successful - an assertion that fails is always reported as failed. 
-This behavior will be visited more thoroughly in the refactoring of the 
-`strategy` API (see next section...).
+__ISSUE__: In logging-event-based libraries like QUnit and tape, pure 
+interception is not always successful - an assertion that fails inside a `where` 
+clause will almost always be reported as failed. This behavior will be visited 
+more thoroughly in the refactoring of the `strategy` API (see next section...).
 
 # strategy
 
@@ -441,11 +451,11 @@ specify a strategy when using mocha.*
 
 + `{ strategy: 'mocha' }`
 + `{ mocha: 1 }`
-+ `{ mocha: mocha }` (when mocha is defined elsewhere in your tests and you wish  
-    to use it within the test function itself)
++ `{ mocha: mocha }` (use this when `mocha` is defined elsewhere in your tests 
+    and you wish  to use it within the test function itself)
 
-However, unless you are using should.js, you must specify which assertion method 
-your test relies on:
+However, unless you are using `should.js`, you must specify which assertion 
+method your test relies on:
 
 + `{ expect: expect }`
 + `{ assert: assert }`
@@ -463,8 +473,8 @@ assertion library for the browser."*
 ## jasmine
 
 Because jasmine also uses a try+catch approach, you do not need to specify 
-jasmine as the test strategy *unless you want to intercept 
-failing tests.*  Specify the jasmine strategy with one of the following:
+jasmine as the test strategy *unless you want to intercept failing tests.*  
+Specify the jasmine strategy with one of the following:
 
 + `{ strategy: 'jasmine' }`
 + `{ jasmine: 1 }`
@@ -472,7 +482,7 @@ failing tests.*  Specify the jasmine strategy with one of the following:
 
 ## QUnit
 
-When using QUnit, you __must__ specify the QUnit strategy as follows:
+When using QUnit, you __must__ always specify the QUnit strategy as follows:
 
 + `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
 
@@ -482,7 +492,7 @@ for QUnit."*
 
 ## tape
 
-For use with tape, you __must__ specify the tape strategy as follows:
+For use with tape, you __must__ always specify the tape strategy as follows:
 
 + `{ tape: [test | t] }` 
 
@@ -546,12 +556,13 @@ versions of test suites.  Here's how they stack up:
 testem
 ------
 
-I'm using Toby Ho's MAGNIFICENT [testem](https://github.com/airportyh/testem) 
-to drive tests in node.js and in multiple browsers.
+I'm using Toby Ho's (@airportyh) MAGNIFICENT 
+[testem](https://github.com/airportyh/testem) to drive tests in node.js and in 
+multiple browsers.
 
 The core tests use 
 [jasmine-2.0.0](http://jasmine.github.io/2.0/introduction.html) (which requires 
-testem v0.6.3 or later) in browsers, and Misko Hevery's
+testem v0.6.3 or later) in browsers, and Misko Hevery's (@mhevery)
 [jasmine-node](https://github.com/mhevery/jasmine-node) (which uses jasmine 
 1.3.1 internally) on node.js.
 
@@ -591,7 +602,7 @@ You can view them directly on rawgithub:
 
   
 # TODO
-+ fix intercept in event-based library strategies
++ improve intercept in event-based library strategies
 + self-shunt where to test itself more cleanly, progressively
 + clean up the procedural long-method setup code in the where() function
 + explore jasmine tap reporter by Miller Medeiros (@millermedeiros)
@@ -622,12 +633,22 @@ January 2014 to invalidate that bit of self-doubt in a hurry.
 
 ## WHAT I FOUND OUT
 
-Test libraries make assumptions.  Not everyone designs with "lifecycle" in mind. 
-Not all test libraries expose hooks for intercepting messages.  That could be a 
-blocking issue when you need a way to plug in to the lifecycle of a test, 
-perform transforms, etc.  It also means their reporters are tightly coupled with 
-their test runners.  *Which means some libraries themselves do not benefit from 
-their own stated purpose - to ease test-driven development.*
+Test libraries make assumptions.  Not all test libraries are designed with the 
+same "lifecycle" in mind, meaning they do not expose hooks at identical stages. 
+When adding message interception support, I found in more than one case that 
+there is no 'after-test-but-before-result' hook that would allow me to scrub 
+expected failures from the reporter.  
+
+That means some library output reporters are tightly coupled with their test 
+runners.  *Which means some libraries themselves do not benefit from their own 
+stated purpose - to ease test-driven development.*
+
+In addition, not all *browsers* handle the test lifecycle the same way.  This 
+was not a surprise so much as annoyance.  For example, in the QUnit suite, IE, 
+Chrome and Opera report two failures whereas Firefox reports only one.  However, 
+these failures are expected so we really want to see NO failures.  QUnit also 
+reported the failures *first* in the console, regardless of their occurrence in 
+the test suite.  (That could be a side-effect of using qunit-tap, however.)
 
 QUnit was surprisingly easy to hook *some* information, but impossible to trap 
 completely.  You can force a failing result in QUnit with this:
@@ -637,38 +658,25 @@ completely.  You can force a failing result in QUnit with this:
 But QUnit's legacy lifecycle doesn't expose a way for testers to intercept 
 messages to the HTML reporter (which is just visual rather than logical 
 inspection anyway).  So I recommend using it with another reporting utility like 
-qunit-tap so that you can ignore the tightly-coupled mess of the HTML reporter. 
-That's a strike against it.
+qunit-tap so that you can ignore the "should fail" results in the HTML reporter. 
 
 Same goes for Tape except that there is no HTML reporter for it, as it is a test 
-library for node.js projects.  With Tape in the browser, you need browserify - 
-which already is a strike against it if you want to drive browser tests.
+library for node.js projects.  To run tape in the browser, you need 
+[browserify](http://browserify.org/). That's a minor benefit if you prefer the 
+terse syntax of tape. If your emphasis is on browser capabilities rather than 
+node.js, tape should not be your first choice.
 
-Mocha was even more surprisingly easy to work with, probably because of TJ's 
-early decision to completely de-couple the assertion system from the test runner 
-and reporter.  Taking assert, expect and should to the browser required only one 
+Mocha was even easier to work with, probably due to TJ's (@tjholowaychuk) early 
+decision to de-couple the assertion system completely from the test runner and 
+reporter.  Taking assert, expect and should to the browser required only one 
 library to be ported - assert.js.  Working with chai was even easier - no port 
 needed for the browser. 
-
-Not all browsers handle the test lifecycle the same way.  This was not a 
-surprise so much as annoyance.  IE, Chrome and Opera report two failures in the 
-QUnit suite whereas Firefox reports only one.  The failures are expected so we 
-really want to see NO failures.  And failures are reported first in the console 
-regardless of their occurrence in the test suite (that could be a side-effect of
-using qunit-tap).
-
-
 
 After this experience, I recommend the following tools for JavaScript TDD:
 
 + __mocha__ - non-invasive try+catch, multiple reporter support, just works.
-+ __should.js (or chai/should)__ - ignore the disingenuous FUD from purists and 
-maintainability experts regarding `Object.prototype.should`, `should` makes test 
-assertions easy to write, because `assertions.should.be.easy.to.write`.
-+ __testem__ - easy to configure live-reload harness that just works.
++ __should.js (or chai/should)__ - should.js makes test assertions easy to write 
+  by decorating with `Object.prototype.should` - which makes TDD in JavaScript 
+  more satisfying - (motto: `assertions.should.be.easy.to.write`).
++ __testem__ - easy to configure, live-reload harness that just works.
 + __travis__ - free service with multiple environment support that just works.
-
-
-# License
-
-MIT for now, JSON eventually
