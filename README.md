@@ -258,7 +258,7 @@ A commented row is ignored.
       
 # numeric data vs numeric string
 
-## numeric data is automatically converted to the `Number` type
+### numeric data is automatically converted to the `Number` type
 
 That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
 `Math.max(Number(a), Number(b))`.
@@ -298,7 +298,7 @@ created to verify that numeric conversions work:
         expect(+s).toBe(c);
       });
 
-## numeric strings are preserved
+### numeric strings are preserved
 
       where(function () {
         /***
