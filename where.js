@@ -362,10 +362,12 @@
         if (v === "false") row[i] = false;
         
       } else {
-      
         // convert numerics
-        v = parseFloat(v.replace(/\'|\"|\,/g,''));
-        isNaN(v) || (row[i] = v);        
+        // "support numeric strings #2" bug from johann-sonntagbauer        
+        if (v.match(/\d+/g)) {
+          v = v.replace(/\'|\"|\,/g,'');
+          isNaN(v) || (row[i] = Number(v));
+        }
       }
     }
   }

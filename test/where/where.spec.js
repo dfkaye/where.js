@@ -156,7 +156,7 @@ describe('where.js [core jasmine spec]', function () {
                 6     |    4     |   10.0   |  3
                 8.030 |   -2.045 |    5.985 |  4
             1,000.67  | 1345     | 2345.67  |  6
-                5f |      5 | 10f | 1
+                5 |      5 | 10 | 1
           ***/
           
           /* 
@@ -199,7 +199,17 @@ describe('where.js [core jasmine spec]', function () {
         expect(h).toBe('');         // empty boxes are empty strings
         expect(normal).toBe('a b'); // unquoted values are strings
       });
-    }); 
+    });
+    
+    it('should handle numeric strings', function() {
+      where(function () {
+        /***
+          date 
+          1973-01-01 
+          ***/
+        expect(date).toBe('1973-01-01');
+      });
+    });
     
   });
 
@@ -362,7 +372,6 @@ describe('where.js [core jasmine spec]', function () {
             a  |  b  |  c
             1  |  1  |  x
           ***/
-          
           expect(Math.max(a, b)).toBe(c);
           
         }, { jasmine: jasmine, expect: expect, intercept: 1});
@@ -427,8 +436,9 @@ describe('where.js [core jasmine spec]', function () {
           5  |  3  |  5.01
         ***/
         
-        // /* using match for numeric data here */
+        // /* using match for numeric data here */        
         expect(Math.max(a, b)).toBe(c);
+        
       }, { strategy: 'jasmine', expect: expect, intercept: 1 });
 
       expect(results.failing.length).toBe(2);
