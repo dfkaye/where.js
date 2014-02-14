@@ -342,7 +342,8 @@
   }
   
   /**
-   * Replaces row data value string with falsy/truthy or numeric value.
+   * Replaces un-quoted values with null, undefined, true, false or numeric type 
+   * values. Values containing quotes are not replaced.
    *
    * @private 
    * @function convertTypes
@@ -360,14 +361,14 @@
         if (v === "null") row[i] = null;
         if (v === "true") row[i] = true;
         if (v === "false") row[i] = false;
-        
-      } else {
-        // convert numerics
-        // "support numeric strings #2" bug from johann-sonntagbauer        
-        if (v.match(/\d+/g) && v.search(/[\'|\"]/g) === -1) {
-          v = v.replace(/\,/g,'');
-          isNaN(v) || (row[i] = Number(v));
-        }
+      }
+            
+      if (v.match(/\d+/g) && v.search(/[\'|\"]/g) === -1) {
+      
+        // convert un-quoted numerics
+        // "support numeric strings #2" bug from johann-sonntagbauer      
+        v = v.replace(/\,/g,'');
+        isNaN(v) || (row[i] = Number(v));
       }
     }
   }
