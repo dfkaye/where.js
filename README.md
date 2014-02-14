@@ -339,8 +339,8 @@ When an expectation fails, the data-table labels plus the row of values for the
 current expectation are added to the *current* failing item. Every failed 
 expectation in a `where()` test will appear similar to:
 
-     [a | b | c] : 
-     [1 | 2 | x] (Error: Expected 2 to be 'x'.)
+      [a | b | c] : 
+      [1 | 2 | x] (Error: Expected 2 to be 'x'.)
 
 # results
 
