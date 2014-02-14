@@ -364,8 +364,8 @@
       } else {
         // convert numerics
         // "support numeric strings #2" bug from johann-sonntagbauer        
-        if (v.match(/\d+/g)) {
-          v = v.replace(/\'|\"|\,/g,'');
+        if (v.match(/\d+/g) && v.search(/[\'|\"]/g) === -1) {
+          v = v.replace(/\,/g,'');
           isNaN(v) || (row[i] = Number(v));
         }
       }

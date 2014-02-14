@@ -210,77 +210,6 @@ A commented row is ignored.
         expect(Math.max(a, b)).toBe(c);
       });
 
-numeric data
-------------
-
-__Numeric data is automatically converted to the `Number` type.__
-
-That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
-`Math.max(Number(a), Number(b))`.
-
-That also means every test can use strict equality, so you don't need to rely 
-on regular expression matchers when getting started.
-
-_However_, where `Math` is involved there is usually an octal, signed, comma, or 
-precision bug waiting.  where.js handles all but precision automatically.  You 
-can get precision into your tests by adding another column, as seen in the test 
-created to verify that numeric conversions work:
-
-      where(function(){
-        /***
-              a     |    b     |    c     |  p
-              
-              0     |    1     |    1     |  1
-              0.0   |    1.0   |    1     |  1
-             -1     |   +1     |    0     |  1
-             +1.1   |   -1.2   |   -0.1   |  2
-             08     |   08     |   16     |  2
-              6     |    4     |   10.0   |  3
-              8.030 |   -2.045 |    5.985 |  4
-          1,000.67  | 1345     | 2345.67  |  6
-          
-        ***/
-        
-        /* 
-         * using precisions for famous .1 + .2 == 0.30000000000000004 
-         * and 5.985 vs 5.98499999999999999999999999 bugs 
-         *
-         * toPrecision() returns a string, so the prefixed '+' uses implicit 
-         * conversion to number.
-         */
-         
-        var s = (a + b).toPrecision(p);
-        expect(+s).toBe(c);
-      });
-
-      
-# date strings are preserved
-
-      where(function () {
-        /***
-          date 
-          1973-01-01 
-          ***/
-        expect(date).toBe('1973-01-01');
-      });
-      
-      
-# null, undefined, boolean values
-
-Truthy/falsy values are also automatically converted as per this test:
-
-      where(function () {
-        /***
-          a    | b         | c     | d
-          null | undefined | false | true
-        ***/
-        
-        expect(a).toBe(null);
-        expect(b).toBe(undefined);
-        expect(c).toBe(false);
-        expect(d).toBe(true);
-      });
-
 # string data vs. empty data
 
 While data with quoted strings are preserved,
@@ -326,6 +255,80 @@ While data with quoted strings are preserved,
           expect(a).toBe('');
         });
       });
+      
+# numeric data vs numeric string
+
+## numeric data is automatically converted to the `Number` type
+
+That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
+`Math.max(Number(a), Number(b))`.
+
+That also means every test can use strict equality, so you don't need to rely 
+on regular expression matchers when getting started.
+
+_However_, where `Math` is involved there is usually an octal, signed, comma, or 
+precision bug waiting.  where.js handles all but precision automatically.  You 
+can get precision into your tests by adding another column, as seen in the test 
+created to verify that numeric conversions work:
+
+      where(function(){
+        /***
+              a     |    b     |    c     |  p
+              
+              0     |    1     |    1     |  1
+              0.0   |    1.0   |    1     |  1
+             -1     |   +1     |    0     |  1
+             +1.1   |   -1.2   |   -0.1   |  2
+             08     |   08     |   16     |  2
+              6     |    4     |   10.0   |  3
+              8.030 |   -2.045 |    5.985 |  4
+          1,000.67  | 1345     | 2345.67  |  6
+          
+        ***/
+        
+        /* 
+         * using precisions for famous .1 + .2 == 0.30000000000000004 
+         * and 5.985 vs 5.98499999999999999999999999 bugs 
+         *
+         * toPrecision() returns a string, so the prefixed '+' uses implicit 
+         * conversion to number.
+         */
+         
+        var s = (a + b).toPrecision(p);
+        expect(+s).toBe(c);
+      });
+
+## numeric strings are preserved
+
+      where(function () {
+        /***
+          date        | dataString   | number | numberString
+          1973-01-01  | '2014-01-01' | 2      | '4'
+          ***/
+        expect(date).toBe('1973-01-01');
+        expect(dataString).toBe('\'2014-01-01\'');
+        expect(number).toBe(2);
+        expect(numberString).toBe('\'4\'');
+      });
+      
+      
+# null, undefined, boolean values
+
+Truthy/falsy values are also automatically converted as per this test:
+
+      where(function () {
+        /***
+          a    | b         | c     | d
+          null | undefined | false | true
+        ***/
+        
+        expect(a).toBe(null);
+        expect(b).toBe(undefined);
+        expect(c).toBe(false);
+        expect(d).toBe(true);
+      });
+
+
     
 # output
 

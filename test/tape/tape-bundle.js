@@ -9377,7 +9377,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    * @param {Array} row - row data values.
    */
   function convertTypes(row) {
-    for (var v, n, i = 0; i < row.length; i += 1) {
+    for (var v, i = 0; i < row.length; i += 1) {
        
       v = row[i];
       
@@ -9393,8 +9393,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         // convert numerics
         // "support numeric strings #2" bug from johann-sonntagbauer        
         if (v.match(/\d+/g)) {
-          n = v.replace(/\'|\"|\,/g,'');
-          isNaN(n) || (row[i] = Number(n));
+          v = v.replace(/\'|\"|\,/g,'');
+          isNaN(v) || (row[i] = Number(v));
         }
       }
     }

@@ -204,11 +204,15 @@ describe('where.js [core jasmine spec]', function () {
     it('should handle numeric strings', function() {
       where(function () {
         /***
-          date 
-          1973-01-01 
+          date        | dataString   | number | numberString
+          1973-01-01  | '2014-01-01' | 2      | '4'
           ***/
         expect(date).toBe('1973-01-01');
+        expect(dataString).toBe('\'2014-01-01\'');
+        expect(number).toBe(2);
+        expect(numberString).toBe('\'4\'');
       });
+      
     });
     
   });
