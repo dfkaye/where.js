@@ -13,7 +13,8 @@
       "command": "node ./test/qunit/node-suite.js"
     },
     "tape" : {
-      "command": "browserify ./test/tape/node-suite.js -o ./test/tape/tape-bundle.js && node ./test/tape/node-suite.js"
+      "command": "browserify ./test/tape/node-suite.js -o ./test/tape/tape-bundle.js && node ./test/tape/node-suite.js",
+      "protocol": "tap"
     }    
   }
 }
