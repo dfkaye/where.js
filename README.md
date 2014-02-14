@@ -253,6 +253,18 @@ created to verify that numeric conversions work:
         expect(+s).toBe(c);
       });
 
+      
+# date strings are preserved
+
+      where(function () {
+        /***
+          date 
+          1973-01-01 
+          ***/
+        expect(date).toBe('1973-01-01');
+      });
+      
+      
 # null, undefined, boolean values
 
 Truthy/falsy values are also automatically converted as per this test:
