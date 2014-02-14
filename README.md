@@ -212,7 +212,7 @@ A commented row is ignored.
 
 # string data vs. empty data
 
-While data with quoted strings are preserved,
+## data with quoted strings are preserved
 
     it('should handle quoted strings', function () {
       where(function () {
@@ -232,7 +232,7 @@ While data with quoted strings are preserved,
       });
     });
     
-## *empty* data should be formatted with exterior table borders:
+## *empty* data should be delimited with separators:
 
       it('should throw when empty data missing separators', function() {
         expect(function() {
