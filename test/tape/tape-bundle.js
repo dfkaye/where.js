@@ -7959,6 +7959,8 @@ Test.prototype.error
 = Test.prototype.ifErr
 = Test.prototype.iferror
 = function (err, msg, extra) {
+
+console.log('error');
     this._assert(!err, {
         message : defined(msg, String(err)),
         operator : 'error',

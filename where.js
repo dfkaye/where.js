@@ -507,7 +507,7 @@
   where.strategy('QUnit', function qunitStrategy(context) {
     
     // this code reminds me of java for some reason...
-    
+
     var test;
     var realPush;
     var interceptingPush;
@@ -524,18 +524,18 @@
         if (!details.result) {
           details.result = !details.result;
         }
-        realPush.call(QUnit.config.current.assertions, details);
+        realPush.call(context.QUnit.config.current.assertions, details);
       };
       
       // override on start
       context.QUnit.testStart(function(detail) {
-        realPush = QUnit.config.current.assertions.push;
-        QUnit.config.current.assertions.push = interceptingPush;
+        realPush = context.QUnit.config.current.assertions.push;
+        context.QUnit.config.current.assertions.push = interceptingPush;
       });
     
       // undo override on done
       context.QUnit.testDone(function(detail) {
-        QUnit.config.current.assertions.push = realPush;
+        context.QUnit.config.current.assertions.push = realPush;
       });
     }
 

@@ -180,6 +180,7 @@ test('should not throw when intercept specified', function(assert) {
 
   var results;
   var error;
+  
   try {
   
     results = where(function(){
@@ -196,6 +197,7 @@ test('should not throw when intercept specified', function(assert) {
   } catch(e) {
     error = e;
   }
+  
   assert.ok(!error, 'should not have thrown');
   assert.equal(results.failing.length, 1, 'should be 1 failing');
   assert.equal(results.passing.length, 1, 'should be 1 passing');
