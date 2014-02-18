@@ -511,9 +511,10 @@ For use with tape, you __must__ always specify the tape strategy as follows:
 
 + `{ tape: [test | t] }` 
 
-This is due to James' (@substack) approach of passing the tape `test` reference 
-into the callback as `t` and ingeniously re-using that as both a results cache 
-and as an emitter for 'result' events.
+This is due to Isaac's (@izs) approach of passing the __tap__ `test` reference 
+into the callback as `t` which James' (@substack) amends in __tape__ by 
+re-using that function as both a results cache and as an emitter for 'result' 
+events.
 
     var test = require('tape');
 

@@ -17,8 +17,8 @@
       if (location.href.indexOf('://localhost:7357') != -1) {
         var log = document.getElementById('log')
         Testem.handleConsoleMessage = function(msg){
-          //Testem.emit('tap', msg)//this line crashes testem
-          //log.appendChild(document.createTextNode(msg + '\n'))
+          Testem.emit('tap', msg)//this line crashes testem
+          log.appendChild(document.createTextNode(msg + '\n'))
           return false
         }
       }
