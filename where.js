@@ -485,16 +485,19 @@
       });
       
       /* execute on currentSpec for jasmine 1.x.x */
-      fnTest.apply(currentSpec, [context].concat(value));
-    
-      /* restore result api */
-      
-      /* jasmine 1.x.x. */ 
-      addResult && (result.addResult = addResult);
-      
-      /* jasmine 2.x.x. */ 
-      addExpectationResult && 
-      (jasmine.Spec.prototype.addExpectationResult = addExpectationResult);     
+      try {
+        fnTest.apply(currentSpec, [context].concat(value));
+      }
+      finally {
+        /* restore result api */
+
+        /* jasmine 1.x.x. */
+        addResult && (result.addResult = addResult);
+
+        /* jasmine 2.x.x. */
+        addExpectationResult &&
+        (jasmine.Spec.prototype.addExpectationResult = addExpectationResult);
+      }
     };        
   });
   
