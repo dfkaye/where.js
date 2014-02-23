@@ -73,6 +73,7 @@ describe('where.js [jasmine tests]', function () {
 
   });
   
+  // Merge pull request #5 from johann-sonntagbauer
   it('should throw unintercepted expectation errors', function() {
 
     expect(function() {
@@ -92,14 +93,14 @@ describe('where.js [jasmine tests]', function () {
 
   it('should throw unintercepted errors', function() {
     expect(function() {
-        where(function() {
-            /***
-              | a | b | c |
-              | 1 | 2 | 2 |
-              ***/
-              throw new Error('some error');
-          }, { jasmine: jasmine, expect: expect });
-      }).toThrow();
+      where(function() {
+        /***
+        | a | b | c |
+        | 1 | 2 | 2 |
+        ***/
+        throw new Error('some error');
+      }, { jasmine: jasmine, expect: expect });
+    }).toThrow();
   });
   
 // UNCOMMENT THIS TEST TO SEE STACK OUTPUT FOR FAILING WHERE() ASSERTION

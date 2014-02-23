@@ -7,6 +7,15 @@
     "name": "david kaye (@dfkaye)",
     "email" : "dfkaye@yahoo.com"
   },
+  "contributors" : [
+    {
+      "name" : "Johann Sonntagbauer",
+      "email" : "johann.sonntagbauer@gmx.at"
+    },
+    { "name" : "Jamon Holmgren",
+      "email" : "jamon@clearsightstudio.com"
+    }
+  ],
   "devDependencies": {
     "jasmine-node": "1.x.x"
   },
