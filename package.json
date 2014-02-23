@@ -36,7 +36,7 @@
   },
   "scripts": {
     "test": "jasmine-node --verbose ./test/where/where.spec.js",
-    "jasmine": "jasmine-node --verbose --matchall ./test/jasmine/where-spec",
+    "jasmine": "jasmine-node --verbose --matchall ./test/jasmine/where-spec.js",
     "mocha": "node ./test/mocha/node-suite.js",
     "qunit": "node ./test/qunit/node-suite.js",
     "tape": "node ./test/tape/node-suite.js",
