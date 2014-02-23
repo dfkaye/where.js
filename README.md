@@ -584,21 +584,21 @@ testem v0.6.3 or later) in browsers, and Misko Hevery's (@mhevery)
 
 The `testem.json` file defines launchers for the different frameworks for both 
 node.js and browser suites:
-  - `testem -l where` # core tests using jasmine
-  - `testem -l jasmine` 
-  - `testem -l mocha`
-  - `testem -l qunit`
-  - `testem -l tape` # runs browserify on the tape suite 
++ `testem -l where` # core tests using jasmine
++ `testem -l jasmine` 
++ `testem -l mocha`
++ `testem -l qunit`
++ `testem -l tape` # runs browserify on the tape suite 
 
 ### npm testem scripts
 
 The `package.json` file defines scripts to call the testem launchers (with the 
 appropriate browser test page for each):
-  - `npm run testem`
-  - `npm run testem-jasmine`
-  - `npm run testem-mocha`
-  - `npm run testem-qunit`
-  - `npm run testem-tape`
++ `npm run testem`
++ `npm run testem-jasmine`
++ `npm run testem-mocha`
++ `npm run testem-qunit`
++ `npm run testem-tape`
 
 ### browser suites (and rawgithub)
 
@@ -608,11 +608,11 @@ chai, qunit, qunit-tap, and jasmine-2.0.0), rather than your system's `/testem`
 directory, so they can be viewed as static pages.  
 
 You can view them directly on rawgithub:
-- [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
-- [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
-- [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
-- [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
-- [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
++ [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
++ [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
++ [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
++ [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
++ [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
   
 ## conclusions so far  
