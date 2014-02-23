@@ -47,7 +47,7 @@ but you can see the [tests](#tests)...
 ## important: global assignment
 
 Running `where.js` adds a `where()` method to the **global** namespace - 
-([here's why](https://gist.github.com/dfkaye/9129150))
+([__here's why__](https://gist.github.com/dfkaye/9129150), if you're curious...)
 
 node.js:
 
