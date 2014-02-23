@@ -2,22 +2,24 @@
 
 # where.js
 
-Use data-tables in JavaScript tests, similar to Cucumber 
-[`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines) 
-or Spock 
-[`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks). 
+Provides data-table support in JavaScript tests.
 
 Mostly ready for prime time, though still some things [to do](#TODO).
+
+## inspired by:
++ Cucumber [`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines)
++ Spock [`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks)
++ JP Castro's (@jphpsf)[DRYing Up Your JavaScript Jasmine Tests With the Data Provider Pattern](http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
++ Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
 ## contributors
 
 + [Johann Sonntagbauer](https://github.com/johann-sonntagbauer)
 + [Jamon Holmgren](https://github.com/jamonholmgren)
 
-## Inspired by:
+## license
 
-+ JP Castro's (@jphpsf)[DRYing Up Your JavaScript Jasmine Tests With the Data Provider Pattern](http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
-+ Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
+JSON
 
 ## works on my machine...
 
@@ -25,20 +27,16 @@ but you can see the [tests](#tests)...
 
 ## libraries tested and supported so far
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
-  + [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
+  - [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
 + [mocha](http://visionmedia.github.io/mocha/)
-  + `assert` (on node.js) and [assert.js](https://github.com/Jxck/assert) in the
+  - `assert` (on node.js) and [assert.js](https://github.com/Jxck/assert) in the
     browser
-  + [expect.js](https://github.com/LearnBoost/expect.js)
-  + [should.js](https://github.com/visionmedia/should.js)
-  + [chai](http://chaijs.com/) (assert, expect, should)
+  - [expect.js](https://github.com/LearnBoost/expect.js)
+  - [should.js](https://github.com/visionmedia/should.js)
+  - [chai](http://chaijs.com/) (assert, expect, should)
 + [QUnit](http://qunitjs.com/)
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
-
-## license
-
-JSON
 
 ## install
 
@@ -610,11 +608,11 @@ chai, qunit, qunit-tap, and jasmine-2.0.0), rather than your system's `/testem`
 directory, so they can be viewed as static pages.  
 
 You can view them directly on rawgithub:
-  - [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
-  - [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
-  - [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
-  - [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
-  - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
+- [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
+- [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
+- [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
+- [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
+- [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
   
 ## conclusions so far  
