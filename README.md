@@ -589,11 +589,11 @@ testem v0.6.3 or later) in browsers, and Misko Hevery's (@mhevery)
 The `testem.json` file defines launchers for the different frameworks for both 
 node.js and browser suites:
 
-+ `testem -l where` # core tests using jasmine
++ `testem -l where` (core tests using jasmine)
 + `testem -l jasmine` 
 + `testem -l mocha`
 + `testem -l qunit`
-+ `testem -l tape` # runs browserify on the tape suite 
++ `testem -l tape` (runs browserify on the tape suite)
 
 ### npm testem scripts
 
