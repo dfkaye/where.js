@@ -1,6 +1,6 @@
 {
   "name": "where.js",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "data-driven test method for js frameworks (mocha, jasmine, qunit, tape)",
   "homepage" : "https://github.com/dfkaye/where.js",
   "author": {
