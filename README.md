@@ -70,7 +70,7 @@ browsers:
     // => true
     
 
-## use case
+# justify
 
 Easier to read and modify this
     
@@ -113,9 +113,7 @@ inject other information or references into the test function.
 (I'll relate some additional lessons learned from this project down below or 
 elsewhere.)
 
-## format
-
-### multi-line comment
+## multi-line format
 
 A data table inside a where() function should be enclosed between start `/***` 
 and end `***/` 3-asterisk comments.
@@ -153,7 +151,7 @@ sequences.
         expect(Math.max(a, b)).toBe c
         return      
 
-### table rows
+## row format
 
 Similar to Cucumber and Spock, where.js data tables must contain at least two 
 rows. The first row must contain the names to be used as variables in the 
@@ -177,7 +175,7 @@ the expectation - without having to be defined or var'd:
     });
 
     
-### table borders
+## borders
 
 Tables may also optionally contain left and right edge borders, similar to 
 Cucumber and Fit:
@@ -194,7 +192,9 @@ Cucumber and Fit:
       });
     });
 
-### line comments
+For empty cells, borders are required.
+
+## line comments
 
 Table rows may contain line comments.
 
@@ -218,11 +218,9 @@ A commented row is ignored.
         expect(Math.max(a, b)).toBe(c);
       });
 
-## data conversions
+## string data vs. empty data
 
-### string data vs. empty data
-
-#### data with quoted strings are preserved
+### data with quoted strings are preserved
 
     it('should handle quoted strings', function () {
       where(function () {
@@ -242,7 +240,7 @@ A commented row is ignored.
       });
     });
     
-#### *empty* data should be delimited with separators:
+### *empty* data should be delimited with separators:
 
       it('should throw when empty data missing separators', function() {
         expect(function() {
@@ -266,9 +264,9 @@ A commented row is ignored.
         });
       });
       
-### numeric data vs numeric string
+## numeric data vs numeric string
 
-#### numeric data is automatically converted to the `Number` type
+### numeric data is automatically converted to the `Number` type
 
 That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
 `Math.max(Number(a), Number(b))`.
@@ -308,7 +306,7 @@ created to verify that numeric conversions work:
         expect(+s).toBe(c);
       });
 
-#### numeric strings are preserved
+### numeric strings are preserved
 
       where(function () {
         /***
@@ -322,7 +320,7 @@ created to verify that numeric conversions work:
       });
       
       
-### null, undefined, boolean values
+## null, undefined, boolean values
 
 Truthy/falsy values are also automatically converted as per this test:
 
@@ -551,10 +549,12 @@ included in the browser suite for tape, and can be found in the
 statements to a list in the DOM.*
 
 
-### custom strategy __TODO__
+### custom strategy 
+__TODO__
 
 
-### more sophisticated example __TODO__ [ object instance creation example]
+### more sophisticated example 
+__TODO__ [ object instance creation example]
 
         
 ## tests
@@ -616,7 +616,8 @@ You can view them directly on rawgithub:
   - [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
   - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
-## Long Story 
+  
+## conclusions so far  
 
 I started with jasmine-where back when (October 2013) as a self-assessment and 
 found both v1.3.1 and v2.0.0-rc3 were a bit tricky but not difficult to 
@@ -626,7 +627,7 @@ simplifying my own jasmine-where and jasmine-intercept projects.  Thinking I was
 just not that great at this anymore, I took on the whole `where.js` concept in 
 January 2014 to invalidate that bit of self-doubt in a hurry.
 
-### What I found out
+__what I found out__
 
 Test libraries make assumptions.  Not all test libraries are designed with the 
 same "lifecycle" in mind, meaning they do not expose hooks at identical stages. 
@@ -667,7 +668,7 @@ reporter.  Taking assert, expect and should to the browser required only one
 library to be ported - assert.js.  Working with chai was even easier - no port 
 needed for the browser. 
 
-### I recommend...
+__I recommend...__
 
 After this experience, I recommend the following tools for JavaScript TDD:
 
