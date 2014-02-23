@@ -7,6 +7,8 @@ Use data-tables in JavaScript tests, similar to Cucumber
 or Spock 
 [`where:` blocks](https://code.google.com/p/spock/wiki/SpockBasics#Where_Blocks). 
 
+Mostly ready for prime time, though still some things [to do](#TODO).
+
 ## contributors
 
 + [Johann Sonntagbauer](https://github.com/johann-sonntagbauer)
@@ -17,11 +19,9 @@ or Spock
 + JP Castro's (@jphpsf)[DRYing Up Your JavaScript Jasmine Tests With the Data Provider Pattern](http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
 + Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
-Mostly ready for prime time, though still some things [to do](#TODO).
+## works on my machine...
 
-# works on my machine
-
-See the [tests](#tests)...
+but you can see the [tests](#tests)...
 
 ## libraries tested and supported so far
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
@@ -36,9 +36,7 @@ See the [tests](#tests)...
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
 
-
-
-## License
+## license
 
 JSON
 
@@ -72,7 +70,7 @@ browsers:
     // => true
     
 
-## story
+## use case
 
 Easier to read and modify this
     
@@ -115,7 +113,9 @@ inject other information or references into the test function.
 (I'll relate some additional lessons learned from this project down below or 
 elsewhere.)
 
-## multi-line comment format
+## format
+
+### multi-line comment
 
 A data table inside a where() function should be enclosed between start `/***` 
 and end `***/` 3-asterisk comments.
@@ -153,7 +153,7 @@ sequences.
         expect(Math.max(a, b)).toBe c
         return      
 
-### table format
+### table rows
 
 Similar to Cucumber and Spock, where.js data tables must contain at least two 
 rows. The first row must contain the names to be used as variables in the 
@@ -171,11 +171,13 @@ the expectation - without having to be defined or var'd:
          4 | 3 | 4
          6 | 6 | 6
         ***/
+        
         expect(Math.max(a, b)).toBe(c);
       });
     });
 
-### borders
+    
+### table borders
 
 Tables may also optionally contain left and right edge borders, similar to 
 Cucumber and Fit:
@@ -216,9 +218,11 @@ A commented row is ignored.
         expect(Math.max(a, b)).toBe(c);
       });
 
-## string data vs. empty data
+## data conversions
 
-### data with quoted strings are preserved
+### string data vs. empty data
+
+#### data with quoted strings are preserved
 
     it('should handle quoted strings', function () {
       where(function () {
@@ -238,7 +242,7 @@ A commented row is ignored.
       });
     });
     
-### *empty* data should be delimited with separators:
+#### *empty* data should be delimited with separators:
 
       it('should throw when empty data missing separators', function() {
         expect(function() {
@@ -262,9 +266,9 @@ A commented row is ignored.
         });
       });
       
-## numeric data vs numeric string
+### numeric data vs numeric string
 
-### numeric data is automatically converted to the `Number` type
+#### numeric data is automatically converted to the `Number` type
 
 That enables you to type `Math.max(a, b)` to avoid re-typing coercions such as 
 `Math.max(Number(a), Number(b))`.
@@ -304,7 +308,7 @@ created to verify that numeric conversions work:
         expect(+s).toBe(c);
       });
 
-### numeric strings are preserved
+#### numeric strings are preserved
 
       where(function () {
         /***
@@ -318,7 +322,7 @@ created to verify that numeric conversions work:
       });
       
       
-## null, undefined, boolean values
+### null, undefined, boolean values
 
 Truthy/falsy values are also automatically converted as per this test:
 
@@ -347,6 +351,7 @@ expectation in a `where()` test will appear similar to:
     [a | b | c] : 
     [1 | 2 | x] (Error: Expected 2 to be 'x'.)
 
+    
 ## results
 
 `where()` returns a `results` object with arrays for `labels` and `values` 
@@ -416,12 +421,12 @@ console.
 Failed tests or errors will appear as
 
     [a | b | c] : 
-     [1 | 2 | x] (Error: Expected 2 to be 'x'.)
+    [1 | 2 | x] (Error: Expected 2 to be 'x'.)
      
 Passing tests will appear as
 
     [a | b | c] : 
-     [1 | 2 | 2] (Passed)
+    [1 | 2 | 2] (Passed)
      
 
 ### intercept
