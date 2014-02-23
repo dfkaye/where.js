@@ -212,9 +212,19 @@ describe('where.js [core jasmine spec]', function () {
         expect(number).toBe(2);
         expect(numberString).toBe('\'4\'');
       });
-      
     });
-    
+
+    it('should not strip "/"', function() {
+      where(function() {
+        /***
+            date
+            01/01/1970   // comment
+         // 02/02/1972
+         ***/
+        expect(typeof date).toBe('string');
+        expect(date).toBe('01/01/1970');
+      })
+    });
   });
 
   /* empty vs. bordered data */

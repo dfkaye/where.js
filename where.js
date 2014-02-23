@@ -236,7 +236,7 @@
     
     // convert table into an array of row data
     var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
-                    .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
+                    .replace(/(\/\*+)*[\r]*(\*+\/)*/g, '') // ...block comments
                     .split('\n'); // and split by newline
     
     var rows = [];
