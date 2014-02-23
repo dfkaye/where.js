@@ -278,29 +278,33 @@ can get precision into your tests by adding another column, as seen in the test
 created to verify that numeric conversions work:
 
       where(function(){
+      
         /***
-              a     |    b     |    c     |  p
+          a        | b      | c       | p
               
-              0     |    1     |    1     |  1
-              0.0   |    1.0   |    1     |  1
-             -1     |   +1     |    0     |  1
-             +1.1   |   -1.2   |   -0.1   |  2
-             08     |   08     |   16     |  2
-              6     |    4     |   10.0   |  3
-              8.030 |   -2.045 |    5.985 |  4
-          1,000.67  | 1345     | 2345.67  |  6
-          
-        ***/
+          0        | 1      | 1       | 1
+          0.0      | 1.0    | 1       | 1
+          -1       | +1     | 0       | 1
+          +1.1     | -1.2   | -0.1    | 2
+          08       | 08     | 16      | 2
+          6        | 4      | 10.0    | 3
+          8.030    | -2.045 | 5.985   | 4
+          1,000.67 | 1345   | 2345.67 | 6
+          5        | 5      | 10      | 1
+          ***/
         
-        /* 
-         * using precisions for famous .1 + .2 == 0.30000000000000004 
+        /*
+         * using precision for famous .1 + .2 == 0.30000000000000004 
          * and 5.985 vs 5.98499999999999999999999999 bugs 
-         *
+         */
+ 
+        var s = (a + b).toPrecision(p);
+        
+        /*
          * toPrecision() returns a string, so the prefixed '+' uses implicit 
          * conversion to number.
          */
          
-        var s = (a + b).toPrecision(p);
         expect(+s).toBe(c);
       });
 

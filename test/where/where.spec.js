@@ -168,10 +168,19 @@ describe('where.js [core jasmine spec]', function () {
             5        | 5      | 10      | 1
             ***/
           
-          // using precisions for famous .1 + .2 == 0.30000000000000004 
-          // and 5.985 vs 5.98499999999999999999999999 bugs 
-          var s = (a + b).toPrecision(p)
-          expect(+s).toBe(c) // implicit conversion with prefixed +
+          /*
+           * using precision for famous .1 + .2 == 0.30000000000000004 
+           * and 5.985 vs 5.98499999999999999999999999 bugs 
+           */
+   
+          var s = (a + b).toPrecision(p);
+          
+          /*
+           * toPrecision() returns a string, so the prefixed '+' uses implicit 
+           * conversion to number.
+           */
+           
+          expect(+s).toBe(c);
         });
         
        }).not.toThrow();
