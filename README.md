@@ -616,25 +616,6 @@ You can view them directly on rawgithub:
   - [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
   - [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
-  
-## TODO
-+ improve intercept in event-based library strategies
-+ self-shunt where to test itself more cleanly, progressively
-+ clean up the procedural long-method setup code in the where() function
-+ reorganize docs - too sprawling or verbose
-+ strategy 
-  - 'purpose' needs better explaining (try+catch vs events vs ?)
-  - custom strategy needs explaining
-+ strategy - refactoring: 
-  - provide a `list` method returning all strategies registered
-  - ease up on lookup cleverness
-  - make context/strategy specification easier, more global
-  - ui needs re-visiting - strings vs objects
-    - jasmine - assume global or double as 'context.jasmine'
-    - QUnit - assume global or double as 'context.QUnit'
-    - tape - t function serves double as 'context.tape'
-
-
 ## Long Story 
 
 I started with jasmine-where back when (October 2013) as a self-assessment and 
@@ -697,3 +678,21 @@ After this experience, I recommend the following tools for JavaScript TDD:
 + __testem__ - easy to configure, live-reload harness that just works.
 + __travis__ - free service with multiple environment support that just works.
 
+  
+## TODO
++ improve intercept in event-based library strategies
++ self-shunt where to test itself more cleanly, progressively
++ clean up the procedural long-method setup code in the where() function
++ reorganize docs - too sprawling or verbose
++ strategy 
+  - 'purpose' needs better explaining (try+catch vs events vs ?)
+  - custom strategy needs explaining
++ strategy - refactoring: 
+  - provide a `list` method returning all strategies registered
+  - ease up on lookup cleverness
+  - make context/strategy specification easier, more global
+  - ui needs re-visiting - strings vs objects
+    - jasmine - assume global or double as 'context.jasmine'
+    - QUnit - assume global or double as 'context.QUnit'
+    - tape - t function serves double as 'context.tape'
+    
