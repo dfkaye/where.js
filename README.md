@@ -111,7 +111,7 @@ inject other information or references into the test function.
 (I'll relate some additional lessons learned from this project down below or 
 elsewhere.)
 
-## multi-line format
+## multi-line comments
 
 A data table inside a where() function should be enclosed between start `/***` 
 and end `***/` 3-asterisk comments.
@@ -127,27 +127,13 @@ and end `***/` 3-asterisk comments.
         expect(Math.max(a, b)).toBe(c);
       });
 
-### coffee-script comments
 
-As of Jan 2014, the 3-asterisk comment sequences are the only item not directly 
-translatable to CoffeeScript.  The workaround is to use CoffeeScript's mechanism 
-for [embedded JavaScript](http://coffeescript.org/#embedded) by placing backtick 
-( \` ) characters before the start `/***` and after the end `***/` comment
-sequences.
+### CoffeeScript comments
 
-      where ->
-      
-        `/***
-        
-         a | b | c
-         1 | 2 | 2
-         4 | 3 | 4
-         6 | 6 | 6
-         
-        ***/`
-        
-        expect(Math.max(a, b)).toBe c
-        return      
+If you're writing tests in CoffeeScript, see the 
+[CoffeeScript format](#CoffeeScript-format) section for slightly different 
+syntax (though more aesthetically appealing, I must admit). 
+
 
 ## row format
 
@@ -498,8 +484,10 @@ assertion library for the browser."*
 #### jasmine
 
 Because jasmine also uses a try+catch approach, you do not need to specify 
-jasmine as the test strategy *unless you want to intercept failing tests.*  
-Specify the jasmine strategy with one of the following:
+jasmine as the test strategy.
+
+*To intercept failing tests*, however, you __must__ specify jasmine as the 
+strategy, using one of the following:
 
 + `{ strategy: 'jasmine' }`
 + `{ jasmine: 1 }`
@@ -555,9 +543,84 @@ statements to a list in the DOM.*
 __TODO__
 
 
-### more sophisticated example 
-__TODO__ [ object instance creation example]
+## CoffeeScript format
 
+As of Jan 2014, the 3-asterisk comment sequences are the only item not directly 
+translatable to CoffeeScript.  
+
+### embedded table with backticks
+
+One workaround is to use CoffeeScript's mechanism for 
+[embedded JavaScript](http://coffeescript.org/#embedded) by placing backtick 
+( \` ) characters before the start `/***` and after the end `***/` comment
+sequences.
+
+      where ->
+      
+        `/***
+        
+         a | b | c
+         1 | 2 | 2
+         4 | 3 | 4
+         6 | 6 | 6
+         
+        ***/`
+        
+        expect(Math.max(a, b)).toBe c
+      
+### triple quote comments
+
+*__Thanks to [Jason Karns](https://github.com/jasonkarns)__, for this 
+suggestion*, you can also use the triple-quote multi-line string supported by 
+CoffeeScript, as in
+
+    where ->
+      """
+      a | b | c
+      1 | 2 | 3
+      4 | 5 | 9
+      """
+      expect(a + b).toBe(c)
+      
+which compiles to
+
+    where(function() {
+      "a | b | c\n1 | 2 | 3\n4 | 5 | 9";
+      return expect(a + b).toBe(c);
+    });
+
+To intercept expected failures (using jasmine in this case), this CoffeeScript:
+
+       results = where ->
+         """
+         a | b | c
+         1 | 2 | 3
+         4 | 5 | 6
+         """
+         expect(a + b).toBe(c)
+               
+       , { jasmine: jasmine, expect: expect, intercept: 1 }
+       
+       expect(results.failing.length).toBe(1)
+       expect(results.passing.length).toBe(1)
+
+compiles to:
+
+      var results;
+
+      results = where(function() {
+        "a | b | c\n1 | 2 | 3\n4 | 5 | 6";
+        return expect(a + b).toBe(c);
+      }, {
+        jasmine: jasmine,
+        expect: expect,
+        intercept: 1
+      });
+
+      expect(results.failing.length).toBe(1);
+
+      expect(results.passing.length).toBe(1);
+    
         
 ## tests
 

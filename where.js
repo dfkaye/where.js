@@ -229,18 +229,34 @@
    */
   function parseDataTable(fnBody) {
 
+    var table;
+    var data;
+    var str, row, size, i;
+    var rows = [];    
     var fs = fnBody.toString();
     
-    // find data table comment
-    var table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//)[0];
+    // find data table
     
-    // convert table into an array of row data
-    var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
-                    .replace(/(\/\*+)*[\r]*(\*+\/)*/g, '') // ...block comments
-                    .split('\n'); // and split by newline
+    table = fs.match(/[\"][^\n]+[\n]?[^\n]+[\"][\;]/);
     
-    var rows = [];
-    var str, row, size, i;
+    if (table) {
+    
+      // match on compiled multiline string in coffeescript
+      // submitted by jason karns
+      // https://github.com/dfkaye/where.js/issues/6
+      
+      data = table[0].replace(/[\"]/, '') // remove leading coffee quote
+                     .replace(/[\"][\;]/, '') // remove closing coffee quote
+                     .split('\\n'); // and split by escaped newline
+    } else {
+    
+      // match asterisk style multiline strings
+      // let it fail normally after this
+      table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//);
+      data = table[0].replace(/\/\/[^\r]*/g, '') // remove line comments...
+                     .replace(/(\/\*+)*[\r]*(\*+\/)*/g, '') // ...block comments
+                     .split('\n'); // and split by newline
+    }
     
     for (i = 0; i < data.length; i++) {
 

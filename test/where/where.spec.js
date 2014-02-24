@@ -18,7 +18,7 @@ describe('where.js [core jasmine spec]', function () {
     it('should accept 2 arguments', function () {
       expect(where.length).toBe(2);
     });
-    
+       
     it('should accept context arg with jasmine and expect props', function () {
       where(function(){
         /*** 
@@ -230,6 +230,7 @@ describe('where.js [core jasmine spec]', function () {
       });
     });
 
+    
   // Merge pull request #4 from johann-sonntagbauer
     it('should not strip "/"', function() {
       where(function() {
@@ -244,6 +245,8 @@ describe('where.js [core jasmine spec]', function () {
     });
   });
 
+
+  
   /* empty vs. bordered data */
 
   describe('empty vs. bordered data', function() {
@@ -498,6 +501,72 @@ describe('where.js [core jasmine spec]', function () {
 
   });
 
+  
+  // COMPILED FROM COFFEESCRIPT
+  
+  describe('CoffeeScript support', function () {
+    
+  // submitted by jason karns
+  // https://github.com/dfkaye/where.js/issues/6
+  // support more aesthetic coffeescript multiline string syntax
+  
+    it('should handle compiled multiline CoffeeScript', function () {
+    
+      /* 
+       * where ->
+       *   """
+       *   a | b | c
+       *   1 | 2 | 3
+       *   4 | 5 | 9
+       *   """
+       *   expect(a + b).toBe(c)
+       */
+    
+      where(function() {
+      
+        "a | b | c\n1 | 2 | 3\n4 | 5 | 9";
+        
+        return expect(a + b).toBe(c);
+      });
+      
+    });
+    
+    it('should intercept expected fails in compiled CoffeeScript', function () {
+    
+      /*
+       * results = where ->
+       *   """
+       *   a | b | c
+       *   1 | 2 | 3
+       *   4 | 5 | 6
+       *   """
+       *   expect(a + b).toBe(c)
+       *         
+       * , { jasmine: jasmine, expect: expect, intercept: 1 }
+       *
+       * expect(results.failing.length).toBe(1)
+       * expect(results.passing.length).toBe(1)
+       */
+       
+      var results;
+
+      results = where(function() {
+        "a | b | c\n1 | 2 | 3\n4 | 5 | 6";
+        return expect(a + b).toBe(c);
+      }, {
+        jasmine: jasmine,
+        expect: expect,
+        intercept: 1
+      });
+
+      expect(results.failing.length).toBe(1);
+
+      expect(results.passing.length).toBe(1);
+      
+    });
+    
+  });
+  
   
   // ASYNCHRONOUS TESTS IN JASMINE
   
