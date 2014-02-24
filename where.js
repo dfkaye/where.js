@@ -237,6 +237,7 @@
     
     // find data table
     
+    // try to match on compiled coffeescript first
     table = fs.match(/[\"][^\n]+[\n]?[^\n]+[\"][\;]/);
     
     if (table) {
@@ -247,12 +248,15 @@
       
       data = table[0].replace(/[\"]/, '') // remove leading coffee quote
                      .replace(/[\"][\;]/, '') // remove closing coffee quote
+                     .replace(/[\#][^\\n]+/g, '') // remove line comments...
                      .split('\\n'); // and split by escaped newline
     } else {
     
-      // match asterisk style multiline strings
-      // let it fail normally after this
+      // match asterisk style multiline strings      
       table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//);
+      
+      // let it fail normally after this
+      
       data = table[0].replace(/\/\/[^\r]*/g, '') // remove line comments...
                      .replace(/(\/\*+)*[\r]*(\*+\/)*/g, '') // ...block comments
                      .split('\n'); // and split by newline

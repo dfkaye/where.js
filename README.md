@@ -545,8 +545,8 @@ __TODO__
 
 ## CoffeeScript format
 
-As of Jan 2014, the 3-asterisk comment sequences are the only item not directly 
-translatable to CoffeeScript.  
+As of Jan 2014, the 3-asterisk comment sequences and line comments are the only 
+items not directly translatable to CoffeeScript.  
 
 ### embedded table with backticks
 
@@ -620,8 +620,35 @@ compiles to:
       expect(results.failing.length).toBe(1);
 
       expect(results.passing.length).toBe(1);
-    
+
+### line comments
+
+Line comments inside the multi-line comment are not removed in CoffeeScript, so 
+this:
+
+      where ->
+        """
+        a | b | c
+      # 1 | 2 | 3 # should be removed
+        4 | 5 | 9
+        """
+        expect(a + b).toBe(c)
         
+compiles to
+
+      where(function() {
+      
+        "a | b | c\n# 1 | 2 | 3 # should be removed\n4 | 5 | 9";
+        
+        return expect(a + b).toBe(c);
+      });
+      
+Good news is that where() itself will parse for this situation and replace 
+characters from `#` to `\n`:
+
+    "a | b | c\n 4 | 5 | 9";
+
+      
 ## tests
 
 The goal of making where.js run in "any" test framework required making numerous 

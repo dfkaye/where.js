@@ -504,7 +504,7 @@ describe('where.js [core jasmine spec]', function () {
   
   // COMPILED FROM COFFEESCRIPT
   
-  describe('CoffeeScript support', function () {
+  describe('CoffeeScript compiled to JavaScript', function () {
     
   // submitted by jason karns
   // https://github.com/dfkaye/where.js/issues/6
@@ -562,6 +562,27 @@ describe('where.js [core jasmine spec]', function () {
       expect(results.failing.length).toBe(1);
 
       expect(results.passing.length).toBe(1);
+      
+    });
+    
+    it('should remove line comments within compiled CoffeeScript', function () {
+    
+      /* 
+       * where ->
+       *   """
+       *   a | b | c
+       * # 1 | 2 | 3 # should be removed
+       *   4 | 5 | 9
+       *   """
+       *   expect(a + b).toBe(c)
+       */
+    
+      where(function() {
+      
+        "a | b | c\n# 1 | 2 | 3 # should be removed\n4 | 5 | 9";
+        
+        return expect(a + b).toBe(c);
+      });
       
     });
     
