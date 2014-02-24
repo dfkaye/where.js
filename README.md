@@ -76,20 +76,20 @@ Easier to read and modify this
       where(function(){
         /*** 
           a  |  b  |  c
-          1  |  2  |  2
-          4  |  3  |  4
-          6  |  6  |  6
+          1  |  2  |  3
+          4  |  3  |  7
+          6  |  6  |  12
         ***/
-        expect(a + b)).toBe(c);
+        expect(a + b).toBe(c);
       });
     });
 
 than this
 
     it('description', function () {
-      [[1, 2, 2],
-       [4, 3, 4],
-       [6, 6, 6]].forEach(function(row, r, rows) {
+      [[1, 2, 3],
+       [4, 3, 7],
+       [6, 6, 12]].forEach(function(row, r, rows) {
                
         expect(Number(row[0]) + Number(row[1])).toBe(Number(row[2]));
       });
