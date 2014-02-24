@@ -132,7 +132,7 @@ and end `***/` 3-asterisk comments.
 ### CoffeeScript comments
 
 If you're writing tests in CoffeeScript, see the 
-[CoffeeScript format](##coffeescript-format) section for slightly different 
+[CoffeeScript format](#coffeescript-format) section for slightly different 
 syntax (though more aesthetically appealing, I must admit). 
 
 
