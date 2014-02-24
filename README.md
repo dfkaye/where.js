@@ -15,6 +15,7 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 ## contributors
 
 + [Johann Sonntagbauer](https://github.com/johann-sonntagbauer)
++ [Jason Karns](https://github.com/jasonkarns)
 + [Jamon Holmgren](https://github.com/jamonholmgren)
 
 ## license
@@ -763,22 +764,9 @@ reporter.  Taking assert, expect and should to the browser required only one
 library to be ported - assert.js.  Working with chai was even easier - no port 
 needed for the browser. 
 
-__I recommend...__
-
-After this experience, I recommend the following tools for JavaScript TDD:
-
-+ __mocha__ - non-invasive try+catch, multiple reporter support, just works.
-+ __should.js (or chai/should)__ - should.js makes test assertions easy to write 
-  by decorating with `Object.prototype.should` - which makes TDD in JavaScript 
-  more satisfying - (motto: `assertions.should.be.easy.to.write`).
-+ __testem__ - easy to configure, live-reload harness that just works.
-+ __travis__ - free service with multiple environment support that just works.
-
   
 ## TODO
 
-+ improve intercept in event-based library strategies
-+ self-shunt where to test itself more cleanly, progressively
 + clean up the procedural long-method setup code in the where() function
 + reorganize docs - too sprawling or verbose
 + strategy 
