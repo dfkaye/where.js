@@ -93,6 +93,7 @@ describe('where.js [jasmine tests]', function () {
 
   it('should throw unintercepted errors', function() {
     expect(function() {
+    
       where(function() {
         /***
         | a | b | c |
@@ -100,6 +101,7 @@ describe('where.js [jasmine tests]', function () {
         ***/
         throw new Error('some error');
       }, { jasmine: jasmine, expect: expect });
+      
     }).toThrow();
   });
   
@@ -141,7 +143,7 @@ describe('where.js [jasmine tests]', function () {
         
         expect(Math.max(a, b)).toBe(c);
         
-      }, { expect: expect, jasmine: jasmine });
+      }, { jasmine: jasmine, expect: expect });
       
     } catch (err) {
     

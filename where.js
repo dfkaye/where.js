@@ -447,6 +447,7 @@
     };
   }());
   
+  
   // STRATEGY for MOCHA, the default try-catch strategy
   //
   // does not require a context argument with a strategy
@@ -468,9 +469,8 @@
 
   where.strategy('jasmine', function jasmineStrategy(context) {
 
-    // TODO - enforce jasmine: jasmine convention in context
-    //var jasmine = context.jasmine;
-    //
+    // ! enforce { jasmine: jasmine } convention in context !
+    var jasmine = context.jasmine;
     
     var currentSpec = /* jasmine 1.x.x. */ jasmine.getEnv().currentSpec || 
                       /* jasmine 2.x.x. */ { result : { } };
@@ -587,8 +587,9 @@
   // STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
   // contraction?). tape's event-driven reporting allows us to turn off the 
   // the default test reports so that expected failures are not reported as 
-  // failed.  James' foresight in using each tape/test function as an event
-  // emitter AND using the 'result' event handler as a pre-reporting-processor.
+  // failed.  James' (@substack) foresight in using each tape/test function as 
+  // an event emitter AND using the 'result' event handler as a pre-reporting 
+  // processor.
   //
   // requires context argument with strategy defined as { tape: test | t } where
   // [test | t] is the current test (or t) method

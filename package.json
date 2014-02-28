@@ -28,6 +28,7 @@
     "data-driven",
     "jasmine",
     "mocha",
+    "nodeunit",
     "qunit",
     "tape"
   ],
@@ -37,6 +38,7 @@
     "chai": ">= 1.x",
     "expect.js": ">= 0.2",
     "mocha": ">= 1.7",
+    "nodeunit" : ">= 0.8.6",
     "qunitjs": ">= 1.13",
     "qunit-tap": ">= 1.4",
     "should": ">= 3.0.1",
@@ -55,6 +57,7 @@
     "testem": "testem -l where -t ./test/where/browser-suite.html",
     "testem-jasmine": "testem -l jasmine -t ./test/jasmine/browser-suite.html",
     "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
+    "testem-nodeunit": "testem -l nodeunit -t ./test/nodeunit/browser-suite.html",
     "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",
     "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"    
   } 

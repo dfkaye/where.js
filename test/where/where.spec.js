@@ -28,7 +28,7 @@ describe('where.js [core jasmine spec]', function () {
         expect(jasmine).toBe(context.jasmine);
         expect(expect).toBe(context.expect);
 
-      }, { jasmine: 1, expect: expect});
+      }, { jasmine: jasmine, expect: expect });
     });
     
     it('should accept context arg with {strategy: "jasmine"}', function () {
@@ -39,7 +39,7 @@ describe('where.js [core jasmine spec]', function () {
           ***/
         expect(strategy).toBe('jasmine');
         
-      }, { strategy: 'jasmine', expect: expect});
+      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect });
     });
     
     it('should accept only a function as first argument', function () {
@@ -446,7 +446,7 @@ describe('where.js [core jasmine spec]', function () {
         ***/
         expect(Math.max(a, b)).toBe(Number(c));
         
-      }, { jasmine: 1, expect: expect, intercept: 1, log: 1});
+      }, { jasmine: jasmine, expect: expect, intercept: 1, log: 1});
       
       expect(count).toBe(results.passing.length + results.failing.length);
       
@@ -465,7 +465,7 @@ describe('where.js [core jasmine spec]', function () {
           4  |  8  |  7
         ***/
         expect(Math.max(a, b)).toBe(c);
-      }, { strategy: 'jasmine', expect: expect, intercept: 1 });
+      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect, intercept: 1 });
             
       expect(results.failing.length).toBe(1);
       expect(results.passing.length).toBe(3);
@@ -488,7 +488,7 @@ describe('where.js [core jasmine spec]', function () {
         // /* using match for numeric data here */        
         expect(Math.max(a, b)).toBe(c);
         
-      }, { strategy: 'jasmine', expect: expect, intercept: 1 });
+      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect, intercept: 1 });
 
       expect(results.failing.length).toBe(2);
       expect(results.passing.length).toBe(2);
@@ -624,7 +624,7 @@ describe('where.js [core jasmine spec]', function () {
             4  |  8  |  7
           ***/
           expect(Math.max(a, b)).toBe(Number(c));
-        }, { jasmine: 1, expect: expect, intercept: 1});
+        }, { jasmine: jasmine, expect: expect, intercept: 1});
         
         expect(results.failing.length).toBe(1);
         expect(results.passing.length).toBe(3);
@@ -648,7 +648,7 @@ describe('where.js [core jasmine spec]', function () {
             4  |  8  |  7
           ***/
           expect(Math.max(a, b)).toBe(Number(c));
-        }, { jasmine: 1, expect: expect, intercept: 1, log: 1});
+        }, { jasmine: jasmine, expect: expect, intercept: 1, log: 1});
         
         expect(results.failing.length).toBe(1);
         expect(results.passing.length).toBe(3);

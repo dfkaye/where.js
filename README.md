@@ -487,16 +487,13 @@ assertion library for the browser."*
 Because jasmine also uses a try+catch approach, you do not need to specify 
 jasmine as the test strategy.
 
-*To intercept failing tests*, however, you __must__ specify jasmine as the 
-strategy, using one of the following:
+*To intercept failing tests*, however, specify the jasmine strategy as follows:
 
-+ `{ strategy: 'jasmine' }`
-+ `{ jasmine: 1 }`
 + `{ jasmine: jasmine }` (jasmine is defined globally in both node and browsers)
 
 #### QUnit
 
-When using QUnit, you __must__ always specify the QUnit strategy as follows:
+When using QUnit, specify the QUnit strategy as follows:
 
 + `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
 
@@ -506,14 +503,11 @@ for QUnit."*
 
 #### tape
 
-For use with tape, you __must__ always specify the tape strategy as follows:
+For use with tape, specify the tape strategy as follows:
 
 + `{ tape: [test | t] }` 
 
-This is due to Isaac's (@izs) approach of passing the __tap__ `test` reference 
-into the callback as `t` which James' (@substack) amends in __tape__ by 
-re-using that function as both a results cache and as an emitter for 'result' 
-events.
+where `test` or `t` refers to the test function passed in to each tape test:
 
     var test = require('tape');
 
@@ -534,6 +528,7 @@ events.
       t.end();
     });
 
+    
 *A copy of my [dom-console](https://github.com/dfkaye/dom-console) library is 
 included in the browser suite for tape, and can be found in the 
 [test/util](/test/util) folder. The dom-console merely writes `console.log()` 
@@ -541,7 +536,8 @@ statements to a list in the DOM.*
 
 
 ### custom strategy 
-__TODO__
+
+__IN PROGRESS ! [28 FEB 2014]__
 
 
 ## CoffeeScript format
@@ -571,9 +567,7 @@ sequences.
       
 ### triple quote comments
 
-*__Thanks to [Jason Karns](https://github.com/jasonkarns)__, for this 
-suggestion*, you can also use the triple-quote multi-line string supported by 
-CoffeeScript, as in
+You can also use the triple-quote multi-line string supported by CoffeeScript. 
 
     where ->
       """
@@ -589,7 +583,10 @@ which compiles to
       "a | b | c\n1 | 2 | 3\n4 | 5 | 9";
       return expect(a + b).toBe(c);
     });
-
+ 
+*__Thanks to [Jason Karns](https://github.com/jasonkarns)__, for this 
+suggestion* ~ this is a nicer approach.
+    
 To intercept expected failures (using jasmine in this case), this CoffeeScript:
 
        results = where ->
@@ -622,10 +619,14 @@ compiles to:
 
       expect(results.passing.length).toBe(1);
 
+which is good enough for now.
+
 ### line comments
 
-Line comments inside the multi-line comment are not removed in CoffeeScript, so 
-this:
+Line comments inside the multi-line comment are not removed by the CoffeeScript 
+compiler, but `where()` will parse for this situation.
+
+In other words, this Coffeescript:
 
       where ->
         """
@@ -644,8 +645,7 @@ compiles to
         return expect(a + b).toBe(c);
       });
       
-Good news is that where() itself will parse for this situation and replace 
-characters from `#` to `\n`:
+and `where()` will replace the characters from `#` to `\n` to:
 
     "a | b | c\n 4 | 5 | 9";
 
@@ -767,13 +767,14 @@ needed for the browser.
   
 ## TODO
 
++ custom strategy how-to doc
++ custom strategy for nodeunit [in progress]
++ custom testem adapter for nodeunit [in progress]
++ fix nodeunit.js (browser version) [in progress]
 + clean up the procedural long-method setup code in the where() function
 + reorganize docs - too sprawling or verbose
-+ strategy 
-  - 'purpose' needs better explaining (try+catch vs events vs ?)
-  - custom strategy needs explaining
 + strategy - refactoring: 
-  - provide a `list` method returning all strategies registered
+  - add a `list` method returning all strategies registered
   - ease up on lookup cleverness
   - make context/strategy specification easier, more global
   - ui needs re-visiting - strings vs objects

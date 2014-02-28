@@ -9,6 +9,9 @@
     "mocha" : {
       "command": "node ./test/mocha/node-suite.js"
     },
+    "nodeunit" : {
+      "command": "node ./test/nodeunit/node-suite.js"
+    },
     "qunit" : {
       "command": "node ./test/qunit/node-suite.js"
     },
