@@ -1,10 +1,5 @@
 // where-tests.js
 // another nice surprise - nodeunit is commonjs+this friendly
-//(typeof exports != 'undefined' || (exports = this));
-
-if (typeof require == 'function') {
-  var nodeunit = require('nodeunit');
-}
 
 this.whereTests = {
   
