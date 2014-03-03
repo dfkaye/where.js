@@ -492,6 +492,10 @@ assertion library for the browser."
 
 #### jasmine
 
+To use the jasmine strategy, add the following to your node suite:
+
+    require('../../strategy/jasmine-strategy.js');
+  
 Because jasmine also uses a try+catch approach, you do not need to specify 
 jasmine as the test strategy.  However, it is *recommended if you want to 
 intercept failing test messages*:
@@ -499,8 +503,28 @@ intercept failing test messages*:
 + `{ strategy: 'jasmine' }` when jasmine is defined globally (node, browsers)
 + `{ jasmine: jasmine }` when you need to use jasmine within the where function.
 
+#### nodeunit
+
+To use the nodeunit strategy, add the following to your node suite:
+
+    require('../../strategy/nodeunit-strategy.js');
+  
+The nodeunit strategy does not use a reference to the nodeunit object, so you 
+need only use the strategy string approach in your tests:
+
+    { strategy: 'nodeunit' }
+    
+When you need to use nodeunit within the where() function specify nodeunit with:
+
+    { nodeunit: nodeunit }
+
+
 #### QUnit
 
+To use the QUnit strategy, add the following to your node suite:
+
+    require('../../strategy/qunit-strategy.js');
+    
 When using QUnit, specify the QUnit strategy as follows:
 
 + `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
@@ -511,6 +535,10 @@ for QUnit."
 
 #### tape
 
+To use the tape strategy, add the following to your node suite:
+
+    require('../../strategy/tape-strategy.js');
+    
 For use with tape, specify the tape strategy as follows:
 
 + `{ tape: [test | t] }` 
@@ -767,7 +795,14 @@ You can view them directly on rawgithub:
 + [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
 + [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
-  
+
+### custom adapter for nodeunit with testem
+
+Adding a custom adapter for nodeunit to work in testem took half a day to get 
+completely wrong, then a second half-day to get correct. The file is at 
+[vendor/testem/nodeunit-adapter.js](vendor/testem/nodeunit-adapter.js)
+
+
 ## conclusions so far  
 
 I started with jasmine-where back when (October 2013) as a self-assessment and 
@@ -826,13 +861,9 @@ finding yet again that some people just can't be bothered to test anything on
 Windows, I've updated the key methods with the proper versions in the core 
 library.  That's in the [/vendor/nodeunit](./vendor/nodeunit) directory.
 
-Adding a custom adapter for nodeunit to work in testem took half a day to get 
-completely wrong, then a second half-day to get correct [boilerplate needed]
-
 
 ## TODO
 
-+ custom testem adapter for nodeunit - how-to doc [in progress]
 + clean up the procedural long-method setup code in the where() function
 + clean up the procedural verbose documentation
    
