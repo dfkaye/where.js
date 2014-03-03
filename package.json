@@ -1,7 +1,7 @@
 {
   "name": "where.js",
-  "version": "0.0.9",
-  "description": "data-driven test method for js frameworks (mocha, jasmine, qunit, tape)",
+  "version": "0.0.10",
+  "description": "data-driven test method for JavaScript test libraries",
   "homepage" : "https://github.com/dfkaye/where.js",
   "author": {
     "name": "david kaye (@dfkaye)",
@@ -24,13 +24,15 @@
   },
   "keywords": [
     "where",
+    "where-data",
     "data-table",
     "data-driven",
     "jasmine",
     "mocha",
     "nodeunit",
     "qunit",
-    "tape"
+    "tape",
+    "testem"
   ],
   "license": "JSON",
   "main": "./where.js",
