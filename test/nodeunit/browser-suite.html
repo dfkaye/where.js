@@ -6,13 +6,13 @@
     
     <script src="../../vendor/nodeunit/nodeunit.js"></script>
     <script src="../../where.js"></script>
-    <script src="./where-nodeunit-strategy.js"></script>
+    <script src="../../strategy/nodeunit-strategy.js"></script>
     
     <script>
       if (location.href.indexOf('://localhost:7357') != -1) {
         //<!-- testem goes between framework and specs/tests -->
         document.write('<script src="/testem.js">' + '<\/' + 'script>');
-        document.write('<script src="./testem-nodeunit-adapter.js">' + '<\/' + 'script>');
+        document.write('<script src="../../vendor/testem/nodeunit-adapter.js">' + '<\/' + 'script>');
       }
     </script>
     

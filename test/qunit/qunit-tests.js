@@ -3,6 +3,7 @@
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js
   require('../../where.js');
+  require('../../strategy/qunit-strategy.js');
 }
 
 // should be function

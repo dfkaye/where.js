@@ -7,7 +7,7 @@ $ node test/qunit-suite.js
 
 // qunit-tap + qunitjs
 
-var util = require("util"),
+var util = require('util'),
     QUnit = require('qunitjs'),
     qunitTap = require('qunit-tap');
     

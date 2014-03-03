@@ -67,7 +67,7 @@ this.whereTests = {
       a | b | c
       1 | 2 | 3 // should see (passed) in console
       4 | 5 | 7
-      // shouldn't see this
+      //shouldn't see this
       ***/
       test.equal(a + b, c, (a + ' + ' + b + ' = ' + c));
       

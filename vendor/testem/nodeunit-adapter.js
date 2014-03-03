@@ -1,4 +1,4 @@
-// testem-nodeunit-adapter.js
+// /vendor/testem/nodeunit-adapter.js
 // david kaye
 // 27 FEB 2014
 // part of where.js custom strategy exercis
@@ -14,10 +14,10 @@
 
 function nodeunitAdapter(socket) {
 
-  // nodeunit.runModules() is called by nodeunit.run()
+  // nodeunit.run() is called from the browser suite to kick things off.
+  // nodeunit.run() calls nodeunit.runModules(). 
   // We intercept runModules() here and populate the real options object with 
   // callbacks for each event we care about in the lifecyle.
-  // nodeunit.run() is called from the browser suite to kick things off
   
   var runModules = nodeunit.runModules;
   nodeunit.runModules = function (modules, options) {
@@ -50,8 +50,8 @@ function nodeunitAdapter(socket) {
       moduleStart.call(options, name);
     };
     
-    // intercept calls to testDone() and populate test results with Testem-
-    // specific details.
+    // this is the heart of it. intercept calls to testDone() and populate test 
+    // results with Testem-specific details.
     options.testDone = function (name, assertions) {
       
       // tell nodeunit first
@@ -110,9 +110,11 @@ function nodeunitAdapter(socket) {
     
     // tell Testem we're under way
     socket.emit('tests-start');
+    
+    // tell nodeunit we're under way...
     runModules(modules, options);
   };
 }
 
 // Tell Testem to use your adapter
-Testem.useCustomAdapter(nodeunitAdapter)
+Testem.useCustomAdapter(nodeunitAdapter);

@@ -1,5 +1,3 @@
-// where-nodeunit-strategy.js
-// where.js/strategy/nodeunit.js
 // STRATEGY for nodeunit ~ turned out to be really simple
 // which means @caolan knew what he was doing.
 //

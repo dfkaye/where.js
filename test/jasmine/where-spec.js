@@ -4,6 +4,7 @@
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js
   require('../../where.js');
+  require('../../strategy/jasmine-strategy.js');
 }
 
 // should be function

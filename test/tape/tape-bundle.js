@@ -8839,11 +8839,58 @@ function through (write, end, opts) {
 
 },{"__browserify_process":18,"stream":10}],33:[function(require,module,exports){
 
+
+
+  // STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
+  // contraction?). tape's event-driven reporting allows us to turn off the 
+  // the default test reports so that expected failures are not reported as 
+  // failed.  James' (@substack) foresight in using each tape/test function as 
+  // an event emitter AND using the 'result' event handler as a pre-reporting 
+  // processor.
+  //
+  // requires context argument with strategy defined as { tape: test | t } where
+  // [test | t] is the current test (or t) method
+  
+  where.strategy('tape', function tapeStrategy(context) {
+  
+    var tape = context.tape;
+    
+    return function testTape(fnTest, test, value) {
+    
+      var listeners;
+      
+      // turn off tape's automatic reporting (pass/fail counts) 
+      if (context.intercept) {
+        listeners = tape._events['result'];
+        tape.removeAllListeners('result');        
+      }
+      
+      tape.on('result', function onResult(result) {
+        if (!result.ok) {
+          test.result = 'Error: expected ' + result.actual + ' to be ' + 
+                        result.expected;
+        }
+        tape.removeListener('result', onResult);
+      });
+      
+      fnTest.apply({}, [context].concat(value));
+      
+      // restore tape's result reporting
+      if (context.intercept) {
+        for (var i = 0; i < listeners.length; ++i) {
+          tape.on('result', listeners[i]);
+        }
+      }      
+    };
+  });
+},{}],34:[function(require,module,exports){
+
 // node test/tape/node-suite
 
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js
   require('../../where.js');
+  require('../../strategy/tape-strategy.js');
 }
 
 var tape = require('tape');
@@ -9027,7 +9074,7 @@ tape('should not throw when intercept specified', function(test) {
   test.end();
 });
 
-},{"../../where.js":34,"tape":19}],34:[function(require,module,exports){
+},{"../../strategy/tape-strategy.js":33,"../../where.js":35,"tape":19}],35:[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/**
  * @name where.js
  * @author david kaye (@dfkaye)
@@ -9137,7 +9184,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     }
     
     context = context || {};
-    //context = context || strategy;
     
     // long stretch of procedural code here
     
@@ -9176,17 +9222,27 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
      * test row.  The default strategy is "mocha" which uses a try+catch 
      * approach.  If a strategy method is not found, an error is thrown.  If a 
      * strategy method is returned, it is immediately invoked with the context 
-     * object and returns the "seeded" method for the given strategy.
+     * object and returns the seeded "applyStrategy" method for the given 
+     * strategy.
      */
-    var applyStrategy = where.strategy(context.strategy || 
-                                       (context.jasmine && 'jasmine') || 
-                                       (context.QUnit && 'QUnit') || 
-                                       (context.tape && 'tape') || 
-                                       (context.mocha || 'mocha'))(context);
+    var applyStrategy = (function findStrategy(context) {
     
-    var test, i;   
+      var list = where.strategy.list();
+      var name;
+      
+      for (var i = 0; i < list.length;  i += 1) {
 
-    for (i = 0; i < values.length; i += 1) {
+        if (context[list[i]] || context.strategy === list[i]) {
+          name = list[i];
+          break;
+        }
+      }
+
+      return where.strategy(name || 'mocha')(context);
+    }(context));
+
+    // apply the strategy to test each row of data
+    for (var test, i = 0; i < values.length; i += 1) {
     
       test = { result: PASSED };
       
@@ -9212,6 +9268,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       }
     }
 
+    // produce the failing error state if not intercepting messages
     if (!context.intercept && failing.length > 0) {
       throwFailingResults(failing);
     }
@@ -9259,18 +9316,38 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    */
   function parseDataTable(fnBody) {
 
+    var table;
+    var data;
+    var str, row, size, i;
+    var rows = [];    
     var fs = fnBody.toString();
     
-    // find data table comment
-    var table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//)[0];
+    // find data table
     
-    // convert table into an array of row data
-    var data = table.replace(/\/\/[^\r]*/g, '') // remove line comments...
-                    .replace(/[\/\*]*[\r]*[\*\/]*/g, '') // ...block comments
-                    .split('\n'); // and split by newline
+    // try to match on compiled coffeescript first
+    table = fs.match(/[\"][^\n]+[\n]?[^\n]+[\"][\;]/);
     
-    var rows = [];
-    var str, row, size, i;
+    if (table) {
+    
+      // match on compiled multiline string in coffeescript
+      // submitted by jason karns
+      // https://github.com/dfkaye/where.js/issues/6
+      
+      data = table[0].replace(/[\"]/, '') // remove leading coffee quote
+                     .replace(/[\"][\;]/, '') // remove closing coffee quote
+                     .replace(/[\#][^\\n]+/g, '') // remove line comments...
+                     .split('\\n'); // and split by escaped newline
+    } else {
+    
+      // match asterisk style multiline strings      
+      table = fs.match(/\/(\*){3,3}[^\*]+(\*){3,3}\//);
+      
+      // let it fail normally after this
+      
+      data = table[0].replace(/\/\/[^\r]*/g, '') // remove line comments...
+                     .replace(/(\/\*+)*[\r]*(\*+\/)*/g, '') // ...block comments
+                     .split('\n'); // and split by newline
+    }
     
     for (i = 0; i < data.length; i++) {
 
@@ -9402,15 +9479,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       }
     }
   }
-  
-  
+    
   // STRATEGY
-  // TODO - YET ANOTHER REFACTORING:
-  //    PROVIDE A LIST METHOD TO SHOW ALL STRATEGIES REGISTERED
-  //    EASE UP LOOKUP'S CLEVERNESS
-  //    make context specification easier, more global
-  //    EXAMPLE OF DEFINING CUSTOM STRATEGY
-  
   
   /**
    * Provides an enclosed registry for name+function pairings to be used as test 
@@ -9426,6 +9496,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    *
    * When a registered function is returned, it must then be called with a 
    * context object to "seed" it and return the actual function to be applied.
+   *
+   * where.strategy also exposes the registry object, and a list() method that 
+   * returns the names of any strategies registered.
    * 
    * @function strategy
    * @memberof where
@@ -9442,25 +9515,41 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     /**
      * @private
      */
-    var registry = {};
-
+    var registry = whereStrategy.registry = {};
+    
+    var list = whereStrategy.list = function list() {
+      var list = [];
+      for (var k in registry) {
+        if (registry.hasOwnProperty(k)) {
+          list.push(k);
+        }
+      }
+      return list;
+    };
+    
     return function lookup(name, fn) {
     
       if (!(name in registry)) {
         if (fn && typeof fn == 'function') {
-            registry[name] = fn;
+          registry[name] = fn;
+          
+          /////////////////////////////////////
+          // refresh the accessor API in case it was deleted
+          lookup.registry = registry;
+          lookup.list = list;
+          /////////////////////////////////////
+
         } else {
-            throw new Error('where.strategy ["' + name + '"] is not defined.');
+          throw new Error('where.strategy ["' + name + '"] is not defined.');
         }
       }
       return registry[name];
     };
   }());
   
-  // STRATEGY for MOCHA, the default try-catch strategy
-  //
-  // does not require a context argument with a strategy
   
+  // STRATEGY for MOCHA, the default try-catch strategy
+  // does not require a context argument with a strategy
   where.strategy('mocha', function mochaStrategy(context) {
   
     return function testMocha(fnTest, test, value) {
@@ -9472,165 +9561,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     };
   });
   
-  // STRATEGY for JASMINE ~ I once respected thee.
-  //
-  // requires context argument with strategy defined as { jasmine: jasmine }
-
-  where.strategy('jasmine', function jasmineStrategy(context) {
-
-    // TODO - enforce jasmine: jasmine convention in context
-    //var jasmine = context.jasmine;
-    //
-    
-    var currentSpec = /* jasmine 1.x.x. */ jasmine.getEnv().currentSpec || 
-                      /* jasmine 2.x.x. */ { result : { } };
-    var result = /* jasmine 1.x.x. */ currentSpec.results_ ||
-                 /* jasmine 2.x.x. */ currentSpec.result;
-    
-    return function testJasmine(fnTest, test, value) {
-    
-      /*overwrite result api (temporarily)...*/
-      
-      /* jasmine 1.x.x. */
-      var addResult = result.addResult;
-      addResult && (result.addResult = function (data) {
-      
-        if (!data.passed_) {
-          test.result = data.trace;
-        } else {
-          addResult.call(result, data);
-        }
-      });
-      
-      /* jasmine 2.x.x. */
-      var addExpectationResult = jasmine.Spec.prototype.addExpectationResult;
-      addExpectationResult && 
-      (jasmine.Spec.prototype.addExpectationResult = function (passed, data) {
-      
-        if (!passed) {
-          test.result = data.message;
-        } else {
-          addExpectationResult.call(result, passed, data);
-        }          
-      });
-      
-      /* execute on currentSpec for jasmine 1.x.x */
-      fnTest.apply(currentSpec, [context].concat(value));
-    
-      /* restore result api */
-      
-      /* jasmine 1.x.x. */ 
-      addResult && (result.addResult = addResult);
-      
-      /* jasmine 2.x.x. */ 
-      addExpectationResult && 
-      (jasmine.Spec.prototype.addExpectationResult = addExpectationResult);     
-    };        
-  });
-  
-  // STRATEGY for QUnit ~ surprisingly not bad! however, complete interception 
-  // of expected failures is not possible in the HTML Reporter as currently 
-  // implemented (QUnit v1.13 as of this writing 12-FEB-2014.
-  //
-  // requires context argument with strategy defined as { QUnit: QUnit }
-  
-  where.strategy('QUnit', function qunitStrategy(context) {
-    
-    // this code reminds me of java for some reason...
-    
-    var test;
-    var realPush;
-    var interceptingPush;
-        
-    if (context.intercept) {
-      
-      /*
-       * this block attempts to capture failing assertions, reset them to 
-       * passing (i.e., they are expected to fail), and push them to QUnit's 
-       * assertions list with the real 'push()' method.
-       */
-       
-      interceptingPush = function overridingAssertionsPush(details) {
-        if (!details.result) {
-          details.result = !details.result;
-        }
-        realPush.call(QUnit.config.current.assertions, details);
-      };
-      
-      // override on start
-      context.QUnit.testStart(function(detail) {
-        realPush = QUnit.config.current.assertions.push;
-        QUnit.config.current.assertions.push = interceptingPush;
-      });
-    
-      // undo override on done
-      context.QUnit.testDone(function(detail) {
-        QUnit.config.current.assertions.push = realPush;
-      });
-    }
-
-    context.QUnit.log(function onResult(details) {
-      if (!details.result) {
-        
-        // overwrite default result with non-passing result detail
-        test.result = 'Error: expected ' + details.actual + ' to be ' + 
-                      details.expected;
-                      
-        if (!context.intercept) {
-          // this adds the QUnit sourceFromStacktrace() output
-          test.result = test.result + '\n' + details.source;
-        }
-      }
-    });
-    
-    return function testQUnit(fnTest, thisTest, value) {
-    
-      test = thisTest;
-
-      fnTest.apply({}, [context].concat(value));
-    };
-  });
-  
-  // STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
-  // contraction?). tape's event-driven reporting allows us to turn off the 
-  // the default test reports so that expected failures are not reported as 
-  // failed.  James' foresight in using each tape/test function as an event
-  // emitter AND using the 'result' event handler as a pre-reporting-processor.
-  //
-  // requires context argument with strategy defined as { tape: test | t } where
-  // [test | t] is the current test (or t) method
-  
-  where.strategy('tape', function tapeStrategy(context) {
-  
-    return function testTape(fnTest, test, value) {
-    
-      var listeners;
-      
-      // turn off tape's automatic reporting (pass/fail counts) 
-      if (context.intercept) {
-        listeners = context.tape._events['result'];
-        context.tape.removeAllListeners('result');        
-      }
-      
-      context.tape.on('result', function onResult(result) {
-        if (!result.ok) {
-          test.result = 'Error: expected ' + result.actual + ' to be ' + 
-                        result.expected;
-        }
-        context.tape.removeListener('result', onResult);
-      });
-      
-      fnTest.apply({}, [context].concat(value));
-      
-      // restore tape's result reporting
-      if (context.intercept) {
-        for (var i = 0; i < listeners.length; ++i) {
-          context.tape.on('result', listeners[i]);
-        }
-      }      
-    };
-  });
-  
 }());
-},{}]},{},[33])
+},{}]},{},[34])
 ;

@@ -35,6 +35,7 @@ but you can see the [tests](#tests)...
   - [expect.js](https://github.com/LearnBoost/expect.js)
   - [should.js](https://github.com/visionmedia/should.js)
   - [chai](http://chaijs.com/) (assert, expect, should)
++ [nodeunit](https://github.com/caolan/nodeunit)
 + [QUnit](http://qunitjs.com/)
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
@@ -447,24 +448,31 @@ interception is not always successful - an assertion that fails inside a `where`
 clause will almost always be reported as failed. This behavior will be visited 
 more thoroughly in the refactoring of the `strategy` API (see next section...).
 
+
 ### strategy
 
-where.js comes with four strategies pre-defined for each testing library 
-supported initially.  A strategy can be defined in one of three ways:
+where.js comes with several strategies pre-defined for each testing library 
+supported initially.  The default strategy is a basic try+catch used by mocha. 
+__You do not need to specify a strategy when using mocha.__ 
 
-+ `{ strategy: '<quoted-name>' }`
-+ `{ <name>: 1 }`
-+ `{ <name>: <name-object-reference> }`
+A strategy can be specified in one of two ways:
+
++ use `{ strategy: '<quoted-name>' }` 
+  - if the name is available as a global variable (this is true for jasmine)
+  - if you do not need a reference to that object (that is true for nodeunit).
++ use `{ <name>: <named-object-reference> }` 
+  - when the name is not a global, *and/or...* 
+  - when your strategy needs a reference to the object (this is true for QUnit 
+    and for tape).
 
 #### mocha (default)
 
-The default strategy is a basic try+catch used by mocha. *You do not need to 
-specify a strategy when using mocha.* 
+The default strategy is a basic try+catch used by mocha. __You do not need to 
+specify a strategy when using mocha.__ 
 
 + `{ strategy: 'mocha' }`
-+ `{ mocha: 1 }`
 + `{ mocha: mocha }` (use this when `mocha` is defined elsewhere in your tests 
-    and you wish  to use it within the test function itself)
+    and you wish to use it within the test function itself)
 
 However, unless you are using `should.js`, you must specify which assertion 
 method your test relies on:
@@ -474,22 +482,22 @@ method your test relies on:
 + `{ expect: chai.expect }`
 + `{ assert: chai.assert }`
 
-*(Both mocha's should.js and chai's should.js add a `should` method to 
+(Both mocha's should.js and chai's should.js add a `should` method to 
 `Object.prototype`, brilliantly making every object assertable - except those, 
-not surprisingly, created by the `Object.create()` method.)*
+not surprisingly, created by the `Object.create()` method.)
 
-*The mocha `assert` browser tests in this repo rely on 
+The mocha `assert` browser tests in this repo rely on 
 [assert.js](http://github.com/Jxck/assert), "a port of the Node.js standard 
-assertion library for the browser."*
+assertion library for the browser."
 
 #### jasmine
 
 Because jasmine also uses a try+catch approach, you do not need to specify 
-jasmine as the test strategy.
+jasmine as the test strategy.  However, it is *recommended if you want to 
+intercept failing test messages*:
 
-*To intercept failing tests*, however, specify the jasmine strategy as follows:
-
-+ `{ jasmine: jasmine }` (jasmine is defined globally in both node and browsers)
++ `{ strategy: 'jasmine' }` when jasmine is defined globally (node, browsers)
++ `{ jasmine: jasmine }` when you need to use jasmine within the where function.
 
 #### QUnit
 
@@ -497,9 +505,9 @@ When using QUnit, specify the QUnit strategy as follows:
 
 + `{ QUnit: QUnit }` (QUnit is defined globally in both node and browsers)
 
-*The QUnit tests in this repo rely on 
+The QUnit tests in this repo rely on 
 [qunit-tap](//https://github.com/twada/qunit-tap), "A TAP Output Producer Plugin 
-for QUnit."*
+for QUnit."
 
 #### tape
 
@@ -529,15 +537,58 @@ where `test` or `t` refers to the test function passed in to each tape test:
     });
 
     
-*A copy of my [dom-console](https://github.com/dfkaye/dom-console) library is 
+A copy of my [dom-console](https://github.com/dfkaye/dom-console) library is 
 included in the browser suite for tape, and can be found in the 
 [test/util](/test/util) folder. The dom-console merely writes `console.log()` 
-statements to a list in the DOM.*
+statements to a list in the DOM.
 
 
 ### custom strategy 
 
-__IN PROGRESS ! [28 FEB 2014]__
+You can define your own strategy for a different library than those supported by 
+where.js. 
+
++ call `where.strategy(name, fn);`
+  + `name` is the name of your target test runner (not the expectation library).
+  + `fn` is an initializer or seed function that should return another function 
+    ~ which in turn is to be called on each row of where-data.
+    
+The following boilerplate shows how to do this.
+
+    where.strategy(name, function nameStrategy(context) {
+    
+      // vars and references
+      
+      return function nameTest(fnTest, test, value) {
+        
+        // pre-process blocks here
+        
+        fnTest.apply({}, [context].concat(value));
+        
+        // post-process
+        
+        if (error) {
+          test.result = 'there was an error';
+        }
+      };
+    });
+
+The 'nameStrategy' function is the initializer, and accepts a `context` argument 
+that refers to the context specifier object in where() calls.
+
+The returned 'nameTest' function should accept these three parameters:
+
++ `fnTest`, the wrapped test function that executes once per each 
+  row of where-data
++ `test`, the current test iteration, for collecting results
++ `values`, an array containing the labels used as variables in each test
+
+The post-process block is where to capture failing results and add them to the 
+`test` object's `.result` property.
+
+Beyond this, it's best to look at the various strategy implementations to see 
+which approach would suit your needs.  These are located in the 
+[/strategy](/tree/master/strategy) directory.
 
 
 ## CoffeeScript format
@@ -662,6 +713,7 @@ versions of test suites.  Here's how they stack up:
 + framework strategy comparison tests on node.js
   - `npm run jasmine`
   - `npm run mocha`
+  - `npm run nodeunit`
   - `npm run qunit`
   - `npm run tape`
 
@@ -683,6 +735,7 @@ node.js and browser suites:
 + `testem -l where` (core tests using jasmine)
 + `testem -l jasmine` 
 + `testem -l mocha`
++ `testem -l nodeunit`
 + `testem -l qunit`
 + `testem -l tape` (runs browserify on the tape suite)
 
@@ -691,9 +744,10 @@ node.js and browser suites:
 The `package.json` file defines scripts to call the testem launchers (with the 
 appropriate browser test page for each):
 
-+ `npm run testem`
++ `npm run testem` (core tests using jasmine)
 + `npm run testem-jasmine`
 + `npm run testem-mocha`
++ `npm run testem-nodeunit`
 + `npm run testem-qunit`
 + `npm run testem-tape`
 
@@ -709,6 +763,7 @@ You can view them directly on rawgithub:
 + [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
 + [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
 + [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
++ [nodeunit](https://rawgithub.com/dfkaye/where.js/master/test/nodeunit/browser-suite.html)
 + [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
 + [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
@@ -738,7 +793,8 @@ stated purpose - to ease test-driven development.*
 In addition, not all *browsers* handle the test lifecycle the same way.  This 
 was not a surprise so much as annoyance.  For example, in the QUnit suite, IE, 
 Chrome and Opera report two failures whereas Firefox reports only one.  However, 
-these failures are expected so we really want to see NO failures.  QUnit also 
+these failures are expected so we really want to see NO failures because we're 
+trying to intercept them before QUnit sends them to the reporter.  QUnit also 
 reported the failures *first* in the console, regardless of their occurrence in 
 the test suite.  (That could be a side-effect of using qunit-tap, however.)
 
@@ -764,21 +820,19 @@ reporter.  Taking assert, expect and should to the browser required only one
 library to be ported - assert.js.  Working with chai was even easier - no port 
 needed for the browser. 
 
-  
+The browser version that ships with nodeunit is based on an earlier version of 
+that library.  After trying the `make` command on it in my Windows setup and 
+finding yet again that some people just can't be bothered to test anything on 
+Windows, I've updated the key methods with the proper versions in the core 
+library.  That's in the [/vendor/nodeunit](/tree/master/vendor/nodeunit) directory.
+
+Adding a custom adapter for nodeunit to work in testem took half a day to get 
+completely wrong, then a second half-day to get correct [boilerplate needed]
+
+
 ## TODO
 
-+ custom strategy how-to doc
-+ custom strategy for nodeunit [in progress]
-+ custom testem adapter for nodeunit [in progress]
-+ fix nodeunit.js (browser version) [in progress]
++ custom testem adapter for nodeunit - how-to doc [in progress]
 + clean up the procedural long-method setup code in the where() function
-+ reorganize docs - too sprawling or verbose
-+ strategy - refactoring: 
-  - add a `list` method returning all strategies registered
-  - ease up on lookup cleverness
-  - make context/strategy specification easier, more global
-  - ui needs re-visiting - strings vs objects
-    - jasmine - assume global or double as 'context.jasmine'
-    - QUnit - assume global or double as 'context.QUnit'
-    - tape - t function serves double as 'context.tape'
-    
++ clean up the procedural verbose documentation
+   

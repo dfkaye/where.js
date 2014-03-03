@@ -3,6 +3,7 @@
 if (typeof require == 'function') {
   // enable to re-use in a browser without require.js
   require('../../where.js');
+  require('../../strategy/jasmine-strategy.js');
 }
 
 describe('where.js [core jasmine spec]', function () {
@@ -19,29 +20,6 @@ describe('where.js [core jasmine spec]', function () {
       expect(where.length).toBe(2);
     });
        
-    it('should accept context arg with jasmine and expect props', function () {
-      where(function(){
-        /*** 
-          a  |  b  |  c
-          1  |  2  |  3
-          ***/
-        expect(jasmine).toBe(context.jasmine);
-        expect(expect).toBe(context.expect);
-
-      }, { jasmine: jasmine, expect: expect });
-    });
-    
-    it('should accept context arg with {strategy: "jasmine"}', function () {
-      where(function(){
-        /*** 
-          a  |  b  |  c
-          1  |  2  |  3
-          ***/
-        expect(strategy).toBe('jasmine');
-        
-      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect });
-    });
-    
     it('should accept only a function as first argument', function () {
       expect(function () {
         where(!function(){});
@@ -245,8 +223,7 @@ describe('where.js [core jasmine spec]', function () {
     });
   });
 
-
-  
+ 
   /* empty vs. bordered data */
 
   describe('empty vs. bordered data', function() {
@@ -387,6 +364,104 @@ describe('where.js [core jasmine spec]', function () {
   });
 
   
+  // STRATEGY API 
+  
+  describe('strategy API', function () {
+  
+    it('should accept context arg with jasmine and expect props', function () {
+      where(function(){
+        /*** 
+          a  |  b  |  c
+          1  |  2  |  3
+          ***/
+        expect(jasmine).toBe(context.jasmine);
+        expect(expect).toBe(context.expect);
+
+      }, { jasmine: jasmine, expect: expect });
+    });
+    
+    it('should accept context arg with {strategy: "jasmine"}', function () {
+      
+      where(function(){
+        /*** 
+          a  |  b  |  c
+          1  |  2  |  3
+          ***/
+        expect(strategy).toBe('jasmine');
+        
+      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect });
+    });
+    
+    it('should retrieve registered strategies', function() {
+      // self-test
+      where(function() {
+        /***
+         name
+         mocha
+         jasmine
+         ***/
+         expect(where.strategy.registry[name]).toBeDefined();
+      }, { jasmine: jasmine, expect: expect });
+    });
+    
+    it('should list all registered strategies', function () {
+    
+      var list = where.strategy.list();
+      expect(list.length).toBe(2);
+    });
+    
+    it('should add a strategy', function() {
+      var name = 'fake';
+      var fn = function() {};
+      
+      where.strategy(name, fn);
+      expect(where.strategy.registry[name]).toBe(fn);
+      expect(where.strategy.list().length).toBe(3);      
+    });
+    
+    it('should delete a strategy', function () {
+      var name = 'fake';
+      
+      delete where.strategy.registry[name]
+      expect(where.strategy.registry[name]).not.toBeDefined();
+      expect(where.strategy.list().length).toBe(2);      
+    });
+    
+    it('should restore a deleted strategy', function () {
+      var name = 'jasmine';
+      var fn = where.strategy.registry[name];
+      var length = where.strategy.list().length;      
+
+      delete where.strategy.registry[name];
+      
+      // self-test
+      where(function () {
+        /***
+          name
+          jasmine
+         ***/
+        expect(where.strategy.registry[name]).not.toBeDefined();
+        expect(where.strategy.list().length).toBe(length - 1);      
+        
+      }, { jasmine: jasmine, expect: expect, fn: fn, length: length });
+      
+      // restore it
+      where.strategy(name, fn);
+      
+      // self-test
+      where(function () {
+        /***
+          name
+          jasmine
+         ***/
+        expect(where.strategy.registry[name]).toBe(fn);
+        expect(where.strategy.list().length).toBe(length);      
+        
+      }, { jasmine: jasmine, expect: expect, fn: fn, length: length });
+    });
+  });
+  
+  
   /***
    * INTERCEPT & LOG TESTS
    * Use these tests to intercept results set by jasmine, particularly on specs
@@ -405,7 +480,7 @@ describe('where.js [core jasmine spec]', function () {
         
         expect(jasmine).toBe(context.jasmine);
         
-      }, { jasmine: jasmine, expect: expect});
+      }, { jasmine: jasmine, expect: expect });
       
       expect(results.failing.length).toBe(0);
       expect(results.passing.length).toBe(1);
@@ -465,7 +540,7 @@ describe('where.js [core jasmine spec]', function () {
           4  |  8  |  7
         ***/
         expect(Math.max(a, b)).toBe(c);
-      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect, intercept: 1 });
+      }, { jasmine: jasmine, expect: expect, intercept: 1 });
             
       expect(results.failing.length).toBe(1);
       expect(results.passing.length).toBe(3);
@@ -488,7 +563,7 @@ describe('where.js [core jasmine spec]', function () {
         // /* using match for numeric data here */        
         expect(Math.max(a, b)).toBe(c);
         
-      }, { strategy: 'jasmine', jasmine: jasmine, expect: expect, intercept: 1 });
+      }, { jasmine: jasmine, expect: expect, intercept: 1 });
 
       expect(results.failing.length).toBe(2);
       expect(results.passing.length).toBe(2);
@@ -496,7 +571,6 @@ describe('where.js [core jasmine spec]', function () {
                                                    results.data.values[1][2] + 
                                                    "'.");
       expect(results.failing[1].message).toContain("Expected 5 to be 5.01.");
-      
     }); 
 
   });

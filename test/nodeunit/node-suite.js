@@ -1,7 +1,7 @@
 // nodeunit node suite
 
 require('../../where.js');
-require('./where-nodeunit-strategy.js');
+require('../../strategy/nodeunit-strategy.js');
 
 var reporter = require('nodeunit').reporters.minimal;
 
