@@ -616,7 +616,7 @@ The post-process block is where to capture failing results and add them to the
 
 Beyond this, it's best to look at the various strategy implementations to see 
 which approach would suit your needs.  These are located in the 
-[/strategy](./strategy) directory.
+[strategy](./strategy) directory.
 
 
 ## CoffeeScript format
@@ -782,7 +782,7 @@ appropriate browser test page for each):
 ### browser suites (and rawgithub)
 
 The `browser-suites` rely on browser versions of each library stored in the 
-[/vendor](./vendor) directory (mocha, expect.js, assert.js, should, 
+[vendor](./vendor) directory (mocha, expect.js, assert.js, should, 
 chai, qunit, qunit-tap, and jasmine-2.0.0), rather than your system's `/testem` 
 directory, so they can be viewed as static pages.  
 
@@ -800,7 +800,7 @@ You can view them directly on rawgithub:
 
 Adding a custom adapter for nodeunit to work in testem took half a day to get 
 completely wrong, then a second half-day to get correct. The file is at 
-[vendor/testem/nodeunit-adapter.js](vendor/testem/nodeunit-adapter.js)
+[vendor/testem/nodeunit-adapter.js](./vendor/testem/nodeunit-adapter.js)
 
 
 ## conclusions so far  
@@ -859,7 +859,7 @@ The browser version that ships with nodeunit is based on an earlier version of
 that library.  After trying the `make` command on it in my Windows setup and 
 finding yet again that some people just can't be bothered to test anything on 
 Windows, I've updated the key methods with the proper versions in the core 
-library.  That's in the [/vendor/nodeunit](./vendor/nodeunit) directory.
+library.  That's in the [vendor/nodeunit](./vendor/nodeunit) directory.
 
 
 ## TODO
