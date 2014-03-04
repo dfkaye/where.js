@@ -62,7 +62,7 @@ node.js:
 
 browsers:
 
-    <script src="../where.js"></script>
+    <script src="[path/to]/where.js"></script>
 
     assert(typeof where === 'function');
     // => true
@@ -494,7 +494,7 @@ assertion library for the browser."
 
 To use the jasmine strategy, add the following to your node suite:
 
-    require('../../strategy/jasmine-strategy.js');
+    require('[path/to/]/strategy/jasmine-strategy.js');
   
 Because jasmine also uses a try+catch approach, you do not need to specify 
 jasmine as the test strategy.  However, it is *recommended if you want to 
@@ -507,7 +507,7 @@ intercept failing test messages*:
 
 To use the nodeunit strategy, add the following to your node suite:
 
-    require('../../strategy/nodeunit-strategy.js');
+    require('[path/to/]/strategy/nodeunit-strategy.js');
   
 The nodeunit strategy does not use a reference to the nodeunit object, so you 
 need only use the strategy string approach in your tests:
@@ -523,7 +523,7 @@ When you need to use nodeunit within the where() function specify nodeunit with:
 
 To use the QUnit strategy, add the following to your node suite:
 
-    require('../../strategy/qunit-strategy.js');
+    require('[path/to/]/strategy/qunit-strategy.js');
     
 When using QUnit, specify the QUnit strategy as follows:
 
@@ -537,7 +537,7 @@ for QUnit."
 
 To use the tape strategy, add the following to your node suite:
 
-    require('../../strategy/tape-strategy.js');
+    require('[path/to/]/strategy/tape-strategy.js');
     
 For use with tape, specify the tape strategy as follows:
 
