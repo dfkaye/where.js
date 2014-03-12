@@ -574,6 +574,7 @@ describe('where.js [core jasmine spec]', function () {
     }); 
 
   // issue 8 - error reporting format (tables not well-formed)
+  // requested enhancement from johan sonntagbauer  
   // https://github.com/dfkaye/where.js/issues/8
   
     it('should return well-formatted messages', function () {
