@@ -68,7 +68,8 @@
    * CONSTANTS
    */
   var SEP = '|';
-  var PAD = ' ' + SEP + ' ';
+  var SPACE = ' ';
+  var PAD = SPACE + SEP + SPACE;
   var PASSED = 'Passed';
   var FAILED = 'Failed';
   
@@ -127,7 +128,6 @@
     var data = parseDataTable(fnBody);   
     var labels = data.labels;
     var values = data.values;
-    var traceLabels = '\n [' + labels.join(PAD) + '] : ';
     
     /*
      * labels array is toString'd so values become param symbols in new Function.
@@ -172,9 +172,8 @@
       applyStrategy(fnTest, test, values[i]);
       
       // each strategy modifies test.result if the test fails.
-      test.message = traceLabels + '\n [' + values[i].join(PAD) + '] (' + 
-                     test.result + ')\n';
-
+      test.message = formatMessage(labels, values[i], test.result);
+      
       if (test.result != PASSED) {
       
         // always log failures
@@ -201,14 +200,58 @@
   
   
   // HELPER METHODS
+ 
+    
+  /**
+   * This method accepts a given label, values and result message, and formats 
+   * them into tabular form, with padded aligned columns.  Output is returned as 
+   * a string.
+   *
+   * @private 
+   * @function formatMessage
+   * @param {Array} of labels
+   * @param {Array} of test values
+   * @param {String} test result
+   * @returns {String} formatted message
+   */
+  function formatMessage(labels, rowValues, result) {
+      
+    for (var value, type, diff, i = 0; i < labels.length; i++) {
+    
+      value = rowValues[i];
+      type = typeof value;
+      
+      if (type == 'undefined' || value === null) {
+        value = '';
+      } else if (type != 'string') {
+        value = String(value);
+      }
+      
+      diff = labels[i].length - value.length;
+      
+      if (diff > 0) {
+        // pad row value      
+        rowValues[i] = value + Array(diff + 1).join(SPACE);
+      }
+      if (diff < 0) {
+        // pad label
+        diff = diff * -1;
+        labels[i] = labels[i] + Array(diff + 1).join(SPACE);
+      }
+    }
+        
+    return '\n [' + labels.join(PAD)    + '] : ' + 
+           '\n [' + rowValues.join(PAD) + '] (' + result + ') \n';
+  }
+  
   
   /**
    * Iterates over array of failing items, concatenates their messages, and 
    * throws an error with the merged messages.
    *
    * @private 
-   * @method throwFailingResults() 
-   * @param row array of failing items.
+   * @function throwFailingResults
+   * @param {Array} row of failing tests.
    * @throws {Error} containing all failure messages
    */
   function throwFailingResults(failing) {
@@ -218,7 +261,7 @@
     }
     
     throw new Error(errorMessage);  
-  }
+  } 
   
   /**
    * Extracts data table labels and row values from a function or string, and 

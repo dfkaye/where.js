@@ -527,8 +527,8 @@ describe('where.js [core jasmine spec]', function () {
       
       // RESTORE console.log
       console.log = log;      
-    });
-  
+    });  
+    
     it('should return results for incorrect expectation', function () {
     
       var results = where(function(){
@@ -573,6 +573,38 @@ describe('where.js [core jasmine spec]', function () {
       expect(results.failing[1].message).toContain("Expected 5 to be 5.01.");
     }); 
 
+  // issue 8 - error reporting format (tables not well-formed)
+  // https://github.com/dfkaye/where.js/issues/8
+  
+    it('should return well-formatted messages', function () {
+    
+      var results = where(function () {
+        /*** 
+          leftInput |    b  |  andTheAnswerIs
+            1000    |  1000 |  1000
+             12     |    24 |  24
+          451       |  2    |  4451
+          4         |  8    |  7
+        ***/
+        
+        expect(Math.max(leftInput, b)).toBe(andTheAnswerIs);
+        
+      }, { jasmine: jasmine, expect: expect, intercept: 1, log: 1 });
+      
+      var passing = results.passing[0].message.split('\n');
+      expect(passing.length).toBe(4);
+      expect(passing[0]).toBe('');
+      expect(passing[1]).toBe(' [leftInput | b    | andTheAnswerIs] : ');
+      expect(passing[2]).toBe(' [1000      | 1000 | 1000          ] (Passed) ');
+      expect(passing[3]).toBe('');
+      
+      var failing = results.failing[0].message.split('\n');
+      expect(failing[0]).toBe('');
+      expect(failing[1]).toBe(' [leftInput | b    | andTheAnswerIs] : ');
+      expect(failing[2]).toBe(' [451       | 2    | 4451          ] (Expected 451 to be 4451.) ');
+      expect(failing[3]).toBe('');
+      
+    });
   });
 
   
