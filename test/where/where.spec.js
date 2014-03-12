@@ -602,7 +602,11 @@ describe('where.js [core jasmine spec]', function () {
       var failing = results.failing[0].message.split('\n');
       expect(failing[0]).toBe('');
       expect(failing[1]).toBe(' [leftInput | b    | andTheAnswerIs] : ');
-      expect(failing[2]).toBe(' [451       | 2    | 4451          ] (Expected 451 to be 4451.) ');
+      
+      // jasmine 1 inserts "Error: " in message, but jasmine 2 does not.
+      // so verify row format and that the message is produced
+      expect(failing[2]).toContain(' [451       | 2    | 4451          ]');
+      expect(failing[2]).toContain('Expected 451 to be 4451.');
       expect(failing[3]).toBe('');
       
     });
