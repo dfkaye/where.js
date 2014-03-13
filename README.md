@@ -12,6 +12,10 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 + JP Castro's (@jphpsf)[DRYing Up Your JavaScript Jasmine Tests With the Data Provider Pattern](http://blog.jphpsf.com/2012/08/30/drying-up-your-javascript-jasmine-tests)
 + Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
+## see also
++ [data-driven](https://github.com/fluentsoftware/data-driven), anextension for 
+  mocha.js
+
 ## contributors
 
 + [Johann Sonntagbauer](https://github.com/johann-sonntagbauer)
@@ -21,10 +25,6 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 ## license
 
 JSON
-
-## works on my machine...
-
-but you can see the [tests](#tests)...
 
 ## libraries tested and supported so far
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
@@ -40,10 +40,16 @@ but you can see the [tests](#tests)...
 + [tape](https://github.com/substack/tape) @substack's event-driven TDD-flavored 
   TAP project for [testling](http://ci.testling.com/)
 
+## works on my machine...
+
+See the [tests](#tests)...
+  
 ## install
 
     npm install where.js
     
+or
+
     git clone https://github.com/dfkaye/where.js.git
   
 ## important: global assignment
@@ -102,16 +108,30 @@ where.js merges methods and lessons learned from my earlier
 and [jasmine-intercept](https://github.com/dfkaye/jasmine-intercept) projects, 
 which are now __deprecated__ as of this release.
 
+
+## where(fn, context) ~ arguments
+
+### {Function} fn
+
 In imitation of Richard Rodger's [mstring](https://github.com/rjrodger/mstring), 
 `where()` accepts a function and inspects its string value, converts the 
 commented data-table into an array of values, and applies the first row data as 
 argument names in a new Function().
 
-`where()` accepts a second [`context`](#context) argument that allows you to 
-inject other information or references into the test function.
+The function's body should contain an expectation or assertion statement.
 
-(I'll relate some additional lessons learned from this project down below or 
-elsewhere.)
+If your JavaScript runtime supports ES65 strict mode, an undeclared variable in 
+the function body will result in an error.
+
+### {Object} context
+
+`where()` accepts a second argument, an context specifier, that allows you to 
+inject other information or references into the test function, namely any 
+references to your test library (jasmine, QUnit, etc.) and methods, variables 
+that are defined outside of the current test (in setup or before calls, for 
+example), and flags for logging or intercepting results to the console.
+
+See more details about the [`context`](#context) argument.
 
 ## multi-line comments
 
@@ -129,6 +149,9 @@ and end `***/` 3-asterisk comments.
         expect(Math.max(a, b)).toBe(c);
       });
 
+__aside__ where.js is a *testing* module and is not intended to be run through a 
+pre-production minifer such as google closure or uglify, both of which remove 
+the comments.
 
 ### CoffeeScript comments
 
@@ -145,7 +168,8 @@ expectation. The remaining rows must contain data values for each name.  Values
 must be separated by the pipe | character.
 
 For example, `a`, `b`, and `c` are named as variables in the table, and used in 
-the expectation - without having to be defined or var'd:
+the expectation - without having to be declared explicitly with the `var` 
+keyword.
 
     it('should pass with correct data and expectation', function () {
       where(function(){

@@ -74,16 +74,20 @@
   var FAILED = 'Failed';
   
   /**
-   * This function processes a function with a commented data-table and any 
-   * expectations into a data array, passing each array row into a new 
+   * The where() function processes a function with a commented data-table and 
+   * any expectations into a data array, passing each array row into a new 
    * Function() that contains the original function body's expectation 
    * statements.
-   
+   *
+   * In ES5 environments supporting the "use strict"; declaration, undeclared 
+   * variables in the function body will result in an error; for example:
+   *    "ReferenceError: assignment to undeclared variable <varname>"
+   *
    * Function accepts a second optional context argument for specifying 
    * non-global expectation methods into the test (e.g., expect: expect), a 
    * strategy or test runner (e.g., strategy: 'qunit'), and output flags (e.g., 
    * intercept: 1, log: 1).
-   
+   *
    * There are two output flags - log, intercept:
    *  + If {log: 1} is specified, the row data under test is always logged to 
    *    the console; otherwise only failing rows are logged.
@@ -100,6 +104,8 @@
    * @returns object for further use in other expectations, containing arrays 
    *  for failing and passing tests, and a values array representing the parsed 
    *  data for each row, including labels.
+   * @throws {ReferenceError} in ES5 environments for un-var'd variables in the 
+   *  body of the fn argument.
    */
   function where(fn, context) {
 
@@ -128,6 +134,10 @@
     var data = parseDataTable(fnBody);   
     var labels = data.labels;
     var values = data.values;
+
+    // ES5 environments only
+    // see http://caniuse.com/use-strict
+    fnBody = '"use strict";\n' + fnBody;
     
     /*
      * labels array is toString'd so values become param symbols in new Function.

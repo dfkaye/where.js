@@ -219,8 +219,27 @@ describe('where.js [core jasmine spec]', function () {
          ***/
         expect(typeof date).toBe('string');
         expect(date).toBe('01/01/1970');
-      })
+      });
     });
+    
+    
+    // 13 MAR 2104
+    // strict mode test (ES5) with fallback error check to prevent global leaks
+    // see http://caniuse.com/use-strict
+    it('should throw "use strict" error for undeclared vars', function () {
+      expect(function() {
+        where(function() {
+          /***
+            error
+            'undeclared variable should be caught by strict mode'
+          ***/
+          accidental = error;
+          // this will throw only if strict mode is not enabled/supported.
+          throw new Error(error);
+        })
+      }).toThrow();
+    });
+    
   });
 
  
