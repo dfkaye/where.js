@@ -13,7 +13,7 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 + Richard Rodger's (@rjrodger) [mstring](https://github.com/rjrodger/mstring)
 
 ## see also
-+ [data-driven](https://github.com/fluentsoftware/data-driven), anextension for 
++ [data-driven](https://github.com/fluentsoftware/data-driven), an extension for 
   mocha.js
 
 ## contributors
