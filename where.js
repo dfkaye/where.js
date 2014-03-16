@@ -483,20 +483,21 @@
    * @param {function} [fn] - The seed function to be associated with the given
    *  name.  If provided, the strategy() call acts as a setter. If not provided, 
    *  strategy() acts as a getter.
-   * @returns {Function} Lookup function for getting and setting a strategy.
+   * @returns {Function} the lookup function for getting and setting a strategy.
    * @throws {Error} when a 'set' call is made on a name already registered.
    */
   where.strategy = (function whereStrategy(/* IFFE named only for tests */) {
-
-  
-    // FIXME ~ .registry and .list attached to the wrong fn !
   
     /**
      * @private
      */
-    var registry = whereStrategy.registry = {};
+    var registry = {};
     
-    var list = whereStrategy.list = function list() {
+    /**
+     * @private
+     * @returns {Array} of entries in the strategy registry.
+     */
+    function list() {
       var list = [];
       for (var k in registry) {
         if (registry.hasOwnProperty(k)) {
@@ -507,21 +508,19 @@
     };
     
     return function lookup(name, fn) {
-    
+            
       if (!(name in registry)) {
         if (fn && typeof fn == 'function') {
           registry[name] = fn;
-          
-          /////////////////////////////////////
-          // refresh the accessor API in case it was deleted
-          lookup.registry = registry;
-          lookup.list = list;
-          /////////////////////////////////////
-
         } else {
           throw new Error('where.strategy ["' + name + '"] is not defined.');
         }
       }
+      /////////////////////////////////////
+      // expose the list API, refresh in case it was deleted
+      lookup.registry !== registry && (lookup.registry = registry);
+      lookup.list !== list && (lookup.list = list);
+      /////////////////////////////////////      
       return registry[name];
     };
   }());
