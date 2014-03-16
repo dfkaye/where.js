@@ -608,10 +608,12 @@ describe('where.js [core jasmine spec]', function () {
         ***/
         
         expect(Math.max(leftInput, b)).toBe(andTheAnswerIs);
+        expect(b).not.toBe(2);
         
-      }, { jasmine: jasmine, expect: expect, intercept: 1, log: 1 });
+        }, { jasmine: jasmine, expect: expect, intercept: 1, log: 1 });
       
       var passing = results.passing[0].message.split('\n');
+      
       expect(passing.length).toBe(4);
       expect(passing[0]).toBe('');
       expect(passing[1]).toBe(' [leftInput | b    | andTheAnswerIs] : ');
@@ -619,15 +621,19 @@ describe('where.js [core jasmine spec]', function () {
       expect(passing[3]).toBe('');
       
       var failing = results.failing[0].message.split('\n');
+      
       expect(failing[0]).toBe('');
       expect(failing[1]).toBe(' [leftInput | b    | andTheAnswerIs] : ');
       
       // jasmine 1 inserts "Error: " in message, but jasmine 2 does not.
       // so verify row format and that the message is produced
       expect(failing[2]).toContain(' [451       | 2    | 4451          ]');
-      expect(failing[2]).toContain('Expected 451 to be 4451.');
-      expect(failing[3]).toBe('');
       
+      // verify first expectation failure message
+      expect(failing[2]).toContain('Expected 451 to be 4451.');
+      // verify the second expectation is appended 
+      expect(failing[2]).toContain('Expected 2 not to be 2.');
+      expect(failing[3]).toBe('');
     });
   });
 

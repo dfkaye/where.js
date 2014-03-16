@@ -657,4 +657,69 @@ describe('where.js [mocha tests]', function(done) {
       
     });
   });
+  
+  
+  // FORMAT 
+  describe('format tests with expect.js', function() {
+  
+    var expect;
+    
+    if (typeof require == 'function') {
+      // enable to re-use in a browser without require.js
+      expect = require('expect.js');
+    } else {
+      expect = window.expect;
+    }
+  
+  // issue 8 - error reporting format (tables not well-formed)
+  // requested enhancement from johan sonntagbauer  
+  // https://github.com/dfkaye/where.js/issues/8
+  
+    it('should return well-formatted messages', function () {
+    
+      var results = where(function () {
+        /*** 
+          leftInput |    b  |  andTheAnswerIs
+            1000    |  1000 |  1000
+             12     |    24 |  24
+          451       |  2    |  4451
+          4         |  8    |  7
+        ***/
+        
+        expect(Math.max(leftInput, b)).to.be(andTheAnswerIs);
+        
+        // jasmine allows this second assertion to run
+        // mocha does NOT, as it is "fail fast"
+        expect(b).not.to.be(2);
+        
+        }, { expect: expect, intercept: 1, log: 1 });    
+      
+      var passing = results.passing[0].message.split('\n');
+      
+      expect(passing.length).to.be(4);
+      expect(passing[0]).to.be('');
+      expect(passing[1]).to.be(' [leftInput | b    | andTheAnswerIs] : ');
+      expect(passing[2]).to.be(' [1000      | 1000 | 1000          ] (Passed) ');
+      expect(passing[3]).to.be('');
+      
+      var failing = results.failing[0].message.split('\n');
+      
+      expect(failing[0]).to.be('');
+      expect(failing[1]).to.be(' [leftInput | b    | andTheAnswerIs] : ');
+      
+      // verify row format and that the message is produced
+      expect(failing[2]).to.contain(' [451       | 2    | 4451          ]');
+      
+      // verify first expectation failure message
+      // mocha inserts "Error: " in message
+      expect(failing[2]).to.contain('Error: expected 451 to equal 4451');
+      
+      // verify the second expectation is NOT appended 
+      expect(failing[2]).not.to.contain('expected 2 not to be 2');
+      
+      // last row empty
+      expect(failing[3]).to.be('');
+    });
+  });
+  
 });

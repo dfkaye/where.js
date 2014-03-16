@@ -24,8 +24,19 @@ where.strategy('tape', function tapeStrategy(context) {
     
     tape.on('result', function onResult(result) {
       if (!result.ok) {
-        test.result = 'Error: expected ' + result.actual + ' to be ' + 
-                      result.expected;
+      
+        /* 
+         * johann sonntagbauer fix 15 MAR 2015
+         * the strategy will be called initial with test.result = 'Passed' 
+         * therefore reset the test result
+         */
+         
+        if (test.result === 'Passed') {
+          test.result = 'Error: ' + result.name;
+        }
+
+        test.result += ': expected ' + result.actual + ' to ' + 
+                       result.operator + ' ' + result.expected;
       }
       tape.removeListener('result', onResult);
     });

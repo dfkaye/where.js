@@ -18,6 +18,7 @@ var tape = require('tape');
 // should log errors by default
 // should log all data when specified
 // should not throw when intercept specified
+// should return well-formatted messages
 
 tape('should be a function', function (test) {
   test.plan(1);
@@ -185,5 +186,37 @@ tape('should not throw when intercept specified', function(test) {
 
   test.equal(results.failing.length, 1, 'should be one failing');
   test.equal(results.passing.length, 1, 'should be one passing');
+  test.end();
+});
+
+tape('should return well-formatted messages', function (test) {
+  
+  var results = where(function () {
+    /*** 
+      leftInput |    b  |  andTheAnswerIs
+        1000    |  1000 |  1000
+         12     |    24 |  24
+      451       |  2    |  4451
+      4         |  8    |  7
+    ***/
+    
+    tape.equal(Math.max(leftInput, b), andTheAnswerIs, 'max(leftInput, b)');
+
+    // tape does not run the second assertion if the first one has failed.
+    tape.notEqual(b, 2, 'b != 2');
+
+    }, { tape: test, intercept: 1 });
+
+  var passing = results.passing[0].message.split('\n');
+  
+  test.equal(passing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+  test.equal(passing[2], ' [1000      | 1000 | 1000          ] (Passed) ');
+  
+  var failing = results.failing[0].message.split('\n');
+  
+  test.equal(failing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+  test.equal(failing[2], ' [451       | 2    | 4451          ]' + 
+                         ' (Error: max(leftInput, b):' + 
+                         ' expected 451 to equal 4451) ');
   test.end();
 });

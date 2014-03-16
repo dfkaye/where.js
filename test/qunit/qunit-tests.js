@@ -203,3 +203,36 @@ test('should not throw when intercept specified', function(assert) {
   assert.equal(results.failing.length, 1, 'should be 1 failing');
   assert.equal(results.passing.length, 1, 'should be 1 passing');
 });
+
+
+test('should return well-formatted messages', function (assert) {
+  
+  var results = where(function () {
+    /*** 
+      leftInput |    b  |  andTheAnswerIs
+        1000    |  1000 |  1000
+         12     |    24 |  24
+      451       |  2    |  4451
+      4         |  8    |  7
+    ***/
+    
+    assert.equal(Math.max(leftInput, b), andTheAnswerIs, 'max(leftInput, b)');
+
+    // QUnit allows this second assertion to run,
+    assert.notEqual(b, 2, 'b != 2');
+
+    }, { assert: assert, QUnit: QUnit, intercept: 1 });
+
+  var passing = results.passing[0].message.split('\n');
+  
+  assert.equal(passing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+  assert.equal(passing[2], ' [1000      | 1000 | 1000          ] (Passed) ');
+  
+  var failing = results.failing[0].message.split('\n');
+  
+  assert.equal(failing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+  assert.equal(failing[2], ' [451       | 2    | 4451          ]' + 
+                           ' (Error: expected 451 to be 4451.' + 
+                           ' Error: expected 2 to be 2. ) ');
+
+});

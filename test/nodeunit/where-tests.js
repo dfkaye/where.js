@@ -76,6 +76,40 @@ this.whereTests = {
     test.equal(results.passing.length, 1, 'should be 1 passing');
     test.equal(results.failing.length, 1, 'should be 1 failing');
     test.done();
-  } 
+  },
+  
+  'should return well-formatted messages': function (test) {
+  
+    var results = where(function () {
+      /*** 
+        leftInput |    b  |  andTheAnswerIs
+          1000    |  1000 |  1000
+           12     |    24 |  24
+        451       |  2    |  4451
+        4         |  8    |  7
+      ***/
+      
+      test.equal(Math.max(leftInput, b), andTheAnswerIs, 'max(leftInput, b)');
+
+      // nodeunit allows this second assertion to run,
+      // but if it fails, it will *overwrite* the previous assertion
+      test.ok(b != 2, 'b != 2');
+
+      }, { strategy: 'nodeunit', test: test, intercept: 1 });
+
+    var passing = results.passing[0].message.split('\n');
+    
+    test.equal(passing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+    test.equal(passing[2], ' [1000      | 1000 | 1000          ] (Passed) ');
+    
+    var failing = results.failing[0].message.split('\n');
+    
+    test.equal(failing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+    test.equal(failing[2], ' [451       | 2    | 4451          ]' + 
+                           ' (AssertionError: max(leftInput, b):' +
+                           ' Expected 451 to be 4451) ');
+
+    test.done();    
+  }
 };
 

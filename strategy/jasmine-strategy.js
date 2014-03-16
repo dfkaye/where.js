@@ -19,7 +19,19 @@ where.strategy('jasmine', function jasmineStrategy(context) {
     addResult && (result.addResult = function (data) {
     
       if (!data.passed_) {
-        test.result = data.trace;
+      
+        /* 
+         * johann sonntagbauer fix 15 MAR 2015
+         * the strategy will be called initial with test.result = 'Passed' 
+         * therefore reset the test result
+         */
+         
+        if (test.result === 'Passed') {
+          test.result = '';
+        }
+        
+        test.result += data.trace + ' ';
+        
       } else {
         addResult.call(result, data);
       }
@@ -29,9 +41,22 @@ where.strategy('jasmine', function jasmineStrategy(context) {
     var addExpectationResult = jasmine.Spec.prototype.addExpectationResult;
     addExpectationResult && 
     (jasmine.Spec.prototype.addExpectationResult = function (passed, data) {
-    
+
       if (!passed) {
-        test.result = data.message;
+      
+        /* 
+         * johann sonntagbauer fix 15 MAR 2015
+         * the strategy will be called initial with test.result = 'Passed' 
+         * therefore reset the test result
+         */
+         
+        if (test.result === 'Passed') {
+          test.result = '';
+        }
+        
+        // simply append error messages
+        test.result += data.message + ' ';
+
       } else {
         addExpectationResult.call(result, passed, data);
       }          

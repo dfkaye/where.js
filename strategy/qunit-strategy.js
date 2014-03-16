@@ -41,14 +41,23 @@ where.strategy('QUnit', function qunitStrategy(context) {
 
   QUnit.log(function onResult(details) {
     if (!details.result) {
+    
+      /* 
+       * johann sonntagbauer fix 15 MAR 2015
+       * the strategy will be called initial with test.result = 'Passed' 
+       * therefore reset the test result
+       */
+       
+      if (test.result === 'Passed') {
+        test.result = '';
+      }
       
-      // overwrite default result with non-passing result detail
-      test.result = 'Error: expected ' + details.actual + ' to be ' + 
-                    details.expected;
+      test.result += 'Error: expected ' + details.actual + ' to be ' + 
+                     details.expected + '. ';
                     
       if (!context.intercept) {
         // this adds the QUnit sourceFromStacktrace() output
-        test.result = test.result + '\n' + details.source;
+        test.result += '\n' + details.source;
       }
     }
   });

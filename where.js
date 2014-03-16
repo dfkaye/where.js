@@ -488,6 +488,9 @@
    */
   where.strategy = (function whereStrategy(/* IFFE named only for tests */) {
 
+  
+    // FIXME ~ .registry and .list attached to the wrong fn !
+  
     /**
      * @private
      */
@@ -532,7 +535,18 @@
       try {
         fnTest.apply({}, [context].concat(value));
       } catch(err) {
-        test.result = err.name + ': ' + err.message;
+
+        /* 
+         * johann sonntagbauer fix 15 MAR 2015
+         * the strategy will be called initial with test.result = 'Passed' 
+         * therefore reset the test result
+         */
+         
+        if (test.result === 'Passed') {
+            test.result = '';
+        }
+        
+        test.result += err.name + ': ' + err.message;
       }
     };
   });

@@ -8838,51 +8838,59 @@ function through (write, end, opts) {
 
 
 },{"__browserify_process":18,"stream":10}],33:[function(require,module,exports){
+// STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
+// contraction?). tape's event-driven reporting allows us to turn off the 
+// the default test reports so that expected failures are not reported as 
+// failed.  James' (@substack) foresight in using each tape/test function as 
+// an event emitter AND using the 'result' event handler as a pre-reporting 
+// processor.
+//
+// requires context argument with strategy defined as { tape: test | t } where
+// [test | t] is the current test (or t) method
 
+where.strategy('tape', function tapeStrategy(context) {
 
-
-  // STRATEGY for TAPE ~ bit less elegant than QUnit, but less verbose (possible 
-  // contraction?). tape's event-driven reporting allows us to turn off the 
-  // the default test reports so that expected failures are not reported as 
-  // failed.  James' (@substack) foresight in using each tape/test function as 
-  // an event emitter AND using the 'result' event handler as a pre-reporting 
-  // processor.
-  //
-  // requires context argument with strategy defined as { tape: test | t } where
-  // [test | t] is the current test (or t) method
+  var tape = context.tape;
   
-  where.strategy('tape', function tapeStrategy(context) {
+  return function testTape(fnTest, test, value) {
   
-    var tape = context.tape;
+    var listeners;
     
-    return function testTape(fnTest, test, value) {
+    // turn off tape's automatic reporting (pass/fail counts) 
+    if (context.intercept) {
+      listeners = tape._events['result'];
+      tape.removeAllListeners('result');        
+    }
     
-      var listeners;
+    tape.on('result', function onResult(result) {
+      if (!result.ok) {
       
-      // turn off tape's automatic reporting (pass/fail counts) 
-      if (context.intercept) {
-        listeners = tape._events['result'];
-        tape.removeAllListeners('result');        
+        /* 
+         * johann sonntagbauer fix 15 MAR 2015
+         * the strategy will be called initial with test.result = 'Passed' 
+         * therefore reset the test result
+         */
+         
+        if (test.result === 'Passed') {
+          test.result = 'Error: ' + result.name;
+        }
+
+        test.result += ': expected ' + result.actual + ' to ' + 
+                       result.operator + ' ' + result.expected;
       }
-      
-      tape.on('result', function onResult(result) {
-        if (!result.ok) {
-          test.result = 'Error: expected ' + result.actual + ' to be ' + 
-                        result.expected;
-        }
-        tape.removeListener('result', onResult);
-      });
-      
-      fnTest.apply({}, [context].concat(value));
-      
-      // restore tape's result reporting
-      if (context.intercept) {
-        for (var i = 0; i < listeners.length; ++i) {
-          tape.on('result', listeners[i]);
-        }
-      }      
-    };
-  });
+      tape.removeListener('result', onResult);
+    });
+    
+    fnTest.apply({}, [context].concat(value));
+    
+    // restore tape's result reporting
+    if (context.intercept) {
+      for (var i = 0; i < listeners.length; ++i) {
+        tape.on('result', listeners[i]);
+      }
+    }      
+  };
+});
 },{}],34:[function(require,module,exports){
 
 // node test/tape/node-suite
@@ -8904,6 +8912,7 @@ var tape = require('tape');
 // should log errors by default
 // should log all data when specified
 // should not throw when intercept specified
+// should return well-formatted messages
 
 tape('should be a function', function (test) {
   test.plan(1);
@@ -9074,6 +9083,37 @@ tape('should not throw when intercept specified', function(test) {
   test.end();
 });
 
+tape('should return well-formatted messages', function (test) {
+  
+  var results = where(function () {
+    /*** 
+      leftInput |    b  |  andTheAnswerIs
+        1000    |  1000 |  1000
+         12     |    24 |  24
+      451       |  2    |  4451
+      4         |  8    |  7
+    ***/
+    
+    tape.equal(Math.max(leftInput, b), andTheAnswerIs, 'max(leftInput, b)');
+
+    // tape does not run the second assertion if the first one has failed.
+    tape.notEqual(b, 2, 'b != 2');
+
+    }, { tape: test, intercept: 1 });
+
+  var passing = results.passing[0].message.split('\n');
+  
+  test.equal(passing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+  test.equal(passing[2], ' [1000      | 1000 | 1000          ] (Passed) ');
+  
+  var failing = results.failing[0].message.split('\n');
+  
+  test.equal(failing[1], ' [leftInput | b    | andTheAnswerIs] : ');
+  test.equal(failing[2], ' [451       | 2    | 4451          ]' + 
+                         ' (Error: max(leftInput, b):' + 
+                         ' expected 451 to equal 4451) ');
+  test.end();
+});
 },{"../../strategy/tape-strategy.js":33,"../../where.js":35,"tape":19}],35:[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/**
  * @name where.js
@@ -9145,21 +9185,26 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    * CONSTANTS
    */
   var SEP = '|';
-  var PAD = ' ' + SEP + ' ';
+  var SPACE = ' ';
+  var PAD = SPACE + SEP + SPACE;
   var PASSED = 'Passed';
   var FAILED = 'Failed';
   
   /**
-   * This function processes a function with a commented data-table and any 
-   * expectations into a data array, passing each array row into a new 
+   * The where() function processes a function with a commented data-table and 
+   * any expectations into a data array, passing each array row into a new 
    * Function() that contains the original function body's expectation 
    * statements.
-   
+   *
+   * In ES5 environments supporting the "use strict"; declaration, undeclared 
+   * variables in the function body will result in an error; for example:
+   *    "ReferenceError: assignment to undeclared variable <varname>"
+   *
    * Function accepts a second optional context argument for specifying 
    * non-global expectation methods into the test (e.g., expect: expect), a 
    * strategy or test runner (e.g., strategy: 'qunit'), and output flags (e.g., 
    * intercept: 1, log: 1).
-   
+   *
    * There are two output flags - log, intercept:
    *  + If {log: 1} is specified, the row data under test is always logged to 
    *    the console; otherwise only failing rows are logged.
@@ -9176,6 +9221,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    * @returns object for further use in other expectations, containing arrays 
    *  for failing and passing tests, and a values array representing the parsed 
    *  data for each row, including labels.
+   * @throws {ReferenceError} in ES5 environments for un-var'd variables in the 
+   *  body of the fn argument.
    */
   function where(fn, context) {
 
@@ -9204,7 +9251,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     var data = parseDataTable(fnBody);   
     var labels = data.labels;
     var values = data.values;
-    var traceLabels = '\n [' + labels.join(PAD) + '] : ';
+
+    // ES5 environments only
+    // see http://caniuse.com/use-strict
+    fnBody = '"use strict";\n' + fnBody;
     
     /*
      * labels array is toString'd so values become param symbols in new Function.
@@ -9249,9 +9299,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       applyStrategy(fnTest, test, values[i]);
       
       // each strategy modifies test.result if the test fails.
-      test.message = traceLabels + '\n [' + values[i].join(PAD) + '] (' + 
-                     test.result + ')\n';
-
+      test.message = formatMessage(labels, values[i], test.result);
+      
       if (test.result != PASSED) {
       
         // always log failures
@@ -9278,14 +9327,58 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
   
   
   // HELPER METHODS
+ 
+    
+  /**
+   * This method accepts a given label, values and result message, and formats 
+   * them into tabular form, with padded aligned columns.  Output is returned as 
+   * a string.
+   *
+   * @private 
+   * @function formatMessage
+   * @param {Array} of labels
+   * @param {Array} of test values
+   * @param {String} test result
+   * @returns {String} formatted message
+   */
+  function formatMessage(labels, rowValues, result) {
+      
+    for (var value, type, diff, i = 0; i < labels.length; i++) {
+    
+      value = rowValues[i];
+      type = typeof value;
+      
+      if (type == 'undefined' || value === null) {
+        value = '';
+      } else if (type != 'string') {
+        value = String(value);
+      }
+      
+      diff = labels[i].length - value.length;
+      
+      if (diff > 0) {
+        // pad row value      
+        rowValues[i] = value + Array(diff + 1).join(SPACE);
+      }
+      if (diff < 0) {
+        // pad label
+        diff = diff * -1;
+        labels[i] = labels[i] + Array(diff + 1).join(SPACE);
+      }
+    }
+        
+    return '\n [' + labels.join(PAD)    + '] : ' + 
+           '\n [' + rowValues.join(PAD) + '] (' + result + ') \n';
+  }
+  
   
   /**
    * Iterates over array of failing items, concatenates their messages, and 
    * throws an error with the merged messages.
    *
    * @private 
-   * @method throwFailingResults() 
-   * @param row array of failing items.
+   * @function throwFailingResults
+   * @param {Array} row of failing tests.
    * @throws {Error} containing all failure messages
    */
   function throwFailingResults(failing) {
@@ -9295,7 +9388,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     }
     
     throw new Error(errorMessage);  
-  }
+  } 
   
   /**
    * Extracts data table labels and row values from a function or string, and 
@@ -9507,17 +9600,21 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
    * @param {function} [fn] - The seed function to be associated with the given
    *  name.  If provided, the strategy() call acts as a setter. If not provided, 
    *  strategy() acts as a getter.
-   * @returns {Function} Lookup function for getting and setting a strategy.
+   * @returns {Function} the lookup function for getting and setting a strategy.
    * @throws {Error} when a 'set' call is made on a name already registered.
    */
   where.strategy = (function whereStrategy(/* IFFE named only for tests */) {
-
+  
     /**
      * @private
      */
-    var registry = whereStrategy.registry = {};
+    var registry = {};
     
-    var list = whereStrategy.list = function list() {
+    /**
+     * @private
+     * @returns {Array} of entries in the strategy registry.
+     */
+    function list() {
       var list = [];
       for (var k in registry) {
         if (registry.hasOwnProperty(k)) {
@@ -9528,21 +9625,19 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     };
     
     return function lookup(name, fn) {
-    
+            
       if (!(name in registry)) {
         if (fn && typeof fn == 'function') {
           registry[name] = fn;
-          
-          /////////////////////////////////////
-          // refresh the accessor API in case it was deleted
-          lookup.registry = registry;
-          lookup.list = list;
-          /////////////////////////////////////
-
         } else {
           throw new Error('where.strategy ["' + name + '"] is not defined.');
         }
       }
+      /////////////////////////////////////
+      // expose the list API, refresh in case it was deleted
+      lookup.registry !== registry && (lookup.registry = registry);
+      lookup.list !== list && (lookup.list = list);
+      /////////////////////////////////////      
       return registry[name];
     };
   }());
@@ -9556,7 +9651,19 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       try {
         fnTest.apply({}, [context].concat(value));
       } catch(err) {
-        test.result = err.name + ': ' + err.message;
+
+        /* 
+         * johann sonntagbauer fix 15 MAR 2015
+         * the strategy will be called initial with test.result = 'Passed' 
+         * therefore reset the test result
+         */
+         
+        if (test.result === 'Passed') {
+          test.result = '';
+        }
+        
+        // simply append error messages
+        test.result += err.name + ': ' + err.message;
       }
     };
   });
