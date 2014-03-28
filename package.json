@@ -19,9 +19,6 @@
       "email" : "jamon@clearsightstudio.com"
     }
   ],
-  "devDependencies": {
-    "jasmine-node": "1.x.x"
-  },
   "keywords": [
     "where",
     "where-data",
@@ -36,10 +33,11 @@
   ],
   "license": "JSON",
   "main": "./where.js",
-  "peerDependencies": {
+  "devDependencies": {
     "chai": ">= 1.x",
     "expect.js": ">= 0.2",
     "mocha": ">= 1.7",
+    "jasmine-node": "1.x.x",    
     "nodeunit" : ">= 0.8.6",
     "qunitjs": ">= 1.13",
     "qunit-tap": ">= 1.4",
