@@ -1,6 +1,6 @@
 {
   "name": "where.js",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "data-driven test method for JavaScript test libraries",
   "homepage" : "https://github.com/dfkaye/where.js",
   "author": {
@@ -17,6 +17,9 @@
     },    
     { "name" : "Jamon Holmgren",
       "email" : "jamon@clearsightstudio.com"
+    },
+    { "name" : "Casey Watson",
+      "email" : "watsoncj@gmail.com"    
     }
   ],
   "keywords": [

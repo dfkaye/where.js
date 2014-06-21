@@ -21,6 +21,7 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 + [Johann Sonntagbauer](https://github.com/johann-sonntagbauer)
 + [Jason Karns](https://github.com/jasonkarns)
 + [Jamon Holmgren](https://github.com/jamonholmgren)
++ [Casey Watson](https://github.com/watsoncj)
 
 ## license
 
