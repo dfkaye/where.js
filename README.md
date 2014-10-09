@@ -804,21 +804,21 @@ appropriate browser test page for each):
 + `npm run testem-qunit`
 + `npm run testem-tape`
 
-### browser suites (and rawgithub)
+### browser suites (and rawgit)
 
 The `browser-suites` rely on browser versions of each library stored in the 
 [vendor](./vendor) directory (mocha, expect.js, assert.js, should, 
 chai, qunit, qunit-tap, and jasmine-2.0.0), rather than your system's `/testem` 
 directory, so they can be viewed as static pages.  
 
-You can view them directly on rawgithub:
+You can view them directly on rawgit:
 
-+ [core suite](https://rawgithub.com/dfkaye/where.js/master/test/where/browser-suite.html)
-+ [jasmine](https://rawgithub.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
-+ [mocha et al.](https://rawgithub.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
-+ [nodeunit](https://rawgithub.com/dfkaye/where.js/master/test/nodeunit/browser-suite.html)
-+ [QUnit with qunit-tap](https://rawgithub.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
-+ [tape with browserified source](https://rawgithub.com/dfkaye/where.js/master/test/tape/browser-suite.html)
++ [core suite](https://rawgit.com/dfkaye/where.js/master/test/where/browser-suite.html)
++ [jasmine](https://rawgit.com/dfkaye/where.js/master/test/jasmine/browser-suite.html)
++ [mocha et al.](https://rawgit.com/dfkaye/where.js/master/test/mocha/browser-suite.html)
++ [nodeunit](https://rawgit.com/dfkaye/where.js/master/test/nodeunit/browser-suite.html)
++ [QUnit with qunit-tap](https://rawgit.com/dfkaye/where.js/master/test/qunit/browser-suite.html)
++ [tape with browserified source](https://rawgit.com/dfkaye/where.js/master/test/tape/browser-suite.html)
 
 
 ### custom adapter for nodeunit with testem
