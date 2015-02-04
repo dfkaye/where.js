@@ -891,7 +891,3 @@ library.  That's in the [vendor/nodeunit](./vendor/nodeunit) directory.
 
 + clean up the procedural long-method setup code in the where() function
 + clean up the procedural verbose documentation
-<<<<<<< HEAD
-   
-=======
->>>>>>> d63a3a2a42c9f404084964c9012c04be012832b2
