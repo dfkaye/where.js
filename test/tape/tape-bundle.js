@@ -9169,7 +9169,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
  * + npmjs.org/dfkaye/where.js
  *
  */
-;(function whereSandox(/* named IFFE for tests */){
+;(function whereSandbox(/* named IFFE for tests */){
 
   // This makes where() a global function so as not to attach itself to any 
   // specific framework.
