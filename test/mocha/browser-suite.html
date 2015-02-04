@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>where.js Mocha Tests</title>
+    <link rel="stylesheet" href="../../vendor/mocha/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="../../where.js"></script>
+    <script src="../../vendor/assert.js"></script>
+    <script src="../../vendor/expect.js"></script>
+    <script src="../../vendor/should.js"></script>
+    <script src="../../vendor/chai.js"></script>
+    <script src="../../vendor/mocha/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script>
+      if (location.href.indexOf('://localhost:7357') != -1) {
+        <!-- testem goes between framework and specs/tests -->
+        document.write('<script src="/testem.js">' + '<\/' + 'script>');
+      }
+    </script>
+    <script src="mocha-tests.js"></script>
+    <script>
+      mocha.checkLeaks();
+      mocha.globals(['where']);
+      mocha.run();
+    </script>
+  </body>
+</html>

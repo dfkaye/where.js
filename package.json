@@ -1,0 +1,68 @@
+{
+  "name": "where.js",
+  "version": "0.0.13",
+  "description": "data-driven test method for JavaScript test libraries",
+  "homepage" : "https://github.com/dfkaye/where.js",
+  "author": {
+    "name": "david kaye (@dfkaye)",
+    "email" : "dfkaye@yahoo.com"
+  },
+  "contributors" : [
+    {
+      "name" : "Johann Sonntagbauer",
+      "email" : "johann.sonntagbauer@gmx.at"
+    },
+    { "name" : "Jason Karns",
+      "email" : "jason@karns.name"
+    },    
+    { "name" : "Jamon Holmgren",
+      "email" : "jamon@clearsightstudio.com"
+    },
+    { "name" : "Casey Watson",
+      "email" : "watsoncj@gmail.com"    
+    }
+  ],
+  "keywords": [
+    "where",
+    "where-data",
+    "data-table",
+    "data-driven",
+    "jasmine",
+    "mocha",
+    "nodeunit",
+    "qunit",
+    "tape",
+    "testem"
+  ],
+  "license": "JSON",
+  "main": "./where.js",
+  "devDependencies": {
+    "chai": ">= 1.x",
+    "expect.js": ">= 0.2",
+    "mocha": ">= 1.7",
+    "jasmine-node": "1.x.x",    
+    "nodeunit" : ">= 0.8.6",
+    "qunitjs": ">= 1.13",
+    "qunit-tap": ">= 1.4",
+    "should": ">= 3.0.1",
+    "tape": ">= 2.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dfkaye/where.js.git"
+  },
+  "scripts": {
+    "test": "jasmine-node --verbose ./test/where/where.spec.js",
+    "jasmine": "jasmine-node --verbose --matchall ./test/jasmine/where-spec.js",
+    "mocha": "node ./test/mocha/node-suite.js",
+    "nodeunit": "node ./test/nodeunit/node-suite.js",
+    "qunit": "node ./test/qunit/node-suite.js",
+    "tape": "node ./test/tape/node-suite.js",
+    "testem": "testem -l where -t ./test/where/browser-suite.html",
+    "testem-jasmine": "testem -l jasmine -t ./test/jasmine/browser-suite.html",
+    "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
+    "testem-nodeunit": "testem -l nodeunit -t ./test/nodeunit/browser-suite.html",
+    "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",
+    "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"    
+  } 
+}

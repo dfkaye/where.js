@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>nodeunit browser suite</title>
+    <link rel='stylesheet' href="../../vendor/nodeunit/nodeunit.css" />
+    
+    <script src="../../vendor/nodeunit/nodeunit.js"></script>
+    <script src="../../where.js"></script>
+    <script src="../../strategy/nodeunit-strategy.js"></script>
+    
+    <script>
+      if (location.href.indexOf('://localhost:7357') != -1) {
+        //<!-- testem goes between framework and specs/tests -->
+        document.write('<script src="/testem.js">' + '<\/' + 'script>');
+        document.write('<script src="../../vendor/testem/nodeunit-adapter.js">' + '<\/' + 'script>');
+      }
+    </script>
+    
+    <script src="./fix-tests.js"></script>
+    <script src="./where-tests.js"></script>
+  </head>
+  <body>
+    <h1 id="nodeunit-header">nodeunit browser suite</h1>
+    <script>
+      nodeunit.run({
+        'fix-tests': fixTests,
+        'where-tests': whereTests
+      });
+    </script>
+  </body>
+</html>

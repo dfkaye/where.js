@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>tape test bundle page</title>
+    <script>
+      if (location.href.indexOf('://localhost:7357') != -1) {
+        <!-- testem goes between framework and specs/tests -->
+        document.write('<script src="/testem.js">' + '<\/' + 'script>');
+      }
+    </script>    
+  </head>
+  <body>
+    <h1>TAP</h1>
+    <pre id="log"></pre>
+    <script>
+      if (location.href.indexOf('://localhost:7357') != -1) {
+        var log = document.getElementById('log')
+        Testem.handleConsoleMessage = function(msg){
+          Testem.emit('tap', msg)//this line crashes testem
+          log.appendChild(document.createTextNode(msg + '\n'))
+          return false
+        }
+      }
+      else {
+        document.write('<script src="../util/dom-console.js">' + '<\/' + 'script>');
+      }
+    </script>
+    <script src="./tape-bundle.js"></script>
+  </body>
+</html>
