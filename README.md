@@ -22,6 +22,7 @@ Mostly ready for prime time, though still some things [to do](#TODO).
 + [Jason Karns](https://github.com/jasonkarns)
 + [Jamon Holmgren](https://github.com/jamonholmgren)
 + [Casey Watson](https://github.com/watsoncj)
++ [Brad Chesney](https://github.com/bradchesney79)
 
 ## license
 
