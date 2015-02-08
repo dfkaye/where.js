@@ -1,6 +1,6 @@
 {
   "name": "where.js",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "data-driven test method for JavaScript test libraries",
   "homepage" : "https://github.com/dfkaye/where.js",
   "author": {
