@@ -4,7 +4,7 @@
 
 Provides data-table support in JavaScript tests.
 
-Mostly ready for prime time, though still some things [to do](#TODO).
+Mostly ready for prime time, though still some things [to do](#todo).
 
 ## inspired by:
 + Cucumber [`scenario-outlines`](https://github.com/cucumber/cucumber/wiki/Scenario-Outlines)
