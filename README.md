@@ -31,7 +31,7 @@ JSON
 ## libraries tested and supported so far
 + [jasmine](http://jasmine.github.io/) (v2.0.0 on browser)
   - [jasmine-node](https://github.com/mhevery/jasmine-node) which uses v1.3.1
-+ [mocha](http://visionmedia.github.io/mocha/)
++ [mocha](http://mochajs.org/)
   - `assert` (on node.js) and [assert.js](https://github.com/Jxck/assert) in the
     browser
   - [expect.js](https://github.com/LearnBoost/expect.js)
