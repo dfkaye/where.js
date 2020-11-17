@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/dfkaye/where.js.png?branch=master)](https://travis-ci.org/dfkaye/where.js)
+**Deprecation notice**: This library is no longer supported.
+
+Please visit [wheredoc](https://github.com/dfkaye/wheredoc) for an improved implementation (though not backward-compatible).
 
 # where.js
 
