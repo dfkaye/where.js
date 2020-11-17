@@ -1,28 +1,32 @@
 {
   "name": "where.js",
-  "version": "0.0.14",
+  "version": "1.0.0",
   "description": "data-driven test method for JavaScript test libraries",
-  "homepage" : "https://github.com/dfkaye/where.js",
+  "homepage": "https://github.com/dfkaye/where.js",
   "author": {
     "name": "david kaye (@dfkaye)",
-    "email" : "dfkaye@yahoo.com"
+    "email": "dfkaye@yahoo.com"
   },
-  "contributors" : [
+  "contributors": [
     {
-      "name" : "Johann Sonntagbauer",
-      "email" : "johann.sonntagbauer@gmx.at"
+      "name": "Johann Sonntagbauer",
+      "email": "johann.sonntagbauer@gmx.at"
     },
-    { "name" : "Jason Karns",
-      "email" : "jason@karns.name"
-    },    
-    { "name" : "Jamon Holmgren",
-      "email" : "jamon@clearsightstudio.com"
+    {
+      "name": "Jason Karns",
+      "email": "jason@karns.name"
     },
-    { "name" : "Casey Watson",
-      "email" : "watsoncj@gmail.com"    
+    {
+      "name": "Jamon Holmgren",
+      "email": "jamon@clearsightstudio.com"
     },
-    { "name" : "Brad Chesney",
-      "email" : "BradChesney79@gmail.com"
+    {
+      "name": "Casey Watson",
+      "email": "watsoncj@gmail.com"
+    },
+    {
+      "name": "Brad Chesney",
+      "email": "BradChesney79@gmail.com"
     }
   ],
   "keywords": [
@@ -43,8 +47,8 @@
     "chai": ">= 1.x",
     "expect.js": ">= 0.2",
     "mocha": ">= 1.7",
-    "jasmine-node": "1.x.x",    
-    "nodeunit" : ">= 0.8.6",
+    "jasmine-node": "1.x.x",
+    "nodeunit": ">= 0.8.6",
     "qunitjs": ">= 1.13",
     "qunit-tap": ">= 1.4",
     "should": ">= 3.0.1",
@@ -66,6 +70,6 @@
     "testem-mocha": "testem -l mocha -t ./test/mocha/browser-suite.html",
     "testem-nodeunit": "testem -l nodeunit -t ./test/nodeunit/browser-suite.html",
     "testem-qunit": "testem -l qunit -t ./test/qunit/browser-suite.html",
-    "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"    
-  } 
+    "testem-tape": "testem -l tape -t ./test/tape/browser-suite.html"
+  }
 }
